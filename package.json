@@ -21,6 +21,7 @@
     "@electron-forge/plugin-fuses": "^7.3.0",
     "@electron-forge/plugin-vite": "^7.3.0",
     "@electron/fuses": "^1.7.0",
+    "@types/node": "^20.11.30",
     "@vitejs/plugin-vue": "^5.0.4",
     "electron": "29.1.4",
     "vite": "^5.1.6"

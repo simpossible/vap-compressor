@@ -1,24 +1,22 @@
 import FileNode from './file_node';
+import fs from 'fs';
+import { isMP4File } from './file_util';
+
+const error_map = {
+  "-1": "文件不存在",
+  "-2": "不支持的文件格式",
+  "-3": "未知错误",
+}
+
+interface VapCenterInterface  {
+  onNodeAdded: (node: FileNode) => void;
+}
 
 class VapCenter {
   nodes: FileNode[];
+  delegate: VapCenterInterface | null = null;
   constructor() {
     this.nodes = [];
-  }
-
-  addNodeForPath(src: string): number {
-    let [code, node] = this.createFileNode(src);
-    if (code == 0) {
-      // add node to first
-      if (node !== null) {
-        this.nodes.unshift(node);
-      }else {
-        return -999;
-      }
-      return code;
-    }
-    return code;
-
   }
 
   createFileNode(src: string) : [number, FileNode | null] {
@@ -34,8 +32,27 @@ class VapCenter {
         return [-2, null];
     }    
     return [-3, null];    
-} 
+  } 
+
+  createFileNodeFromFiles(files, error_callback) {
+    console.log("createFileNodeFromFiles");
+    for (let file of files) {
+      let [code, node] = this.createFileNode(file);
+      if (code == 0) {
+        if (node !== null) {
+          this.nodes.unshift(node);
+          if (this.delegate !== null) {
+            this.delegate.onNodeAdded(node);
+          }
+        }
+      }else {
+        if (error_callback !== null) {
+          error_callback(error_map[code]);
+        }
+      }
+    }
+  }
 }
 
 let shared_center = new VapCenter();
-export default shared_center;
+export { VapCenter, VapCenterInterface , shared_center};

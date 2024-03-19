@@ -1,4 +1,5 @@
-const fs = require('fs');
+import fs from 'fs';
+import * as path from 'path';
 
 function isMP4File(filePath) {
     // 检查文件是否存在
@@ -10,3 +11,5 @@ function isMP4File(filePath) {
     const ext = path.extname(filePath);
     return ext.toLowerCase() === '.mp4';
 }
+
+export { isMP4File}

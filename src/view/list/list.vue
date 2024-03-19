@@ -3,8 +3,8 @@
   </div>
 </template>
 <script>
-import shared_center from '../../sdk/vap_center';
-import CellNodeVm from '../../sdk/cell_node_vm';
+import {shared_center} from '../../sdk/vap_center';
+import CellNodeVm from './cell_node_vm';
 
 export default {
   name: 'VapList',
@@ -29,6 +29,7 @@ export default {
       var vm = new CellNodeVm(node)
       this.vm_list.push(vm)
     }
+    shared_center.delegate = this
   },
 
   data() {
@@ -57,11 +58,18 @@ export default {
       e.stopPropagation();
       this.change_list_area_hightlight(false)
       let files = e.dataTransfer.files;
+      shared_center.createFileNodeFromFiles(files, ((msg)=>{
+        this.$alert(msg);
+      }).bind(this));
       console.log(files)
     },
     change_list_area_hightlight(hightlight = false) {
       this.vap_list_style_class = hightlight ? 'vap_list_style_highlight' : 'vap_list_style_normal'
-    }    
+    },
+    onNodeAdded(node) {
+      var vm = new CellNodeVm(node)
+      this.vm_list.unshift(vm)
+    }
   },
 }
 </script>

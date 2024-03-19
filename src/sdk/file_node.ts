@@ -1,10 +1,11 @@
 import { fi } from "element-plus/es/locale";
 
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+
 
 class FileNode {
     src: string;
+    subNodes: FileNode[] = [];
     constructor(src: string) {
         this.src = src;
     }
