@@ -1,12 +1,11 @@
 <template>
   <div id="vap_list_area" :class="vap_list_style_class">
-    这里是vap列表区域
-    adf 
-    adf
-    adf
   </div>
 </template>
 <script>
+import shared_center from '../../sdk/vap_center';
+import CellNodeVm from '../../sdk/cell_node_vm';
+
 export default {
   name: 'VapList',
   components: {
@@ -24,11 +23,18 @@ export default {
 
       element.addEventListener("dragleave", this.on_space_dragleave, false);
     }, 2000);
+    var node_list =  shared_center.nodes;
+    for (var i = 0; i < node_list.length; i++) {
+      let node = node_list[i]
+      var vm = new CellNodeVm(node)
+      this.vm_list.push(vm)
+    }
   },
 
   data() {
     return {
-      vap_list_style_class: 'vap_list_style_normal',      
+      vap_list_style_class: 'vap_list_style_normal',   
+      vm_list: []
     };
   },
   methods: {
@@ -50,7 +56,7 @@ export default {
       e.preventDefault();
       e.stopPropagation();
       this.change_list_area_hightlight(false)
-      files = e.dataTransfer.files;
+      let files = e.dataTransfer.files;
       console.log(files)
     },
     change_list_area_hightlight(hightlight = false) {
@@ -62,10 +68,11 @@ export default {
 
 <style>
 .vap_list_style_normal {
- 
+ height: 100%;
  background-color: red;
 }
 .vap_list_style_highlight {
+  height: 100%;
   border-color: red;
   border-style: solid;
   background-color: yellow;

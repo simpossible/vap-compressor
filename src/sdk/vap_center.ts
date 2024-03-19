@@ -34,7 +34,8 @@ class VapCenter {
         return [-2, null];
     }    
     return [-3, null];    
+} 
 }
 
- 
-}
+let shared_center = new VapCenter();
+export default shared_center;
