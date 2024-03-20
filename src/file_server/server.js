@@ -7,8 +7,27 @@ const fs = require('fs')
 var server_map = new Map()
 
 server_map.set("/file", function(req, params){
+    var filePath = params["path"]
+    var fileExist = fs.existsSync(filePath);
+    if (!fileExist) {
+        return {
+            "code": -1,
+            "msg": "file not exist",
+            "file_info":{},
+            "is_dir": false
+        }
+    }
+    var fileStat = fs.statSync(filePath)
+    var isDir = fileStat.isDirectory()
+    var file_info = {}
+    if (isDir) {
+        file_info["size"] = fileStat.size;
+    }
     return {
-        "haha":"file"
+        "code": 0,
+        "msg": "",
+        "file_info": file_info,
+        "is_dir": isDir
     }
 });
 
