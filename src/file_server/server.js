@@ -7,8 +7,11 @@ const fs = require('fs')
 var server_map = new Map()
 
 server_map.set("/file", function(req, params){
-    var filePath = params["path"]
+
+    var filePath = params.get("path")
+    console.log("get file info at path:", filePath);
     var fileExist = fs.existsSync(filePath);
+    var result = {}
     if (!fileExist) {
         return {
             "code": -1,
@@ -20,20 +23,23 @@ server_map.set("/file", function(req, params){
     var fileStat = fs.statSync(filePath)
     var isDir = fileStat.isDirectory()
     var file_info = {}
-    if (isDir) {
-        file_info["size"] = fileStat.size;
+    if (!isDir) {
+        file_info["size"] = fileStat.size;        
+        result["sub_files"] = []
+    }else {
+        // get sub files
+        var subFiles = fs.readdirSync(filePath)
+        result["sub_files"] = subFiles
     }
-    return {
-        "code": 0,
-        "msg": "",
-        "file_info": file_info,
-        "is_dir": isDir
-    }
+    result["code"] = 0
+    result["msg"] = ""
+    result["file_info"] = file_info
+    result["is_dir"] = isDir
+    return result
 });
 
 const server = http.createServer((req, res) => {    
-    res.writeHead(200, { 'Content-Type': 'application/jsonn'})
-
+       
     const { url } = req;    // url is somthome like /file?path=xxx
     var urlObj = new URL("http://xxx.com" + url)
     var pathName = urlObj.pathname
@@ -43,8 +49,12 @@ const server = http.createServer((req, res) => {
         var params = urlObj.searchParams;
         
         var result = func(req, params);
+        res.setHeader('Access-Control-Allow-Origin', '*'); 
+        res.writeHead(200, { 'Content-Type': 'application/jsonn'}) 
         res.end(JSON.stringify(result))
     }else {
+        res.setHeader('Access-Control-Allow-Origin', '*'); 
+        res.writeHead(200, { 'Content-Type': 'application/jsonn'}) 
         res.end(JSON.stringify({}))
     }   
   })

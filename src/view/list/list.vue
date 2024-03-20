@@ -63,9 +63,7 @@ export default {
       e.stopPropagation();
       this.change_list_area_hightlight(false)
       let files = e.dataTransfer.files;
-      shared_center.createFileNodeFromFiles(files, ((msg)=>{
-        this.$alert(msg);
-      }).bind(this));
+      shared_center.createFileNodeFromFiles(files);
       console.log(files)
     },
     change_list_area_hightlight(hightlight = false) {

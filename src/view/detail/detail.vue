@@ -1,9 +1,5 @@
 <template>
     <div id="vap_list_area" :class="vap_list_style_class">
-        这里是vap详情区域
-        adf
-        adf
-        adf
     </div>
 </template>
 <script>
