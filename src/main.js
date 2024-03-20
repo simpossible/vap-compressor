@@ -1,5 +1,8 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
+// 从 ./src/file_server/server.ts 中导入 start_file_server
+import { start_file_server } from './file_server/server.js';
+
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
@@ -13,6 +16,7 @@ const createWindow = () => {
     height: 600,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: true,
       preload: path.join(__dirname, 'preload.js'),
     },
   });
@@ -49,6 +53,8 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+start_file_server();
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.

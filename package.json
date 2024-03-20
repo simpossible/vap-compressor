@@ -24,7 +24,7 @@
     "@types/node": "^20.11.30",
     "@vitejs/plugin-vue": "^5.0.4",
     "electron": "29.1.4",
-    "vite": "^5.1.6",
+    "vite": "4.0.1",
     "vite-plugin-node-polyfills": "^0.21.0"
   },
   "keywords": [],
