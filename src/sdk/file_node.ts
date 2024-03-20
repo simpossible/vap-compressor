@@ -1,6 +1,6 @@
 import { fi } from "element-plus/es/locale";
 
-import fs from 'fs';
+import * as fs from 'fs';
 
 
 class FileNode {

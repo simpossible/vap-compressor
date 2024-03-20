@@ -1,5 +1,10 @@
 <template>
   <div id="vap_list_area" :class="vap_list_style_class">
+    <el-tree
+    style="max-width: 600px"
+    :data="vm_list"
+    @node-click="handleNodeClick"
+  />
   </div>
 </template>
 <script>

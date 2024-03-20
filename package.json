@@ -24,7 +24,8 @@
     "@types/node": "^20.11.30",
     "@vitejs/plugin-vue": "^5.0.4",
     "electron": "29.1.4",
-    "vite": "^5.1.6"
+    "vite": "^5.1.6",
+    "vite-plugin-node-polyfills": "^0.21.0"
   },
   "keywords": [],
   "author": {
@@ -34,6 +35,7 @@
   "license": "MIT",
   "dependencies": {
     "electron-squirrel-startup": "^1.0.0",
-    "element-plus": "^2.6.1"
+    "element-plus": "^2.6.1",
+    "vite-plugin-optimizer": "^1.4.3"
   }
 }

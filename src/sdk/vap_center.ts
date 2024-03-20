@@ -1,6 +1,9 @@
 import FileNode from './file_node';
-import fs from 'fs';
+import * as fs from 'fs';
 import { isMP4File } from './file_util';
+// import {get_fs_obj} from './temp.js';
+
+// let fs = get_fs_obj();
 
 const error_map = {
   "-1": "文件不存在",
@@ -20,16 +23,16 @@ class VapCenter {
   }
 
   createFileNode(src: string) : [number, FileNode | null] {
-    if (!fs.existsSync(src)) {
-        return [-1, null];
-    }
+    // if (!fs.existsSync(src)) {
+    //   return [-1, null];
+    // }
     let stat = fs.statSync(src)
     if (stat.isDirectory()) {
-        return [0, new FileNode(src)];
+      return [0, new FileNode(src)];
     }    
     //读取文件信息判断是否是 .mp4文件
     if (isMP4File(src)) {
-        return [-2, null];
+      return [-2, null];
     }    
     return [-3, null];    
   } 
@@ -37,7 +40,7 @@ class VapCenter {
   createFileNodeFromFiles(files, error_callback) {
     console.log("createFileNodeFromFiles");
     for (let file of files) {
-      let [code, node] = this.createFileNode(file);
+      let [code, node] = this.createFileNode(file.path);
       if (code == 0) {
         if (node !== null) {
           this.nodes.unshift(node);

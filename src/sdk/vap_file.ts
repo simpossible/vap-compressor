@@ -1,4 +1,4 @@
-import fs from 'fs';
+import * as fs from 'fs';
 import FileNode from './file_node';
 
 class VapFile extends FileNode {
@@ -20,6 +20,7 @@ class VapFile extends FileNode {
 
     initial(): void {
       // get the file info
+      
       if (!fs.lstatSync(this.src).isFile()) {
         return
       }
