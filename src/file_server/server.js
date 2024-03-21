@@ -1,6 +1,7 @@
 const http = require('http')
 const fs = require('fs')
 
+import {get_vap_boxes} from './vap_parser.js'
 // md文件访问在electron完全不行。搞个服务来做吧。
 
 
@@ -26,6 +27,13 @@ server_map.set("/file", function(req, params){
     if (!isDir) {
         file_info["size"] = fileStat.size;        
         result["sub_files"] = []
+        // is mp4
+        if (filePath.endsWith(".mp4")) {
+            file_info["is_mp4"] = true
+            // get mp4 size resolution
+            var all_boxes = get_vap_boxes(filePath)
+
+        }
     }else {
         // get sub files
         var subFiles = fs.readdirSync(filePath)
