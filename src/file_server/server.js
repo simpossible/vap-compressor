@@ -1,5 +1,7 @@
 const http = require('http')
 const fs = require('fs')
+const ffprobe = require('ffprobe')
+const ffprobeStatic = require('ffprobe-static')
 
 import {getVapBoxes} from './vap_parser.js'
 // md文件访问在electron完全不行。搞个服务来做吧。
@@ -7,7 +9,7 @@ import {getVapBoxes} from './vap_parser.js'
 
 var server_map = new Map()
 
-server_map.set("/file", function(req, params){
+async function onFileRequest(req, params) {
 
     var filePath = params.get("path")
     console.log("get file info at path:", filePath);
@@ -40,6 +42,18 @@ server_map.set("/file", function(req, params){
                 }
             }
 
+            const fileMetaData = await ffprobe(filePath, { path: ffprobeStatic.path })
+            if (fileMetaData.streams.length > 0) {
+                for (var info in fileMetaData.streams) {
+                    var stream = fileMetaData.streams[info]
+                    if (stream.codec_type == "video") {
+                        file_info["video_info"] = stream
+                        break;
+                    }
+                }
+            }
+            console.log("fileMetaData:", fileMetaData)
+
         }
     }else {
         // get sub files
@@ -52,7 +66,9 @@ server_map.set("/file", function(req, params){
     result["is_dir"] = isDir
     console.log("result:", result)
     return result
-});
+}
+
+server_map.set("/file", onFileRequest);
 
 const server = http.createServer((req, res) => {    
        
