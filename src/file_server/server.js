@@ -1,7 +1,7 @@
 const http = require('http')
 const fs = require('fs')
 
-import {get_vap_boxes} from './vap_parser.js'
+import {getVapBoxes} from './vap_parser.js'
 // md文件访问在electron完全不行。搞个服务来做吧。
 
 
@@ -31,7 +31,14 @@ server_map.set("/file", function(req, params){
         if (filePath.endsWith(".mp4")) {
             file_info["is_mp4"] = true
             // get mp4 size resolution
-            var all_boxes = get_vap_boxes(filePath)
+            var allBoxes = getVapBoxes(filePath)
+            for (var boxIndex in allBoxes) {
+                var box = allBoxes[boxIndex]
+                if (box.boxType == "vapc") {
+                    var vapJson = box.content
+                    file_info["vap_json"] = JSON.parse(vapJson)
+                }
+            }
 
         }
     }else {
@@ -43,6 +50,7 @@ server_map.set("/file", function(req, params){
     result["msg"] = ""
     result["file_info"] = file_info
     result["is_dir"] = isDir
+    console.log("result:", result)
     return result
 });
 
