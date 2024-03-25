@@ -35,6 +35,7 @@ export default {
     for (var i = 0; i < node_list.length; i++) {
       let node = node_list[i]
       var vm = new CellNodeVm(node)
+      this.vm_list_map.set(node.src, vm);
       this.vm_list.push(vm)
     }
     shared_center.delegate = this
@@ -44,6 +45,7 @@ export default {
     return {
       vap_list_style_class: 'vap_list_style_normal',   
       vm_list: [],
+      vm_list_map: new Map(),
       defaultProps: {
         children: 'children',
         label: 'label',
@@ -78,14 +80,20 @@ export default {
     },
     onNodeAdded(node) {
       console.log('onNodeAdded', node)
+      if (this.vm_list_map.has(node.src)){
+        console.log("node exist");
+        return
+      }
       var vm = new CellNodeVm(node)
       this.vm_list.unshift(vm)
+      vm_list_map.set(node.src, vm)
       // shared_center.delegate.$refs.vap_list_tree.updateKeyChildren(node.src, this.vm_list)
         this.$refs.vap_list_tree.updateKeyChildren(node.src, this.vm_list);
     },
     handleNodeClick(ele, nodeinfo, treeNode, e){
       console.log("on node clicked")
-
+      var uuid = ele.uuid
+      ele.reloadFiles();
     }
   },
 }
