@@ -73,7 +73,11 @@ async function onFileRequest(req, params, res) {
         for (var subFileIndex in subFiles) {
             var subFile = subFiles[subFileIndex]
             var subFilePath = path.join(filePath, subFile);
-            absuluteSubFiles.push(subFilePath)
+            // only keed the mp4 or dir
+            if (subFile.endsWith(".mp4") || fs.statSync(subFilePath).isDirectory()) {
+                absuluteSubFiles.push(subFilePath)
+            }
+            
         }
         result["sub_files"] = absuluteSubFiles
     }
