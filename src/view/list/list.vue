@@ -70,6 +70,7 @@ export default {
       this.vap_list_style_class = hightlight ? 'vap_list_style_highlight' : 'vap_list_style_normal'
     },
     onNodeAdded(node) {
+      console.log('onNodeAdded', node)
       var vm = new CellNodeVm(node)
       this.vm_list.unshift(vm)
     }

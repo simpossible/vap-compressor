@@ -18,7 +18,12 @@ class FileNode {
         axios.get('http://127.0.0.1:3000/file?path=' + this.src)
             .then(response => {
                 console.log("return file is",response.data);
-                console.log(response.data);
+                var responseJson = response.data;
+                var subFiles = responseJson["sub_files"]
+                for (let subFile of subFiles) {
+                    var subNode = new FileNode(subFile);
+                    this.subNodes.push(subNode);
+                }
                 if (this.delegate !== null) {
                     this.delegate.onNodeInfoLoaded(this);
                 }

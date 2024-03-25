@@ -14,8 +14,10 @@ class CellNodeVm {
         node.initialData();
     }
 
-    onNodeInfoLoaded(node: FileNode) {
-        console.log("onNodeInfoLoaded");
+    onNodeInfoLoaded(node: FileNode) {   
+        for (let child of node.subNodes) {
+            this.children.push(new CellNodeVm(child));
+        }
     }
 
 }

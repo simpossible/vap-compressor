@@ -2,6 +2,7 @@ const http = require('http')
 const fs = require('fs')
 const ffprobe = require('ffprobe')
 const ffprobeStatic = require('ffprobe-static')
+const path = require('path')
 
 import {getVapBoxes} from './vap_parser.js'
 // md文件访问在electron完全不行。搞个服务来做吧。
@@ -9,19 +10,23 @@ import {getVapBoxes} from './vap_parser.js'
 
 var server_map = new Map()
 
-async function onFileRequest(req, params) {
+async function onFileRequest(req, params, res) {
 
     var filePath = params.get("path")
     console.log("get file info at path:", filePath);
     var fileExist = fs.existsSync(filePath);
     var result = {}
     if (!fileExist) {
-        return {
+        console.log("onFileRequest 1")
+        result = {
             "code": -1,
             "msg": "file not exist",
             "file_info":{},
             "is_dir": false
         }
+        res.writeHead(200, { 'Content-Type': 'application/jsonn'}) 
+        res.end(JSON.stringify(result))
+        return
     }
     var fileStat = fs.statSync(filePath)
     var isDir = fileStat.isDirectory()
@@ -47,7 +52,13 @@ async function onFileRequest(req, params) {
                 for (var info in fileMetaData.streams) {
                     var stream = fileMetaData.streams[info]
                     if (stream.codec_type == "video") {
-                        file_info["video_info"] = stream
+                        file_info["video_info"] = {
+                            "codec_name": stream.codec_name,
+                            "width": stream.width,
+                            "height": stream.height,
+                            "duration_ts": stream.duration,
+                            "bit_rate": stream.bit_rate,                            
+                        }
                         break;
                     }
                 }
@@ -58,14 +69,21 @@ async function onFileRequest(req, params) {
     }else {
         // get sub files
         var subFiles = fs.readdirSync(filePath)
-        result["sub_files"] = subFiles
+        var absuluteSubFiles = []
+        for (var subFileIndex in subFiles) {
+            var subFile = subFiles[subFileIndex]
+            var subFilePath = path.join(filePath, subFile);
+            absuluteSubFiles.push(subFilePath)
+        }
+        result["sub_files"] = absuluteSubFiles
     }
     result["code"] = 0
     result["msg"] = ""
     result["file_info"] = file_info
     result["is_dir"] = isDir
     console.log("result:", result)
-    return result
+    res.writeHead(200, { 'Content-Type': 'application/jsonn'}) 
+    res.end(JSON.stringify(result))
 }
 
 server_map.set("/file", onFileRequest);
@@ -76,14 +94,11 @@ const server = http.createServer((req, res) => {
     var urlObj = new URL("http://xxx.com" + url)
     var pathName = urlObj.pathname
     // if pathname in server_map
+    res.setHeader('Access-Control-Allow-Origin', '*'); 
     if (server_map.has(pathName)) {
         var func = server_map.get(pathName)
         var params = urlObj.searchParams;
-        
-        var result = func(req, params);
-        res.setHeader('Access-Control-Allow-Origin', '*'); 
-        res.writeHead(200, { 'Content-Type': 'application/jsonn'}) 
-        res.end(JSON.stringify(result))
+        func(req, params, res);
     }else {
         res.setHeader('Access-Control-Allow-Origin', '*'); 
         res.writeHead(200, { 'Content-Type': 'application/jsonn'}) 
