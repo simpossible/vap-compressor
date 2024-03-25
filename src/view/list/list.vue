@@ -1,8 +1,11 @@
 <template>
-  <div id="vap_list_area" :class="vap_list_style_class">
+  <div id="vap_list_area"  :class="vap_list_style_class">
     <el-tree
     style="max-width: 600px"
+    ref="vap_list_tree"
     :data="vm_list"
+    node-key="uuid"
+    :props="defaultProps"
     @node-click="handleNodeClick"
   />
   </div>
@@ -40,7 +43,11 @@ export default {
   data() {
     return {
       vap_list_style_class: 'vap_list_style_normal',   
-      vm_list: []
+      vm_list: [],
+      defaultProps: {
+        children: 'children',
+        label: 'label',
+      }
     };
   },
   methods: {
@@ -73,6 +80,12 @@ export default {
       console.log('onNodeAdded', node)
       var vm = new CellNodeVm(node)
       this.vm_list.unshift(vm)
+      // shared_center.delegate.$refs.vap_list_tree.updateKeyChildren(node.src, this.vm_list)
+        this.$refs.vap_list_tree.updateKeyChildren(node.src, this.vm_list);
+    },
+    handleNodeClick(ele, nodeinfo, treeNode, e){
+      console.log("on node clicked")
+
     }
   },
 }

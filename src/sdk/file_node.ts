@@ -22,7 +22,7 @@ class FileNode {
                 var subFiles = responseJson["sub_files"]
                 for (let subFile of subFiles) {
                     var subNode = new FileNode(subFile);
-                    this.subNodes.push(subNode);
+                    this.subNodes.push(subNode);                    
                 }
                 if (this.delegate !== null) {
                     this.delegate.onNodeInfoLoaded(this);
