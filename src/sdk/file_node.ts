@@ -5,6 +5,12 @@ interface FileNodeDelegate {
     onNodeInfoLoaded: (node: FileNode) => void;
 }
 
+enum FileNodeType {
+    unknow,
+    dir,
+    vap
+}
+
 class FileNode {
     src: string;    
     subNodes: FileNode[] = [];
@@ -13,6 +19,7 @@ class FileNode {
     delegate: any = null;
     isDir: boolean = false;
     isLoading: boolean = false;
+    fileType: FileNodeType = FileNodeType.unknow
     constructor(src: string) {
         this.src = src;
     }
@@ -29,7 +36,16 @@ class FileNode {
                 var responseJson = response.data;
                 var subFiles = responseJson["sub_files"]
                 var tempSubMap = new Map();
-                this.isDir = responseJson["is_dir"];
+                var isDir = responseJson["is_dir"];
+                var isVap = responseJson["is_vap"];
+                if (isDir){
+                    this.fileType = FileNodeType.dir;
+                }else {
+                    if (isVap){
+                        this.fileType = FileNodeType.vap;
+                        this.fileInfo = responseJson["file_info"];
+                    }
+                }
                 var tempArray: FileNode[] = [];
                 for (let subFile of subFiles) {
                     var newNode : FileNode | undefined = undefined;

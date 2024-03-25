@@ -10,6 +10,19 @@ import {getVapBoxes} from './vap_parser.js'
 
 var server_map = new Map()
 
+function getVapInfo(filePath)  {
+    var allBoxes = getVapBoxes(filePath)
+    for (var boxIndex in allBoxes) {
+        var box = allBoxes[boxIndex]
+        if (box.boxType == "vapc") {
+            var vapJson = box.content
+            return JSON.parse(vapJson)
+        }
+    }
+    return null
+
+}
+
 async function onFileRequest(req, params, res) {
 
     var filePath = params.get("path")
@@ -22,7 +35,8 @@ async function onFileRequest(req, params, res) {
             "code": -1,
             "msg": "file not exist",
             "file_info":{},
-            "is_dir": false
+            "is_dir": false,
+            "is_vap": false
         }
         res.writeHead(200, { 'Content-Type': 'application/jsonn'}) 
         res.end(JSON.stringify(result))
@@ -30,41 +44,34 @@ async function onFileRequest(req, params, res) {
     }
     var fileStat = fs.statSync(filePath)
     var isDir = fileStat.isDirectory()
+    var isVap = false
     var file_info = {}
     if (!isDir) {
         file_info["size"] = fileStat.size;        
         result["sub_files"] = []
         // is mp4
         if (filePath.endsWith(".mp4")) {
-            file_info["is_mp4"] = true
-            // get mp4 size resolution
-            var allBoxes = getVapBoxes(filePath)
-            for (var boxIndex in allBoxes) {
-                var box = allBoxes[boxIndex]
-                if (box.boxType == "vapc") {
-                    var vapJson = box.content
-                    file_info["vap_json"] = JSON.parse(vapJson)
-                }
-            }
-
-            const fileMetaData = await ffprobe(filePath, { path: ffprobeStatic.path })
-            if (fileMetaData.streams.length > 0) {
-                for (var info in fileMetaData.streams) {
-                    var stream = fileMetaData.streams[info]
-                    if (stream.codec_type == "video") {
-                        file_info["video_info"] = {
-                            "codec_name": stream.codec_name,
-                            "width": stream.width,
-                            "height": stream.height,
-                            "duration_ts": stream.duration,
-                            "bit_rate": stream.bit_rate,                            
+            var vapJson = getVapInfo(filePath);
+            if (vapJson != null) {
+                const fileMetaData = await ffprobe(filePath, { path: ffprobeStatic.path })
+                if (fileMetaData.streams.length > 0) {
+                    for (var info in fileMetaData.streams) {
+                        var stream = fileMetaData.streams[info]
+                        if (stream.codec_type == "video") {
+                            file_info["video_info"] = {
+                                "codec_name": stream.codec_name,
+                                "width": stream.width,
+                                "height": stream.height,
+                                "duration_ts": stream.duration,
+                                "bit_rate": stream.bit_rate,                            
+                            }
+                            break;
                         }
-                        break;
                     }
                 }
-            }
-            console.log("fileMetaData:", fileMetaData)
-
+                isVap = true    
+                file_info["vap_info"] = vapJson
+            }            
         }
     }else {
         // get sub files
@@ -75,7 +82,17 @@ async function onFileRequest(req, params, res) {
             var subFilePath = path.join(filePath, subFile);
             // only keed the mp4 or dir
             if (subFile.endsWith(".mp4") || fs.statSync(subFilePath).isDirectory()) {
-                absuluteSubFiles.push(subFilePath)
+                if (subFile.endsWith(".mp4")) {
+                    var vapJson = getVapInfo(subFilePath);
+                    if (vapJson != null) {
+                        absuluteSubFiles.push(subFilePath)
+                    }else {
+                        console.log("mp4 file is not vap", subFilePath, "skip it");
+                    }
+                }else {
+                    absuluteSubFiles.push(subFilePath)
+                }
+                
             }
             
         }
@@ -85,6 +102,7 @@ async function onFileRequest(req, params, res) {
     result["msg"] = ""
     result["file_info"] = file_info
     result["is_dir"] = isDir
+    result["is_vap"] = isVap
     console.log("result:", result)
     res.writeHead(200, { 'Content-Type': 'application/jsonn'}) 
     res.end(JSON.stringify(result))

@@ -16,6 +16,12 @@ import CellNodeVm from './cell_node_vm';
 
 export default {
   name: 'VapList',
+  props: {
+    onVapChoosed: {
+      type: Function,
+      required: true
+    }
+  },
   components: {
 
   },
@@ -92,8 +98,10 @@ export default {
     },
     handleNodeClick(ele, nodeinfo, treeNode, e){
       console.log("on node clicked")
-      var uuid = ele.uuid
       ele.reloadFiles();
+      if (!ele.isDir) {
+        this.onVapChoosed(ele.node);
+      }
     }
   },
 }

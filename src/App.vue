@@ -1,7 +1,7 @@
 <template>
   <el-row style="height: 100%;">
     <el-col :span="12">
-      <VapList />
+      <VapList :onVapChoosed="onListVapChoosed"/>
     </el-col>
     <el-col :span="12">
       <VapDetail />
@@ -26,7 +26,11 @@ export default {
   methods: {
     increment() {
       this.count++
+    },
+    onListVapChoosed(node){
+      console.log("listVapChoosed", node)
     }
+
   },
 
   mounted() {
