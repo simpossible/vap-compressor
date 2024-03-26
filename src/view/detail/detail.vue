@@ -3,7 +3,7 @@
         <el-row>
             <!-- 这里是预览区域,区域的高度定为300px -->
             <div ref="anim" class="vap_anim">
-            </div>            
+            </div>
         </el-row>
         <el-row>
             <el-descriptions>
@@ -15,12 +15,7 @@
         </el-row>
         <el-row>
             <!-- 这个搞个文本区域来显示vapJson的参数,最高显示100px-->
-            <el-input
-                type="textarea"
-                :rows="5"
-                :autosize="{ minRows: 5, maxRows: 5 }"
-                :value="vapJson"
-                readonly>
+            <el-input type="textarea" :rows="5" :autosize="{ minRows: 5, maxRows: 5 }" :value="vapJson" readonly>
             </el-input>
         </el-row>
     </div>
@@ -61,7 +56,15 @@ export default {
             this.vapJson = JSON.stringify(this.node.fileInfo.vap_info, null, 0)
             this.duration = this.formatTime(this.node.fileInfo.video_info.duration_ts)
             this.bitRate = this.node.fileInfo.video_info.bit_rate
+            this.fileUrl = "http://127.0.0.1:3000/download?path=" + this.node.src
+            this.vapJsonUrl = "http://127.0.0.1:3000/vap-json?vap-path=" + this.node.src
+            this.play()
         }
+    },
+    unmounted() {
+        if (this.vap != null) {
+            this.vap.pause()
+        }        
     },
 
     data() {
@@ -74,6 +77,46 @@ export default {
         };
     },
     methods: {
+        play() {
+            const that = this
+            var divWidth = this.$refs.anim.offsetWidth;
+            var divHeight = this.$refs.anim.offsetHeight;
+            this.vap = new Vap().play(Object.assign({}, {
+                container: this.$refs.anim,
+                // 素材视频链接
+                src: this.fileUrl,
+                // 素材配置json对象
+                config: this.node.fileInfo.vap_info,
+                width: divWidth,
+                height: divHeight,
+                // 同素材生成工具中配置的保持一致
+                fps: 20,
+                // 是否循环
+                loop: true,
+                // 起始播放时间点
+                beginPoint: 0,
+                // 精准模式
+                accurate: true
+                // 播放起始时间点(秒)
+            },  { type: 1 }))
+                .on('playing', () => {
+                    console.log('playing')
+                })
+                .on('ended', () => {
+                    console.log('ended')
+                })
+                .on('frame', (frame, timestamp) => {
+                    // frame: 当前帧(从0开始)  timestamp: (播放时间戳)
+                    console.log('frame', frame, timestamp)
+                })
+            window.vap = this.vap
+        },
+        pause() {
+            this.vap.pause()
+        },
+        playContinue() {
+            this.vap.play()
+        },
         formatBytes(bytes) {
             if (bytes < 1024) {
                 return bytes + " Bytes";
@@ -84,24 +127,24 @@ export default {
             }
         },
         formatTime(seconds) {
-        let hours = Math.floor(seconds / 3600);
-        let minutes = Math.floor((seconds % 3600) / 60);
-        let secs = (seconds % 60).toFixed(1);
+            let hours = Math.floor(seconds / 3600);
+            let minutes = Math.floor((seconds % 3600) / 60);
+            let secs = (seconds % 60).toFixed(1);
 
-        let timeStr = "";
+            let timeStr = "";
 
-        if (hours > 0) {
-            timeStr += hours + "小时";
-        }
-        if (minutes > 0) {
-            timeStr += minutes + "分钟";
-        }
-        if (secs > 0) {
-            timeStr += secs + "秒";
-        }
+            if (hours > 0) {
+                timeStr += hours + "小时";
+            }
+            if (minutes > 0) {
+                timeStr += minutes + "分钟";
+            }
+            if (secs > 0) {
+                timeStr += secs + "秒";
+            }
 
-        return timeStr;
-    }
+            return timeStr;
+        }
     }
 
 }

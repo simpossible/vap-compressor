@@ -110,6 +110,49 @@ async function onFileRequest(req, params, res) {
 
 server_map.set("/file", onFileRequest);
 
+
+async function downloadFile(req, params, res){ 
+    var filePath = params.get("path")
+    if (!fs.existsSync(filePath)) {
+        // 404
+        res.writeHead(404, { 'Content-Type': 'text/plain' }); 
+        res.end('404 Not Found');
+        return
+    }
+    const filename = path.basename(filePath);    
+
+    // 设置响应头以告知浏览器这是一个需要下载的文件
+    res.setHeader('Content-disposition', 'attachment; filename=' + filename);
+    res.setHeader('Content-Type', 'video/mp4');  
+    // 创建一个读取流并将其管道响应对象
+    const readStream = fs.createReadStream(filePath);
+    readStream.pipe(res);
+}
+
+server_map.set("/download", downloadFile);
+
+async function downloadVapJson(req, params, res){ 
+    var filePath = params.get("vap-path")
+    if (!fs.existsSync(filePath)) {
+        // 404
+        res.writeHead(404, { 'Content-Type': 'text/plain' }); 
+        res.end('404 Not Found');
+        return
+    }
+    var vapJson = getVapInfo(filePath);
+    if (vapJson == null) {
+        res.writeHead(404, { 'Content-Type': 'text/plain' }); 
+        res.end('404 Not Found');
+        return
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json'})
+    res.end(JSON.stringify(vapJson))
+
+}
+server_map.set("/vap-json", downloadVapJson);
+
+
+
 const server = http.createServer((req, res) => {    
        
     const { url } = req;    // url is somthome like /file?path=xxx
