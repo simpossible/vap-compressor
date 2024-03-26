@@ -154,6 +154,5 @@ export default {
 .vap_anim {
     width: 37.5vw;
     height: 37.5vw;
-    background-color: #f0f0f0;
 }
 </style>
