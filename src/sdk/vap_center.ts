@@ -1,4 +1,4 @@
-import FileNode from './file_node';
+import {FileNode} from './file_node';
 import { isMP4File } from './file_util';
 
 interface VapCenterInterface {

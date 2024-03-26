@@ -39,6 +39,7 @@
     "element-plus": "^2.6.1",
     "ffprobe": "^1.1.2",
     "ffprobe-static": "^3.1.0",
+    "video-animation-player": "^1.0.5",
     "vite-plugin-optimizer": "^1.4.3"
   }
 }

@@ -55,7 +55,8 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'label',
-      }
+      },
+      selectNode: null
     };
   },
   methods: {
@@ -92,14 +93,14 @@ export default {
       }
       var vm = new CellNodeVm(node)
       this.vm_list.unshift(vm)
-      vm_list_map.set(node.src, vm)
+      this.vm_list_map.set(node.src, vm)
       // shared_center.delegate.$refs.vap_list_tree.updateKeyChildren(node.src, this.vm_list)
         this.$refs.vap_list_tree.updateKeyChildren(node.src, this.vm_list);
     },
     handleNodeClick(ele, nodeinfo, treeNode, e){
-      console.log("on node clicked")
+      console.log("on node clicked")      
       ele.reloadFiles();
-      if (!ele.isDir) {
+      if (ele.isVap()) {        
         this.onVapChoosed(ele.node);
       }
     }

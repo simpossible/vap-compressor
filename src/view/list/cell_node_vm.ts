@@ -1,4 +1,4 @@
-import FileNode from "../../sdk/file_node";
+import {FileNode, FileNodeType} from "../../sdk/file_node";
 import * as path from 'path';
 import {shared_center} from '../../sdk/vap_center';
 import { el } from "element-plus/es/locale";
@@ -19,6 +19,10 @@ class CellNodeVm {
         }
         node.delegate = this
         node.initialData();
+    }
+
+    isVap(){
+        return this.node.fileType == FileNodeType.vap;
     }
 
     onNodeInfoLoaded(node: FileNode) {   

@@ -1,5 +1,5 @@
 import * as fs from 'fs';
-import FileNode from './file_node';
+import {FileNode} from './file_node';
 
 class VapFile extends FileNode {
     src: string

@@ -17,7 +17,6 @@ class FileNode {
     subNodesMap: Map<string, FileNode> = new Map();
     fileInfo: any = {};
     delegate: any = null;
-    isDir: boolean = false;
     isLoading: boolean = false;
     fileType: FileNodeType = FileNodeType.unknow
     constructor(src: string) {
@@ -74,6 +73,4 @@ class FileNode {
 
 
 
-export default FileNode;
-
-
+export  {FileNode, FileNodeType};
