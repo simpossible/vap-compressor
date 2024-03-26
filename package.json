@@ -6,11 +6,21 @@
   "main": ".vite/build/main.js",
   "scripts": {
     "start": "electron-forge start",
+    "start:mac": "electron-forge start",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
   },
+  "extraResources": [
+    {
+      "from": "./bin/mac",
+      "to": "bin",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ],
   "devDependencies": {
     "@electron-forge/cli": "^7.3.0",
     "@electron-forge/maker-deb": "^7.3.0",
@@ -39,6 +49,7 @@
     "element-plus": "^2.6.1",
     "ffprobe": "^1.1.2",
     "ffprobe-static": "^3.1.0",
+    "fluent-ffmpeg": "^2.1.2",
     "video-animation-player": "^1.0.5",
     "vite-plugin-optimizer": "^1.4.3"
   }

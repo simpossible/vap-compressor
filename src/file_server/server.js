@@ -7,6 +7,8 @@ const path = require('path')
 import {getVapBoxes} from './vap_parser.js'
 // md文件访问在electron完全不行。搞个服务来做吧。
 
+// 压缩信息的字典。存储的是路径和压缩信息的关系
+var compressInfoMap = new Map()
 
 var server_map = new Map()
 
@@ -150,6 +152,98 @@ async function downloadVapJson(req, params, res){
 
 }
 server_map.set("/vap-json", downloadVapJson);
+
+async function getCompressInfo(req, params, res){
+    // get vap compressInfo; state in [0, 1, 2] 0 == not start, 1 == compressing, 2 == done
+    var filePath = params.get("path")
+    if (!fs.existsSync(filePath)) {
+        // 404
+        res.writeHead(404, { 'Content-Type': 'text/plain' }); 
+        res.end('404 Not Found');
+        return
+    }
+    var basePath = path.dirname(filePath)
+    var basename = path.basename(filePath)
+    var tempVapPath = path.join(basePath, ".compress_" + basename + ".mp4")
+    if (fs.existsSync(tempVapPath)) {
+        // if existed indicated the compress is done
+        var compressInfo = {}
+        if (compressInfoMap.has(filePath)) {
+            compressInfo = compressInfoMap.get(filePath)
+            compressInfo.compress_path = tempVapPath
+            compressInfo.state = 2
+            if (compressInfo.end_time == undefined){
+                compressInfo.end_time = new Date().getTime()
+            }            
+        }else {
+            compressInfo.state = 2,
+            compressInfo.org_path = filePath,
+            compressInfo.compress_path = tempVapPath
+            compressInfo.end_time = new Date().getTime()            
+            compressInfo.start_time = new Date().getTime()  
+            compressInfoMap.set(filePath, compressInfo)
+        }
+        res.writeHead(200, { 'Content-Type': 'application/json'})
+        res.end(JSON.stringify(compressInfo))
+
+        return
+    }
+    // if not existed
+    res.writeHead(200, { 'Content-Type': 'application/json'})
+    res.end(JSON.stringify({
+        state: 0,
+        org_path: filePath
+    }))
+}
+server_map.set("/compress-info", getCompressInfo);
+
+
+
+function compressVideo(inputPath, outputPath) {
+    const ffmpeg = require('fluent-ffmpeg');
+    return new Promise((resolve, reject) => {
+        ffmpeg(inputPath)
+            .outputOptions('-vf', 'scale=640:-1') // 缩放视频的分辨率
+            .outputOptions('-c:v', 'libx264') // 设置视频编码为libx264
+            .outputOptions('-crf', '23') // 设置视频质量，值越小质量越高
+            .outputOptions('-preset', 'superfast') // 设置压缩速度，superfast为最快
+            .output(outputPath)
+            .on('end', resolve)
+            .on('error', reject)
+            .run();
+    });
+}
+
+
+
+async function startCompress(req, params, res){
+    
+
+    var basePath = path.dirname(filePath)
+    var basename = path.basename(filePath)
+    var tempVapPath = path.join(basePath, ".compress_" + basename + ".mp4")
+    if (fs.existsSync(tempVapPath)) {
+        getCompressInfo(req, params, res)
+        return
+    }
+    var compressInfo = {}
+    if (compressInfoMap.has(filePath)) {
+        compressInfo = compressInfoMap.get(filePath)     
+    }else {
+        compressInfo.state = 1,
+        compressInfo.start_time = new Date().getTime()
+        compressInfo.org_path = filePath        
+        compressInfoMap.set(filePath, compressInfo)
+    }
+    // start compress
+    
+    compressVideo('input.mp4', 'output.mp4')
+    .then(() => console.log('Compression finished!'))
+    .catch(console.error);
+}
+
+server_map.set("/start-compress", startCompress);
+
 
 
 
