@@ -83,3 +83,15 @@ export function getVapBoxes(file_path) {
     }    
     return allBoxes    
 }
+
+function addVapInfoToMp4(filePath) {
+    var allBoxes = getVapBoxes(filePath)
+    for (var boxIndex in allBoxes) {
+        var box = allBoxes[boxIndex]
+        if (box.boxType == "vapc") {
+            return -1, "already vap"
+        }
+    }
+        
+    return null
+}

@@ -7,7 +7,7 @@
       <VapDetail :key="refreshKey" :node="selectNode" ></VapDetail>
     </el-col>
     <el-col :span="9">
-
+      <VapCompressDetail :key="refreshKey" :node="selectNode"> </VapCompressDetail>
     </el-col>
   </el-row>
 
@@ -15,12 +15,14 @@
 <script>
 import VapList from "./view/list/list.vue";
 import VapDetail from "./view/detail/detail.vue";
+import VapCompressDetail from "./view/compress_detail/compress_detail.vue";
 import { FileNode } from "./sdk/file_node";
 
 export default {
   components: {
     VapList,
-    VapDetail
+    VapDetail,
+    VapCompressDetail
   },
   data() {
     return {

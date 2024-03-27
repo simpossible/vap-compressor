@@ -1,8 +1,12 @@
 import { fi } from "element-plus/es/locale";
 import axios from 'axios';
 
-interface FileNodeDelegate {
+interface FileNodeInterface {
     onNodeInfoLoaded: (node: FileNode) => void;
+}
+
+interface FileNodeCompressInterFace {
+    onNodeCompressInfoUpdated: (node: FileNode) => void;
 }
 
 enum FileNodeType {
@@ -18,10 +22,29 @@ class FileNode {
     fileInfo: any = {};
     delegate: any = null;
     isLoading: boolean = false;
+    compressInfo: any = {};
+    compressDelegates: Array<any> = [];
+    isCompressingLoadding: boolean = false;
+    isCompressing: boolean = false;
     fileType: FileNodeType = FileNodeType.unknow
     constructor(src: string) {
         this.src = src;
     }
+
+    addCompresseDelegate(delegate: any){
+        if (this.compressDelegates.indexOf(delegate) >= 0){
+            return
+        }
+        this.compressDelegates.push(delegate);
+    }
+    deleteCompresseDelegate(delegate: any){
+        var index = this.compressDelegates.indexOf(delegate);
+        if (index >= 0){
+            this.compressDelegates.splice(index, 1);
+        }
+    }
+
+
 
     initialData() {
         if (this.isLoading) {
@@ -31,7 +54,6 @@ class FileNode {
         axios.get('http://127.0.0.1:3000/file?path=' + this.src)
             .then(response => {
                 this.isLoading = false;
-                console.log("return file is",response.data);
                 var responseJson = response.data;
                 var subFiles = responseJson["sub_files"]
                 var tempSubMap = new Map();
@@ -68,6 +90,42 @@ class FileNode {
                 this.isLoading = false;
                 console.log(error);
             });
+    }
+    loadCompressInfo(){
+        // get current compress info
+        if  (this.isCompressingLoadding){
+            return
+        }
+        this.isCompressingLoadding = true
+        axios.get('http://127.0.0.1:3000/compress-info?path=' + this.src).then(response => {
+            this.isCompressingLoadding = false
+            this.compressInfo = response.data;
+            for(let delegate of this.compressDelegates){
+                delegate.onNodeCompressInfoUpdated(this);
+            }
+        }).catch(error => {
+            this.isCompressingLoadding = false
+        })
+    }
+
+    startCompress(){
+        if (this.isCompressing){
+            return
+        }
+        if (this.fileType != FileNodeType.vap){
+            return
+        }
+        if (this.compressInfo.state == 1) {
+            return
+        }
+        this.isCompressing = true
+        axios.get('http://127.0.0.1:3000/start-compress?path=' + this.src).then(response => {
+            this.isCompressing = false
+            this.loadCompressInfo();
+        }).catch(error => {
+            this.isCompressing = false
+        })
+
     }
 }
 

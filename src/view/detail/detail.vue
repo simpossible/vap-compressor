@@ -14,6 +14,11 @@
             </el-descriptions>
         </el-row>
         <el-row>
+            <el-col :span="24">
+            <el-button @click="play" style="margin: 6px 6px 6px 6px;">压缩</el-button>
+            </el-col>
+        </el-row>
+        <el-row>
             <!-- 这个搞个文本区域来显示vapJson的参数,最高显示100px-->
             <el-input type="textarea" :rows="5" :autosize="{ minRows: 5, maxRows: 5 }" :value="vapJson" readonly>
             </el-input>

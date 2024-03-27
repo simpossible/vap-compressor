@@ -4,7 +4,7 @@ const ffprobe = require('ffprobe')
 const ffprobeStatic = require('ffprobe-static')
 const path = require('path')
 
-import {getVapBoxes} from './vap_parser.js'
+import {getVapBoxes, addVapInfoToMp4} from './vap_parser.js'
 // md文件访问在electron完全不行。搞个服务来做吧。
 
 // 压缩信息的字典。存储的是路径和压缩信息的关系
@@ -217,8 +217,7 @@ function compressVideo(inputPath, outputPath) {
 
 
 async function startCompress(req, params, res){
-    
-
+    var filePath = params.get("path")
     var basePath = path.dirname(filePath)
     var basename = path.basename(filePath)
     var tempVapPath = path.join(basePath, ".compress_" + basename + ".mp4")
