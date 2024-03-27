@@ -109,6 +109,7 @@ class FileNode {
     }
 
     startCompress(){
+        console.log("start compress");
         if (this.isCompressing){
             return
         }

@@ -91,7 +91,7 @@ function addVapInfoToMp4(filePath) {
         if (box.boxType == "vapc") {
             return -1, "already vap"
         }
-    }
+    }    
         
     return null
 }

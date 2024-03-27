@@ -203,10 +203,8 @@ function compressVideo(inputPath, outputPath) {
     const ffmpeg = require('fluent-ffmpeg');
     return new Promise((resolve, reject) => {
         ffmpeg(inputPath)
-            .outputOptions('-vf', 'scale=640:-1') // 缩放视频的分辨率
-            .outputOptions('-c:v', 'libx264') // 设置视频编码为libx264
             .outputOptions('-crf', '23') // 设置视频质量，值越小质量越高
-            .outputOptions('-preset', 'superfast') // 设置压缩速度，superfast为最快
+            .outputOptions('-preset', 'fast') // 设置压缩速度，superfast为最快
             .output(outputPath)
             .on('end', resolve)
             .on('error', reject)
@@ -220,7 +218,7 @@ async function startCompress(req, params, res){
     var filePath = params.get("path")
     var basePath = path.dirname(filePath)
     var basename = path.basename(filePath)
-    var tempVapPath = path.join(basePath, ".compress_" + basename + ".mp4")
+    var tempVapPath = path.join(basePath, "__compress_" + basename)
     if (fs.existsSync(tempVapPath)) {
         getCompressInfo(req, params, res)
         return
@@ -236,8 +234,12 @@ async function startCompress(req, params, res){
     }
     // start compress
     
-    compressVideo('input.mp4', 'output.mp4')
-    .then(() => console.log('Compression finished!'))
+    compressVideo(filePath, tempVapPath)
+    .then(() => {
+        console.log('Compression finished!')
+        // var oldVapInfo = getVapInfo(filePath)
+        // addVapInfoToMp4(tempVapPath, compressInfo.vap_info)
+    })
     .catch(console.error);
 }
 

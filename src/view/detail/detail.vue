@@ -111,8 +111,6 @@ export default {
                     console.log('ended')
                 })
                 .on('frame', (frame, timestamp) => {
-                    // frame: 当前帧(从0开始)  timestamp: (播放时间戳)
-                    console.log('frame', frame, timestamp)
                 })
             window.vap = this.vap
         },

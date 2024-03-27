@@ -1,35 +1,20 @@
 <template>  
-<div v-if="compressInfo.state != 2">
-  <!-- 这里显示压缩进度 -->
-  <el-row>
-    <el-button size="large" circle>压缩</el-button>
-  </el-row>
+<div >
+  <!-- 这里显示开始压缩按钮 -->
+  <el-row style="margin-top: 100px;">
+    <el-col :span="8"></el-col>   
+    <el-col :span="8"> <el-button @click="onCompressClicked" circle style="width: 100px;height: 100px;"> 开始压缩 </el-button></el-col>
+    <el-col :span="8"></el-col>
+</el-row>
 </div>
-  <div v-if="compressInfo.state == 2" id="vap_detail_area">
-      <el-row>
-          <!-- 这里是预览区域,区域的高度定为300px -->
-          <div ref="anim" class="vap_anim">
-          </div>
-      </el-row>
-      <el-row>
-          <el-descriptions>
-              <el-descriptions-item label="分辨率">{{ resolution }}</el-descriptions-item>
-              <el-descriptions-item label="文件大小">{{ fileSize }}</el-descriptions-item>
-              <el-descriptions-item label="比特率">{{ bitRate }}</el-descriptions-item>
-              <el-descriptions-item label="时长">{{ duration }}</el-descriptions-item>
-          </el-descriptions>
-      </el-row>
-      <el-row>
-          <el-col :span="24">
-          <el-button @click="play" style="margin: 6px 6px 6px 6px;">压缩</el-button>
-          </el-col>
-      </el-row>
-      <el-row>
-          <!-- 这个搞个文本区域来显示vapJson的参数,最高显示100px-->
-          <el-input type="textarea" :rows="5" :autosize="{ minRows: 5, maxRows: 5 }" :value="vapJson" readonly>
-          </el-input>
-      </el-row>
-  </div>
+<div v-if="compressInfo.state == 1">
+  <!-- 这里显示压缩进度 -->
+</div>
+
+<div v-if="compressInfo.state == 2">
+  <!-- 这里显示播放 -->
+</div>
+
 </template>
 <script>
 import { FileNode } from '../../sdk/file_node';
@@ -47,15 +32,16 @@ export default {
 
   },
   mounted() {
-      
+    this.node.addCompresseDelegate(this)
   },
   unmounted() {   
-       
+    this.node.deleteCompresseDelegate(this)
   },
 
   data() {
       return {
-          compressInfo:{state:0}, //当前的压缩信息
+                    
+          compressInfo:{state:-1}, //当前的压缩信息
           compressNode: null, // 压缩后的文件节点
           fileSize: "",
           resolution: "",
@@ -65,6 +51,14 @@ export default {
       };
   },
   methods: {
+      onCompressClicked(){
+        this.node.startCompress()
+      },
+      onNodeCompressInfoUpdated(node) {
+        if (node.src == this.node.src) {
+            console.log("onNodeCompressInfoUpdated", node);
+        }
+      },
       play() {
           const that = this
           var divWidth = this.$refs.anim.offsetWidth;
