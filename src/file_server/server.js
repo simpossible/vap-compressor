@@ -226,21 +226,49 @@ async function startCompress(req, params, res){
     var compressInfo = {}
     if (compressInfoMap.has(filePath)) {
         compressInfo = compressInfoMap.get(filePath)     
-    }else {
-        compressInfo.state = 1,
-        compressInfo.start_time = new Date().getTime()
-        compressInfo.org_path = filePath        
-        compressInfoMap.set(filePath, compressInfo)
     }
+    if (compressInfo.state == 1) {
+        res.writeHead(200, { 'Content-Type': 'application/json'})
+        res.end(JSON.stringify(compressInfo))
+        return
+    }
+    compressInfo.state = 1,
+    compressInfo.start_time = new Date().getTime()
+    compressInfo.org_path = filePath        
+    compressInfoMap.set(filePath, compressInfo)
     // start compress
     
+    toCompressVideo();
+    res.writeHead(200, { 'Content-Type': 'application/json'})
+    res.end(JSON.stringify(compressInfo))
+}
+
+async function toCompressVideo(inputPath, outputPath) {
     compressVideo(filePath, tempVapPath)
     .then(() => {
         console.log('Compression finished!')
-        // var oldVapInfo = getVapInfo(filePath)
-        // addVapInfoToMp4(tempVapPath, compressInfo.vap_info)
+        if (!compressInfoMap.has(filePath)) {
+            console.log("no compress info");
+            // remove output file
+            fs.unlinkSync(tempVapPath)
+            return
+        }
+        console.log("add vapc info")
+        var compressInfo = compressInfoMap.get(filePath)
+        compressInfo.end_time = new Date().getTime()
+        // add vap info to the mp4 file
+        var oldVapInfo = getVapInfo(filePath)
+        if (vap_info != null) {
+            var code, errorMsg = addVapInfoToMp4(tempVapPath, oldVapInfo)
+            compressInfo.errorCode = code
+            compressInfo.errorMsg = errorMsg
+        }else {
+            compressInfo.errorCode = -1
+            compressInfo.errorMsg = "get vap info error"
+        }
     })
     .catch(console.error);
+
 }
 
 server_map.set("/start-compress", startCompress);

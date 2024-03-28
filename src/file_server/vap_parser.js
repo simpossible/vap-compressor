@@ -84,7 +84,7 @@ export function getVapBoxes(file_path) {
     return allBoxes    
 }
 
-function addVapInfoToMp4(filePath, vapJson) {
+export function addVapInfoToMp4(filePath, vapJson) {
     var allBoxes = getVapBoxes(filePath)
     for (var boxIndex in allBoxes) {
         var box = allBoxes[boxIndex]
@@ -124,5 +124,5 @@ function addVapInfoToMp4(filePath, vapJson) {
     })
 
 
-    return null
+    return 0, ""
 }
