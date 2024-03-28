@@ -84,14 +84,45 @@ export function getVapBoxes(file_path) {
     return allBoxes    
 }
 
-function addVapInfoToMp4(filePath) {
+function addVapInfoToMp4(filePath, vapJson) {
     var allBoxes = getVapBoxes(filePath)
     for (var boxIndex in allBoxes) {
         var box = allBoxes[boxIndex]
         if (box.boxType == "vapc") {
             return -1, "already vap"
         }
-    }    
-        
+    }
+    // add a box ftype=vapc data=vapJson to the mp4 file
+    var vapJsonStr = JSON.stringify(vapJson)
+    var vapJsonBuffer = Buffer.from(vapJsonStr)
+    var vapJsonBufferLen = vapJsonBuffer.length
+    var vapcBoxSize = 8 + vapJsonBufferLen
+    var vapcBoxBuffer = Buffer.alloc(vapcBoxSize)
+    vapcBoxBuffer.write("vapc", 0)
+    vapcBoxBuffer.writeUInt32BE(vapcBoxSize, 4)
+    vapJsonBuffer.copy(vapcBoxBuffer, 8)
+
+    var fileBaseName = path.basename(filePath)
+    var fileDir = path.dirname(filePath)
+    var tempFilePath = path.join(fileDir, "__temp" + fileBaseName)
+    var fd = fs.openSync(tempFilePath, 'w')    
+    var oldFd = fs.openSync(filePath, 'r')
+    var position = 0
+    for (var oldBox of allBoxes) {
+        var oldBoxBuffer = Buffer.alloc(oldBox.size)
+        fs.readSync(oldFd, oldBoxBuffer, {
+            position: oldBox.start,
+            length: oldBox.size
+        })
+        fs.writeSync(fd, oldBoxBuffer, {
+            position: oldBox.start
+        })
+        position = oldBox.start + oldBox.size
+    }
+    fs.writeSync(fd, vapcBoxBuffer, {
+        position: position
+    })
+
+
     return null
 }
