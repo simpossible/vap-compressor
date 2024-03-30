@@ -93,11 +93,13 @@ class FileNode {
     }
     loadCompressInfo(){
         // get current compress info
+        console.log("loadCompressInfo");
         if  (this.isCompressingLoadding){
             return
         }
         this.isCompressingLoadding = true
         axios.get('http://127.0.0.1:3000/compress-info?path=' + this.src).then(response => {
+            console.log("on compress info back", response.data);
             this.isCompressingLoadding = false
             this.compressInfo = response.data;
             for(let delegate of this.compressDelegates){
@@ -121,9 +123,15 @@ class FileNode {
         }
         this.isCompressing = true
         axios.get('http://127.0.0.1:3000/start-compress?path=' + this.src).then(response => {
+            console.log("start compress 1", response.data);
             this.isCompressing = false
             this.loadCompressInfo();
+            this.compressInfo = response.data;
+            for(let delegate of this.compressDelegates){
+                delegate.onNodeCompressInfoUpdated(this);
+            }
         }).catch(error => {
+            console.log("start compress 1", error);
             this.isCompressing = false
         })
 

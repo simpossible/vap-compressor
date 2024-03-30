@@ -9,6 +9,7 @@
 </div>
 <div v-if="compressInfo.state == 1">
   <!-- 这里显示压缩进度 -->
+  {{ progress }}
 </div>
 
 <div v-if="compressInfo.state == 2">
@@ -40,23 +41,45 @@ export default {
 
   data() {
       return {
-                    
           compressInfo:{state:-1}, //当前的压缩信息
+          progress: 0, // 压缩进度
           compressNode: null, // 压缩后的文件节点
           fileSize: "",
           resolution: "",
           vapJson: "",
           bitRate: "",
-          duration: ""
+          duration: "",
+          timer: null
       };
   },
   methods: {
+    checkTimer(){
+        if (this.compressInfo.state == 1) {
+            if (this.timer == null) {
+                this.timer = setInterval(() => {
+                    this.node.loadCompressInfo()
+                }, 1000)
+            }
+        }else {
+            if (this.timer != null) {
+                clearInterval(this.timer)
+                this.timer = null
+            }
+        }
+    },
+    
+
       onCompressClicked(){
         this.node.startCompress()
       },
       onNodeCompressInfoUpdated(node) {
+        console.log('onNodeCompressInfoUpdated', node.compressInfo)
         if (node.src == this.node.src) {
-            console.log("onNodeCompressInfoUpdated", node);
+            this.compressInfo = node.compressInfo;
+            if (this.compressInfo.progress != undefined) {
+                this.progress = this.compressInfo.progress;
+            }
+            this.checkTimer()
         }
       },
       play() {

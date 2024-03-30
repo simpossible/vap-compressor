@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path')
 
 class Mp4Box {    
     constructor(boxType, start, size, content) {
