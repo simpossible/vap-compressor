@@ -1,5 +1,4 @@
-import { compose } from 'element-plus/es/components/table/src/util'
-import { fa } from 'element-plus/es/locale'
+
 
 const fs = require('fs')
 const path = require('path')

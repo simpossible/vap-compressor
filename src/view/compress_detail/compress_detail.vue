@@ -1,4 +1,5 @@
 <template>
+    <div v-if="node != null && node != undefined && node.src != ''">
     <div v-if="compressInfo.state == 0">
         <!-- 这里显示开始压缩按钮 -->
         <el-row style="margin-top: 100px;">
@@ -22,6 +23,7 @@
     <div v-if="compressInfo.state == 2">
         <!-- 这里显示播放 -->
     </div>
+</div>
 
 </template>
 <script>
@@ -39,7 +41,8 @@ export default {
     components: {
 
     },
-    mounted() {
+    mounted() {        
+        console.log("this .node is ", this.node)
         this.node.addCompresseDelegate(this)
     },
     unmounted() {
