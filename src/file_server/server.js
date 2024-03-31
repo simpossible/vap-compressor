@@ -6,7 +6,13 @@ const path = require('path')
 
 import { getVapBoxes, addVapInfoToMp4 } from './vap_parser.js'
 import {CompressState} from './compress_state.js'
+import { exit } from 'process'
 // md文件访问在electron完全不行。搞个服务来做吧。
+
+// var oldVapInfo = getVapInfo("/Users/liangjinfeng/Downloads/aaaa/video.mp4")
+// var new_path = addVapInfoToMp4("/Users/liangjinfeng/Downloads/aaaa/test.mp4", oldVapInfo)
+// var all_new_boxes = getVapBoxes(new_path)
+// exit(0)
 
 // 压缩信息的字典。存储的是路径和压缩信息的关系
 var compressInfoMap = new Map()
@@ -19,6 +25,7 @@ function getVapInfo(filePath) {
         var box = allBoxes[boxIndex]
         if (box.boxType == "vapc") {
             var vapJson = box.content
+            console.log("vapJson is", vapJson)
             return JSON.parse(vapJson)
         }
     }

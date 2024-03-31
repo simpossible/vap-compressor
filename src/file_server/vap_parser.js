@@ -1,3 +1,6 @@
+import { compose } from 'element-plus/es/components/table/src/util'
+import { fa } from 'element-plus/es/locale'
+
 const fs = require('fs')
 const path = require('path')
 
@@ -86,6 +89,7 @@ export function getVapBoxes(file_path) {
 }
 
 export function addVapInfoToMp4(filePath, vapJson) {
+    console.log("vap json is ", vapJson)
     var allBoxes = getVapBoxes(filePath)
     for (var boxIndex in allBoxes) {
         var box = allBoxes[boxIndex]
@@ -98,9 +102,10 @@ export function addVapInfoToMp4(filePath, vapJson) {
     var vapJsonBuffer = Buffer.from(vapJsonStr)
     var vapJsonBufferLen = vapJsonBuffer.length
     var vapcBoxSize = 8 + vapJsonBufferLen
+    console.log("ready len is ", vapcBoxSize)
     var vapcBoxBuffer = Buffer.alloc(vapcBoxSize)
-    vapcBoxBuffer.write("vapc", 0)
-    vapcBoxBuffer.writeUInt32BE(vapcBoxSize, 4)
+    vapcBoxBuffer.writeUInt32BE(vapcBoxSize, 0)
+    vapcBoxBuffer.write("vapc", 4)    
     vapJsonBuffer.copy(vapcBoxBuffer, 8)
 
     var fileBaseName = path.basename(filePath)
@@ -122,8 +127,27 @@ export function addVapInfoToMp4(filePath, vapJson) {
     }
     fs.writeSync(fd, vapcBoxBuffer, {
         position: position
-    })
+    });
 
-
+    let newAllBox = getVapBoxes(tempFilePath);
+    var boxOk = false;
+    for (var boxIndex in newAllBox) {
+        var box = newAllBox[boxIndex];
+        if (box.boxType == "vapc") {
+            boxOk = true
+            break
+        }
+    }
+    fs.closeSync(fd);
+    fs.closeSync(oldFd);
+    if (boxOk === true) {
+        //cover filePath with tempFilePath       
+        fs.unlinkSync(filePath)
+        fs.renameSync(tempFilePath, filePath)  
+        return 0, ""
+    }else {
+        fs.unlinkSync(tempFilePath)
+        return -2, "add vapc failed"
+    }
     return 0, ""
 }
