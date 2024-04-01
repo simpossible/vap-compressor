@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { UrlPathQuitCompress, UrlPathStartCompress, UrlPathVapInfo, vapUrlForKey  } from './url_config';
+import { UrlPathAcceptCompress, UrlPathQuitCompress, UrlPathStartCompress, UrlPathVapInfo, vapUrlForKey  } from './url_config';
 import { UrlPathFile, UrlPathCompressInfo } from './url_config';
 
 interface FileNodeInterface {
@@ -174,7 +174,7 @@ class FileNode {
             return
         }
         this.isQuitCompressing = true
-        axios.get(vapUrlForKey(UrlPathQuitCompress, {path: this.src})).then(response => {
+        axios.get(vapUrlForKey(UrlPathAcceptCompress, {path: this.src})).then(response => {
             this.isAcceptCompressing = false
             if (cb != null && cb != undefined){
                 cb(0, "");

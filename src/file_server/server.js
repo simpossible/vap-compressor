@@ -415,8 +415,8 @@ async function quitCompress(req, params, res) {
         res.end()    
         return 
     }    
-    if (compressInfoMap.has(orgVapPath)) {
-        compressInfoMap.delete(orgVapPath)
+    if (compressInfoMap.has(filePath)) {
+        compressInfoMap.delete(filePath)
     }
     res.writeHead(200, { 'Content-Type': 'text/plain' })
     res.end('')
