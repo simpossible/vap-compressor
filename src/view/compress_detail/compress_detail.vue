@@ -29,21 +29,24 @@
                 </div>
             </el-row>
             <el-row>
-                <el-descriptions>
-                    <el-descriptions-item label="分辨率">{{ resolution }}</el-descriptions-item>
-                    <el-descriptions-item label="文件大小">{{ fileSize }}</el-descriptions-item>
-                    <el-descriptions-item label="比特率">{{ bitRate }}</el-descriptions-item>
-                    <el-descriptions-item label="时长">{{ duration }}</el-descriptions-item>
-                </el-descriptions>
+                <el-table :data="tableData">
+                    <el-table-column prop="resolution" label="分辨率"></el-table-column>
+                    <el-table-column prop="fileSize" label="文件大小"></el-table-column>
+                    <el-table-column prop="bitRate" label="比特率"></el-table-column>
+                    <el-table-column prop="duration" label="时长"></el-table-column>
+                </el-table>
             </el-row>
-            <el-row>
+            <el-row style="margin-top: 8px;">
                 <!-- 这个搞个文本区域来显示vapJson的参数,最高显示100px-->                
-                <el-col :span="12" style="padding: 12px 0 12px 0;">
+                <el-col :span="4"></el-col>
+                <el-col :span="7">
                     <el-button @click="quitCompress">放弃</el-button>
                 </el-col>
-                <el-col :span="12" style="padding: 12px 0 12px 0;">
+                <el-col :span="2"></el-col>
+                <el-col :span="7">
                     <el-button @click="acceptCompress">使用</el-button>
                 </el-col>
+                <el-col :span="4"></el-col>
             </el-row>
         </div>
     </div>
@@ -98,7 +101,8 @@ export default {
             compressNode: null,
             vap: null,
             fileUrl: "",
-            vapJsonUrl: ""
+            vapJsonUrl: "",
+            tableData:[]
         };
     },
     methods: {
@@ -143,6 +147,12 @@ export default {
                 this.bitRate = this.compressNode.fileInfo.video_info.bit_rate
                 this.fileUrl = vapUrlForKey(UrlPathDownload, {path: this.compressNode.src});
                 this.vapJsonUrl = vapUrlForKey(UrlPathVapJson, {path: this.compressNode.src});
+                this.tableData = [{
+                    resolution: this.resolution,
+                    fileSize: this.fileSize,
+                    bitRate: this.bitRate,
+                    duration: this.duration                
+                }]
                 this.checkVapPlay()
             }
         },
@@ -189,10 +199,8 @@ export default {
                 // 播放起始时间点(秒)
             }, { type: 1 }))
                 .on('playing', () => {
-                    console.log('playing')
                 })
                 .on('ended', () => {
-                    console.log('ended')
                 })
                 .on('frame', (frame, timestamp) => {
                     // frame: 当前帧(从0开始)  timestamp: (播放时间戳)

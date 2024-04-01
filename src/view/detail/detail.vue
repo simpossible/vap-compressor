@@ -5,13 +5,13 @@
             <div ref="anim" class="vap_anim">
             </div>
         </el-row>
-        <el-row>
-            <el-descriptions>
-                <el-descriptions-item label="分辨率">{{ resolution }}</el-descriptions-item>
-                <el-descriptions-item label="文件大小">{{ fileSize }}</el-descriptions-item>
-                <el-descriptions-item label="比特率">{{ bitRate }}</el-descriptions-item>
-                <el-descriptions-item label="时长">{{ duration }}</el-descriptions-item>
-            </el-descriptions>
+        <el-row>          
+            <el-table :data="tableData">
+                    <el-table-column prop="resolution" label="分辨率"></el-table-column>
+                    <el-table-column prop="fileSize" label="文件大小"></el-table-column>
+                    <el-table-column prop="bitRate" label="比特率"></el-table-column>
+                    <el-table-column prop="duration" label="时长"></el-table-column>
+                </el-table>
         </el-row>
         <el-row>
             <!-- 这个搞个文本区域来显示vapJson的参数,最高显示100px-->
@@ -57,7 +57,8 @@ export default {
             resolution: "",
             vapJson: "",
             bitRate: "",
-            duration: ""
+            duration: "",
+            tableData:[]
         };
     },
     methods: {
@@ -84,6 +85,12 @@ export default {
             this.bitRate = this.node.fileInfo.video_info.bit_rate
             this.fileUrl = vapUrlForKey(UrlPathDownload, {path: this.node.src});
             this.vapJsonUrl = vapUrlForKey(UrlPathVapJson, {path: this.node.src});
+            this.tableData = [{
+                resolution: this.resolution,
+                fileSize: this.fileSize,
+                bitRate: this.bitRate,
+                duration: this.duration                
+            }]
         },
         play() {
             const that = this
