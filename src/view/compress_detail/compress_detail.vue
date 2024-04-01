@@ -9,6 +9,29 @@
                     </el-button></el-col>
                 <el-col :span="8"></el-col>
             </el-row>
+            <!-- 加一个压缩质量的可选进度条 -->
+            <el-row style="background-color: antiquewhite;">
+                <el-col :span="1"></el-col>
+                <el-col :span="5" style="margin-top: 5px;"><el-text class="mx-1">压缩质量</el-text></el-col>
+                <el-col :span="14">
+                    <el-slider v-model="compressQualityValue" :step="1" :max="102" :format-tooltip="qualityTip"
+                        @change="onCompressQualityChange" />
+                </el-col>
+                <el-col :span="3" style="margin-top: 5px;padding-left: 6px;"> <el-text class="mx-1"
+                        size="small">{{ compressQualityPercentage }}</el-text> </el-col>
+            </el-row>
+           <!-- 加一个压缩速度的可选进度条 -->
+           <el-row style="background-color:brown;">
+                <el-col :span="1"></el-col>
+                <el-col :span="5" style="margin-top: 5px;"><el-text class="mx-1">压缩速度</el-text></el-col>
+                <el-col :span="14">
+                    <el-slider v-model="compressSpeedValue" :step="1" :max="compressSpeedMaxValue" :format-tooltip="speedQualityTip"
+                        @change="onCompressSpeedQualityChange" />
+                </el-col>
+                <el-col :span="3" style="margin-top: 5px;padding-left: 6px;"> <el-text class="mx-1"
+                        size="small">{{ compressSpeedTip }}</el-text> </el-col>
+            </el-row>            
+
         </div>
         <div v-if="compressInfo.state == 1">
             <!-- 这里显示压缩进度 -->
@@ -37,7 +60,7 @@
                 </el-table>
             </el-row>
             <el-row style="margin-top: 8px;">
-                <!-- 这个搞个文本区域来显示vapJson的参数,最高显示100px-->                
+                <!-- 这个搞个文本区域来显示vapJson的参数,最高显示100px-->
                 <el-col :span="4"></el-col>
                 <el-col :span="7">
                     <el-button @click="quitCompress">放弃</el-button>
@@ -56,6 +79,7 @@
 import { FileNode } from '../../sdk/file_node';
 import Vap from 'video-animation-player';
 import { vapUrlForKey, UrlPathDownload, UrlPathVapJson } from '../../sdk/url_config';
+import {CompressSpeedOptions, compressSpeedOptionDisplayName } from '../../sdk/compress_params'; 
 
 export default {
     name: 'VapCompressDetail',
@@ -74,7 +98,8 @@ export default {
         this.compressInfo = this.node.compressInfo
         if (this.node.src != '') {
             this.node.loadCompressInfo()
-        }
+            this.onCompressSpeedQualityChange()
+        }        
     },
     unmounted() {
         this.node.deleteCompresseDelegate(this)
@@ -83,6 +108,11 @@ export default {
     data() {
         return {
             compressInfo: { state: 0 }, //当前的压缩信息
+            compressQualityValue: 46, // 压缩质量
+            compressQualityPercentage: '45%',
+            compressSpeedValue: 4,
+            compressSpeedMaxValue: CompressSpeedOptions.length - 1,
+            compressSpeedTip: '',
             progress: 0, // 压缩进度
             compressNode: null, // 压缩后的文件节点
             fileSize: "",
@@ -102,7 +132,7 @@ export default {
             vap: null,
             fileUrl: "",
             vapJsonUrl: "",
-            tableData:[]
+            tableData: []
         };
     },
     methods: {
@@ -145,15 +175,16 @@ export default {
                 this.vapJson = JSON.stringify(this.compressNode.fileInfo.vap_info, null, 0)
                 this.duration = this.formatTime(this.compressNode.fileInfo.video_info.duration_ts)
                 this.bitRate = this.compressNode.fileInfo.video_info.bit_rate
-                this.fileUrl = vapUrlForKey(UrlPathDownload, {path: this.compressNode.src});
-                this.vapJsonUrl = vapUrlForKey(UrlPathVapJson, {path: this.compressNode.src});
+                this.fileUrl = vapUrlForKey(UrlPathDownload, { path: this.compressNode.src });
+                this.vapJsonUrl = vapUrlForKey(UrlPathVapJson, { path: this.compressNode.src });
                 this.tableData = [{
                     resolution: this.resolution,
                     fileSize: this.fileSize,
                     bitRate: this.bitRate,
-                    duration: this.duration                
+                    duration: this.duration
                 }]
                 this.checkVapPlay()
+                this.onCompressQualityChange()
             }
         },
         onNodeCompressInfoUpdated(node) {
@@ -213,8 +244,8 @@ export default {
             }
         },
         playContinue() {
-            if (this.vap != null) { 
-            this.vap.play()
+            if (this.vap != null) {
+                this.vap.play()
             }
         },
         formatBytes(bytes) {
@@ -250,6 +281,21 @@ export default {
         },
         acceptCompress() {
             this.node.acceptCompress()
+        },
+        qualityTip(number) {
+            return (number * 100 / 102).toFixed(2) + "%";
+        },
+        onCompressQualityChange() {
+            this.compressQualityPercentage = (this.compressQualityValue * 100 / 102).toFixed(2) + "%";
+        },
+        speedQualityTip(number){
+            var value = CompressSpeedOptions[number];
+            return compressSpeedOptionDisplayName(value);
+        },
+        onCompressSpeedQualityChange(){
+            console.log("????")
+            var value = CompressSpeedOptions[this.compressSpeedValue];
+            this.compressSpeedTip = compressSpeedOptionDisplayName(value);
         }
     }
 
