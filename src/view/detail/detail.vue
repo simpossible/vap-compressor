@@ -38,33 +38,16 @@ export default {
     },
     mounted() {
         if (this.node != null & this.node != undefined & this.node.src.length > 0) {
-            console.log('the detail area mounted', this.node)
-            // filesize to xx MB
-            //              file_info: {
-            //     size: 905250,
-            //     video_info: {
-            //     codec_name: 'h264',
-            //     width: 1136,
-            //     height: 1632,
-            //     duration_ts: '1.520000',
-            //     bit_rate: '4708400'
-            //     },
-            //     vap_info: { info: [Object], src: [Array], frame: [Array] }
-            // },
-            var fileSizeBytes = this.node.fileInfo.size;
-            this.fileSize = this.formatBytes(fileSizeBytes)
-            this.resolution = this.node.fileInfo.video_info.width + "x" + this.node.fileInfo.video_info.height
-            this.vapJson = JSON.stringify(this.node.fileInfo.vap_info, null, 0)
-            this.duration = this.formatTime(this.node.fileInfo.video_info.duration_ts)
-            this.bitRate = this.node.fileInfo.video_info.bit_rate
-            this.fileUrl = vapUrlForKey(UrlPathDownload, {path: this.node.src});
-            this.vapJsonUrl = vapUrlForKey(UrlPathVapJson, {path: this.node.src});
+            this.node.addDelegates(this)   
+            this.refreshInfo()            
             this.play()
         }
     },
     unmounted() {
+        this.node.deleteDelegates(this)
         if (this.vap != null) {
             this.vap.pause()
+            this.vap = null
         }        
     },
 
@@ -78,6 +61,30 @@ export default {
         };
     },
     methods: {
+        onNodeInfoLoaded(node){
+            if (node == this.node) {
+                var shouldRefreshPlay = false
+                if (this.fileSize != this.formatBytes(node.fileInfo.size)) {
+                    this.fileSize = this.formatBytes(node.fileInfo.size)
+                    shouldRefreshPlay = true
+                }
+                this.refreshInfo()
+                if (shouldRefreshPlay) {
+                    this.stop()
+                    this.play()
+                }
+            }
+        },
+        refreshInfo(){
+            var fileSizeBytes = this.node.fileInfo.size;
+            this.fileSize = this.formatBytes(fileSizeBytes)
+            this.resolution = this.node.fileInfo.video_info.width + "x" + this.node.fileInfo.video_info.height
+            this.vapJson = JSON.stringify(this.node.fileInfo.vap_info, null, 0)
+            this.duration = this.formatTime(this.node.fileInfo.video_info.duration_ts)
+            this.bitRate = this.node.fileInfo.video_info.bit_rate
+            this.fileUrl = vapUrlForKey(UrlPathDownload, {path: this.node.src});
+            this.vapJsonUrl = vapUrlForKey(UrlPathVapJson, {path: this.node.src});
+        },
         play() {
             const that = this
             var divWidth = this.$refs.anim.offsetWidth;
@@ -112,6 +119,12 @@ export default {
         },
         pause() {
             this.vap.pause()
+        },
+        stop() {
+            if(this.vap != null){
+                this.vap.stop()
+                this.vap = null;
+            }
         },
         playContinue() {
             this.vap.play()

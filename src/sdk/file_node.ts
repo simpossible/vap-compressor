@@ -31,6 +31,7 @@ class FileNode {
     isQuitCompressing: boolean = false;
     isAcceptCompressing: boolean = false;
     isOutputNode: boolean = false; // 是否是输出节点的node    
+    delegates: Array<FileNodeInterface> = [];    
     constructor(src: string) {
         this.src = src;
     }
@@ -48,6 +49,18 @@ class FileNode {
         }
     }
 
+    addDelegates(delegate: FileNodeInterface){
+        if (this.delegates.indexOf(delegate) >= 0){
+            return
+        }
+        this.delegates.push(delegate);
+    }
+    deleteDelegates(delegate: FileNodeInterface){
+        var index = this.delegates.indexOf(delegate);
+        if (index >= 0){
+            this.delegates.splice(index, 1);
+        }
+    }
 
 
     initialData() {
@@ -94,6 +107,9 @@ class FileNode {
                 this.subNodesMap = tempSubMap;
                 if (this.delegate !== null) {
                     this.delegate.onNodeInfoLoaded(this);
+                }
+                for(let delegate of this.delegates){
+                    delegate.onNodeInfoLoaded(this);
                 }
             })
             .catch(error => {
@@ -179,7 +195,8 @@ class FileNode {
             if (cb != null && cb != undefined){
                 cb(0, "");
             }
-            this.loadCompressInfo();            
+            this.loadCompressInfo(); 
+            this.initialData();           
         }).catch(error => {
             this.isAcceptCompressing = false
             if (cb != null && cb != undefined){
