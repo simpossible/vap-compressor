@@ -9,10 +9,6 @@ import {CompressState} from './compress_state.js'
 import { exit } from 'process'
 // md文件访问在electron完全不行。搞个服务来做吧。
 
-// var oldVapInfo = getVapInfo("/Users/liangjinfeng/Downloads/aaaa/video.mp4")
-// var new_path = addVapInfoToMp4("/Users/liangjinfeng/Downloads/aaaa/test.mp4", oldVapInfo)
-// var all_new_boxes = getVapBoxes(new_path)
-// exit(0)
 
 // 压缩信息的字典。存储的是路径和压缩信息的关系
 var compressInfoMap = new Map()
@@ -184,10 +180,25 @@ async function getCompressInfo(req, params, res) {
     if (compressInfoMap.has(filePath)) {
         compressInfo = compressInfoMap.get(filePath)
     }else {
-        compressInfo = {
-            state: CompressState.none,
-            org_path: filePath
+        var tempVapPath = tempVapPathFrom(filePath)
+        if (fs.existsSync(tempVapPath)) {
+            var tempVapInfo = getVapInfo(tempVapPath)
+            if (tempVapInfo == null) {
+                // have temp file but not vap
+                compressInfo = {
+                    state: CompressState.none,
+                    org_path: filePath
+                }
+            }else {
+                compressInfo = {
+                    state: CompressState.done,
+                    org_path: filePath,
+                    outputPath: tempVapPath                    
+                }
+                compressInfoMap[filePath] = compressInfo
+            }
         }
+        
     }
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify(compressInfo))

@@ -22,6 +22,8 @@
 
     <div v-if="compressInfo.state == 2">
         <!-- 这里显示播放 -->
+        <el-button>放弃</el-button>
+        <el-button>保留</el-button>
     </div>
 </div>
 
@@ -44,6 +46,8 @@ export default {
     mounted() {        
         console.log("this .node is ", this.node)
         this.node.addCompresseDelegate(this)
+        this.compressInfo = this.node.compressInfo
+        this.node.loadCompressInfo()
     },
     unmounted() {
         this.node.deleteCompresseDelegate(this)
@@ -67,6 +71,7 @@ export default {
                 { color: '#1989fa', percentage: 80 },
                 { color: '#6f7ad3', percentage: 100 },
             ],
+            compressNode: null
         };
     },
     methods: {
@@ -89,12 +94,29 @@ export default {
         onCompressClicked() {
             this.node.startCompress()
         },
+        onNodeInfoLoaded(node) {
+            if (node == this.compressNode) {
+                this.fileSize = this.formatBytes(this.compressNode.fileInfo.size)
+                this.resolution = this.compressNode.fileInfo.resolution
+                this.vapJson = JSON.stringify(this.compressNode.fileInfo.vap_info)
+                this.bitRate = this.compressNode.fileInfo.bitRate
+                this.duration = this.formatTime(this.compressNode.fileInfo.duration)
+            }
+        },
         onNodeCompressInfoUpdated(node) {
             console.log('onNodeCompressInfoUpdated', node.compressInfo)
             if (node.src == this.node.src) {
                 this.compressInfo = node.compressInfo;
                 if (this.compressInfo.progress != undefined) {
                     this.progress = parseFloat(this.compressInfo.progress).toFixed(2);
+                }
+                if (this.compressInfo.state == 2) {
+                  var targetFile = this.compressInfo.outputPath
+                  if (this.compressNode == null) {
+                    this.compressNode = new FileNode(targetFile)
+                    this.compressNode.delegate = this
+                    this.compressNode.initialData()
+                  }
                 }
                 this.checkTimer()
             }
