@@ -23,6 +23,7 @@
 <script>
 import { FileNode } from '../../sdk/file_node';
 import Vap from 'video-animation-player';
+import { vapUrlForKey, UrlPathDownload, UrlPathVapJson } from '../../sdk/url_config';
 
 export default {
     name: 'VapDetail',
@@ -56,8 +57,8 @@ export default {
             this.vapJson = JSON.stringify(this.node.fileInfo.vap_info, null, 0)
             this.duration = this.formatTime(this.node.fileInfo.video_info.duration_ts)
             this.bitRate = this.node.fileInfo.video_info.bit_rate
-            this.fileUrl = "http://127.0.0.1:3000/download?path=" + this.node.src
-            this.vapJsonUrl = "http://127.0.0.1:3000/vap-json?vap-path=" + this.node.src
+            this.fileUrl = vapUrlForKey(UrlPathDownload, {path: this.node.src});
+            this.vapJsonUrl = vapUrlForKey(UrlPathVapJson, {path: this.node.src});
             this.play()
         }
     },

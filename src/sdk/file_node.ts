@@ -1,5 +1,6 @@
-import { fi } from "element-plus/es/locale";
 import axios from 'axios';
+import { UrlPathQuitCompress, UrlPathStartCompress, UrlPathVapInfo, vapUrlForKey  } from './url_config';
+import { UrlPathFile, UrlPathCompressInfo } from './url_config';
 
 interface FileNodeInterface {
     onNodeInfoLoaded: (node: FileNode) => void;
@@ -26,7 +27,10 @@ class FileNode {
     compressDelegates: Array<any> = [];
     isCompressingLoadding: boolean = false;
     isCompressing: boolean = false;
-    fileType: FileNodeType = FileNodeType.unknow
+    fileType: FileNodeType = FileNodeType.unknow;
+    isQuitCompressing: boolean = false;
+    isAcceptCompressing: boolean = false;
+    isOutputNode: boolean = false; // 是否是输出节点的node    
     constructor(src: string) {
         this.src = src;
     }
@@ -51,7 +55,13 @@ class FileNode {
             return
         }
         this.isLoading = true;
-        axios.get('http://127.0.0.1:3000/file?path=' + this.src)
+        var fileUrl = ""
+        if (this.isOutputNode) {
+            fileUrl = vapUrlForKey(UrlPathVapInfo, {path: this.src, output: 1})
+        }else {
+            var fileUrl = vapUrlForKey(UrlPathFile, {path: this.src})
+        }        
+        axios.get(fileUrl)
             .then(response => {
                 this.isLoading = false;
                 var responseJson = response.data;
@@ -90,7 +100,8 @@ class FileNode {
                 this.isLoading = false;
                 console.log(error);
             });
-    }
+    }        
+
     loadCompressInfo(){
         // get current compress info
         console.log("loadCompressInfo");
@@ -98,7 +109,7 @@ class FileNode {
             return
         }
         this.isCompressingLoadding = true
-        axios.get('http://127.0.0.1:3000/compress-info?path=' + this.src).then(response => {
+        axios.get(vapUrlForKey(UrlPathCompressInfo, {path: this.src})).then(response => {
             console.log("on compress info back", response.data);
             this.isCompressingLoadding = false
             this.compressInfo = response.data;
@@ -122,7 +133,7 @@ class FileNode {
             return
         }
         this.isCompressing = true
-        axios.get('http://127.0.0.1:3000/start-compress?path=' + this.src).then(response => {
+        axios.get(vapUrlForKey(UrlPathStartCompress, {path: this.src})).then(response => {
             console.log("start compress 1", response.data);
             this.isCompressing = false
             this.loadCompressInfo();
@@ -134,7 +145,47 @@ class FileNode {
             console.log("start compress 1", error);
             this.isCompressing = false
         })
+    }
 
+    quitCompress(cb: Function){
+        console.log("to quit compress");
+        if (this.isQuitCompressing){
+            cb(-1, "操作正在进行中");
+            return
+        }
+        this.isQuitCompressing = true
+        axios.get(vapUrlForKey(UrlPathQuitCompress, {path: this.src})).then(response => {
+            this.isQuitCompressing = false
+            if (cb != null && cb != undefined){
+                cb(0, "");
+            }
+            this.loadCompressInfo();            
+        }).catch(error => {
+            this.isQuitCompressing = false
+            if (cb != null && cb != undefined){
+            cb(-1, "操作失败: " + error);
+        }
+        })
+    }
+    acceptCompress(cb: Function){
+        console.log("to accept compress");
+        if (this.isAcceptCompressing ){
+            cb(-1, "操作正在进行中");
+            return
+        }
+        this.isQuitCompressing = true
+        axios.get(vapUrlForKey(UrlPathQuitCompress, {path: this.src})).then(response => {
+            this.isAcceptCompressing = false
+            if (cb != null && cb != undefined){
+                cb(0, "");
+            }
+            this.loadCompressInfo();            
+        }).catch(error => {
+            this.isAcceptCompressing = false
+            if (cb != null && cb != undefined){
+            cb(-1, "操作失败: " + error);
+        }
+        })
     }
 }
 

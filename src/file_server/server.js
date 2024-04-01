@@ -9,11 +9,21 @@ import {CompressState} from './compress_state.js'
 import { exit } from 'process'
 // md文件访问在electron完全不行。搞个服务来做吧。
 
+var codeOk = 666
+
 
 // 压缩信息的字典。存储的是路径和压缩信息的关系
 var compressInfoMap = new Map()
 
 var server_map = new Map()
+
+function isFileInnerPath(fileName) {
+    // 是否是临时文件
+    if (fileName.startsWith("__compress_")) {
+        return true
+    }
+    return false
+}
 
 function getVapInfo(filePath) {
     var allBoxes = getVapBoxes(filePath)
@@ -21,7 +31,6 @@ function getVapInfo(filePath) {
         var box = allBoxes[boxIndex]
         if (box.boxType == "vapc") {
             var vapJson = box.content
-            console.log("vapJson is", vapJson)
             return JSON.parse(vapJson)
         }
     }
@@ -85,6 +94,9 @@ async function onFileRequest(req, params, res) {
         var absuluteSubFiles = []
         for (var subFileIndex in subFiles) {
             var subFile = subFiles[subFileIndex]
+            if (isFileInnerPath(subFile)) {
+                continue
+            }
             var subFilePath = path.join(filePath, subFile);
             // only keed the mp4 or dir
             if (subFile.endsWith(".mp4") || fs.statSync(subFilePath).isDirectory()) {
@@ -115,6 +127,104 @@ async function onFileRequest(req, params, res) {
 }
 
 server_map.set("/file", onFileRequest);
+
+async function vapInfo(req, params, res) {
+    // get vap info avoid complex logic copy up function
+    var filePath = params.get("path")
+    console.log("get file info at path:", filePath);
+    var fileExist = fs.existsSync(filePath);
+    var result = {}
+    if (!fileExist) {
+        console.log("file not exist")
+        result = {
+            "code": -1,
+            "msg": "file not exist",
+            "file_info": {},
+            "is_dir": false,
+            "is_vap": false
+        }
+        res.writeHead(200, { 'Content-Type': 'application/jsonn' })
+        res.end(JSON.stringify(result))
+        return
+    }
+    var fileStat = fs.statSync(filePath)
+    var isDir = fileStat.isDirectory()
+    var isVap = false
+    var file_info = {}
+    if (isDir) {
+        console.log("file info failed by dir")
+        result = {
+            "code": -1,
+            "msg": "is a dir",
+            "file_info": {},
+            "is_dir": true,
+            "is_vap": false
+        }
+        res.writeHead(200, { 'Content-Type': 'application/jsonn' })
+        res.end(JSON.stringify(result))
+        return
+    }
+
+    file_info["size"] = fileStat.size;
+    result["sub_files"] = []
+    // is mp4
+    if (!filePath.endsWith(".mp4")) {
+        console.log("file info failed by not mp4")
+        result = {
+            "code": -1,
+            "msg": "not a mp4",
+            "file_info": {},
+            "is_dir": false,
+            "is_vap": false
+        }
+        res.writeHead(200, { 'Content-Type': 'application/jsonn' })
+        res.end(JSON.stringify(result))
+        return
+    }
+    var vapJson = getVapInfo(filePath);
+    if (vapJson == null) {
+        console.log("file info failed by no vap")
+        result = {
+            "code": -1,
+            "msg": "no vap info",
+            "file_info": {},
+            "is_dir": false,
+            "is_vap": false
+        }
+        res.writeHead(200, { 'Content-Type': 'application/jsonn' })
+        res.end(JSON.stringify(result))
+        return
+    }
+    const fileMetaData = await ffprobe(filePath, { path: ffprobeStatic.path })
+    if (fileMetaData.streams.length > 0) {
+        for (var info in fileMetaData.streams) {
+            var stream = fileMetaData.streams[info]
+            if (stream.codec_type == "video") {
+                file_info["video_info"] = {
+                    "codec_name": stream.codec_name,
+                    "width": stream.width,
+                    "height": stream.height,
+                    "duration_ts": stream.duration,
+                    "bit_rate": stream.bit_rate,
+                }
+                break;
+            }
+        }
+        isVap = true
+        file_info["vap_info"] = vapJson
+    }
+    result["code"] = 0
+    result["msg"] = ""
+    result["file_info"] = file_info
+    result["is_dir"] = isDir
+    result["is_vap"] = isVap
+    console.log("result:", result)
+    res.writeHead(200, { 'Content-Type': 'application/jsonn' })
+    res.end(JSON.stringify(result))
+}
+
+server_map.set("/vap-info", vapInfo);
+
 
 
 async function downloadFile(req, params, res) {
@@ -196,6 +306,10 @@ async function getCompressInfo(req, params, res) {
                     outputPath: tempVapPath                    
                 }
                 compressInfoMap[filePath] = compressInfo
+            }
+        }else {
+            compressInfo = {
+                state: 0,
             }
         }
         
@@ -291,7 +405,47 @@ async function toCompressVideo(inputPath, outputPath) {
 server_map.set("/start-compress", startCompress);
 
 
+async function quitCompress(req, params, res) {
+    var filePath = params.get("path")
+    var tempVapPath = tempVapPathFrom(filePath)
+    if (fs.existsSync(tempVapPath)) {
+        // 404
+        fs.unlinkSync(tempVapPath) 
+        res.writeHead(200, { 'Content-Type': 'text/plain' })
+        res.end()    
+        return 
+    }    
+    if (compressInfoMap.has(orgVapPath)) {
+        compressInfoMap.delete(orgVapPath)
+    }
+    res.writeHead(200, { 'Content-Type': 'text/plain' })
+    res.end('')
+}
 
+server_map.set("/quit-compress", quitCompress);
+
+
+async function acceptCompress(req, params, res) {
+    var filePath = params.get("path")
+    var tempVapPath = tempVapPathFrom(filePath)
+    if (!fs.existsSync(tempVapPath)) {
+        // 404
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end('404 Not Found');
+        return
+    }
+    var orgVapPath = filePath
+    if (fs.existsSync(orgVapPath)) {
+        fs.unlinkSync(orgVapPath)
+    }
+    fs.renameSync(tempVapPath, orgVapPath)
+    if (compressInfoMap.has(orgVapPath)) {
+        compressInfoMap.delete(orgVapPath)
+    }
+    res.writeHead(200, { 'Content-Type': 'text/plain' })
+    res.end('')
+}
+server_map.set("/accept-compress", acceptCompress);
 
 const server = http.createServer((req, res) => {
 
