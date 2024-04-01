@@ -37,16 +37,12 @@
                 </el-descriptions>
             </el-row>
             <el-row>
-                <!-- 这个搞个文本区域来显示vapJson的参数,最高显示100px-->
-                <el-col>
-                </el-col>
-                <el-col>
+                <!-- 这个搞个文本区域来显示vapJson的参数,最高显示100px-->                
+                <el-col :span="12" style="padding: 12px 0 12px 0;">
                     <el-button @click="quitCompress">放弃</el-button>
                 </el-col>
-                <el-col>
+                <el-col :span="12" style="padding: 12px 0 12px 0;">
                     <el-button @click="acceptCompress">使用</el-button>
-                </el-col>
-                <el-col>
                 </el-col>
             </el-row>
         </div>

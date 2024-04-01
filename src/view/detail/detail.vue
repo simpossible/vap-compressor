@@ -108,10 +108,9 @@ export default {
                 // 播放起始时间点(秒)
             },  { type: 1 }))
                 .on('playing', () => {
-                    console.log('playing')
+
                 })
                 .on('ended', () => {
-                    console.log('ended')
                 })
                 .on('frame', (frame, timestamp) => {
                 })
