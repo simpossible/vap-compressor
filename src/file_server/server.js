@@ -321,12 +321,13 @@ server_map.set("/compress-info", getCompressInfo);
 
 
 
-function compressVideo(inputPath, outputPath) {
+function compressVideo(inputPath, outputPath, speed, quality) {
+    console.log("real compress with params spped:", speed, "quality:", quality);
     const ffmpeg = require('fluent-ffmpeg');
     return new Promise((resolve, reject) => {
         const command = ffmpeg(inputPath)
-            .outputOptions('-crf', '23') // 设置视频质量，值越小质量越高
-            .outputOptions('-preset', 'fast') // 设置压缩速度，superfast为最快
+            .outputOptions('-crf', quality) // 设置视频质量，值越小质量越高
+            .outputOptions('-preset', speed) // 设置压缩速度，superfast为最快
             .output(outputPath)
             .on('end', resolve)
             .on('error', reject)
@@ -346,6 +347,8 @@ function compressVideo(inputPath, outputPath) {
 
 async function startCompress(req, params, res) {
     var filePath = params.get("path")
+    var speed = params.get("speed")
+    var quality = params.get("quality")
     var tempVapPath = tempVapPathFrom(filePath)
     if (fs.existsSync(tempVapPath)) {
         getCompressInfo(req, params, res)
@@ -366,13 +369,13 @@ async function startCompress(req, params, res) {
     compressInfoMap.set(filePath, compressInfo)
     // start compress
 
-    toCompressVideo(filePath, tempVapPath);
+    toCompressVideo(filePath, tempVapPath, speed, quality);
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify(compressInfo))
 }
 
-async function toCompressVideo(inputPath, outputPath) {
-    compressVideo(inputPath, outputPath)
+async function toCompressVideo(inputPath, outputPath, speed, quality) {
+    compressVideo(inputPath, outputPath, speed, quality)
         .then(() => {
             console.log('Compression finished!')
             if (!compressInfoMap.has(inputPath)) {

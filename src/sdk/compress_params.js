@@ -1,13 +1,13 @@
 export var CompressSpeedOptions = [
-  'veryslow',
-  'slower',
-  'slow',
-  'medium',
-  'fast',
-  'faster',
-  'veryfast',
+  'ultrafast',
   'superfast',
-  'ultrafast'
+  'veryfast',
+  'faster',
+  'fast',
+  'medium',
+  'slow',
+  'slower',
+  'veryslow'
 ]
 
 var __chineseMap = new Map([

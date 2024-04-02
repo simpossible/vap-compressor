@@ -137,7 +137,7 @@ class FileNode {
         })
     }
 
-    startCompress(){
+    startCompress(params){
         console.log("start compress");
         if (this.isCompressing){
             return
@@ -148,8 +148,9 @@ class FileNode {
         if (this.compressInfo.state == 1) {
             return
         }
+        params.path = this.src;
         this.isCompressing = true
-        axios.get(vapUrlForKey(UrlPathStartCompress, {path: this.src})).then(response => {
+        axios.get(vapUrlForKey(UrlPathStartCompress, params)).then(response => {
             console.log("start compress 1", response.data);
             this.isCompressing = false
             this.loadCompressInfo();

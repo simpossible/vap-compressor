@@ -10,27 +10,38 @@
                 <el-col :span="8"></el-col>
             </el-row>
             <!-- 加一个压缩质量的可选进度条 -->
-            <el-row style="background-color: antiquewhite;">
+            <el-row style="margin-top: 12px;">
                 <el-col :span="1"></el-col>
                 <el-col :span="5" style="margin-top: 5px;"><el-text class="mx-1">压缩质量</el-text></el-col>
                 <el-col :span="14">
                     <el-slider v-model="compressQualityValue" :step="1" :max="102" :format-tooltip="qualityTip"
                         @change="onCompressQualityChange" />
                 </el-col>
-                <el-col :span="3" style="margin-top: 5px;padding-left: 6px;"> <el-text class="mx-1"
-                        size="small">{{ compressQualityPercentage }}</el-text> </el-col>
+                <el-col :span="3" style="margin-top: 5px;padding-left: 6px;"> <el-text class="mx-1" size="small">{{
+        compressQualityPercentage }}</el-text> </el-col>
             </el-row>
-           <!-- 加一个压缩速度的可选进度条 -->
-           <el-row style="background-color:brown;">
+            <!-- 加一个压缩速度的可选进度条 -->
+            <el-row style="margin-top: 12px;">
                 <el-col :span="1"></el-col>
-                <el-col :span="5" style="margin-top: 5px;"><el-text class="mx-1">压缩速度</el-text></el-col>
+                <el-col :span="4" style="margin-top: 5px;"><el-text class="mx-1">压缩率</el-text></el-col>
                 <el-col :span="14">
-                    <el-slider v-model="compressSpeedValue" :step="1" :max="compressSpeedMaxValue" :format-tooltip="speedQualityTip"
-                        @change="onCompressSpeedQualityChange" />
+                    <el-slider v-model="compressSpeedValue" :step="1" :max="compressSpeedMaxValue"
+                        :format-tooltip="speedQualityTip" @change="onCompressSpeedQualityChange" />
                 </el-col>
-                <el-col :span="3" style="margin-top: 5px;padding-left: 6px;"> <el-text class="mx-1"
-                        size="small">{{ compressSpeedTip }}</el-text> </el-col>
-            </el-row>            
+                <el-col :span="4" style="margin-top: 5px; padding-left: 12px;">
+                    <el-text class="mx-1" size="small">
+                        {{compressSpeedTip}}
+                    </el-text>
+                </el-col>
+
+            </el-row>
+            <el-row>
+
+                <el-col style="margin-left: 12px;">
+                    <el-text class="mx-1" size="small">压缩率越高需要时间就越久</el-text>
+                </el-col>
+
+            </el-row>
 
         </div>
         <div v-if="compressInfo.state == 1">
@@ -79,7 +90,7 @@
 import { FileNode } from '../../sdk/file_node';
 import Vap from 'video-animation-player';
 import { vapUrlForKey, UrlPathDownload, UrlPathVapJson } from '../../sdk/url_config';
-import {CompressSpeedOptions, compressSpeedOptionDisplayName } from '../../sdk/compress_params'; 
+import { CompressSpeedOptions, compressSpeedOptionDisplayName } from '../../sdk/compress_params';
 
 export default {
     name: 'VapCompressDetail',
@@ -99,7 +110,7 @@ export default {
         if (this.node.src != '') {
             this.node.loadCompressInfo()
             this.onCompressSpeedQualityChange()
-        }        
+        }
     },
     unmounted() {
         this.node.deleteCompresseDelegate(this)
@@ -110,7 +121,7 @@ export default {
             compressInfo: { state: 0 }, //当前的压缩信息
             compressQualityValue: 46, // 压缩质量
             compressQualityPercentage: '45%',
-            compressSpeedValue: 4,
+            compressSpeedValue: 5,
             compressSpeedMaxValue: CompressSpeedOptions.length - 1,
             compressSpeedTip: '',
             progress: 0, // 压缩进度
@@ -164,7 +175,10 @@ export default {
         },
 
         onCompressClicked() {
-            this.node.startCompress()
+            this.node.startCompress({
+                quality: this.compressQualityValue / 2,
+                speed: CompressSpeedOptions[this.compressSpeedValue]
+            })
         },
         onNodeInfoLoaded(node) {
             console.log("onNodeInfoLoadedd");
@@ -288,11 +302,11 @@ export default {
         onCompressQualityChange() {
             this.compressQualityPercentage = (this.compressQualityValue * 100 / 102).toFixed(2) + "%";
         },
-        speedQualityTip(number){
+        speedQualityTip(number) {
             var value = CompressSpeedOptions[number];
             return compressSpeedOptionDisplayName(value);
         },
-        onCompressSpeedQualityChange(){
+        onCompressSpeedQualityChange() {
             console.log("????")
             var value = CompressSpeedOptions[this.compressSpeedValue];
             this.compressSpeedTip = compressSpeedOptionDisplayName(value);
