@@ -418,6 +418,10 @@ async function quitCompress(req, params, res) {
         res.end()    
         return 
     }    
+    if (compressInfoMap.has(orgVapPath)) {
+        var info = compressInfoMap.get(orgVapPath)
+        info.state = CompressState.quitting
+    }
     if (compressInfoMap.has(filePath)) {
         compressInfoMap.delete(filePath)
     }
@@ -436,6 +440,10 @@ async function acceptCompress(req, params, res) {
         res.writeHead(404, { 'Content-Type': 'text/plain' });
         res.end('404 Not Found');
         return
+    }
+    if (compressInfoMap.has(orgVapPath)) {
+        var info = compressInfoMap.get(orgVapPath)
+        info.state = CompressState.acceptting
     }
     var orgVapPath = filePath
     if (fs.existsSync(orgVapPath)) {
