@@ -100,9 +100,7 @@ export default {
     handleNodeClick(ele, nodeinfo, treeNode, e){
       console.log("on node clicked")      
       ele.reloadFiles();
-      if (ele.isVap()) {        
         this.onVapChoosed(ele.node);
-      }
     }
   },
 }

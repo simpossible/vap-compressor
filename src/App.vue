@@ -3,11 +3,14 @@
     <el-col :span="6">
       <VapList :onVapChoosed="onListVapChoosed"/>
     </el-col>
-    <el-col :span="9">
+    <el-col :span="9" v-if="selectNode.fileType == 2">
       <VapDetail :key="refreshKey" :node="selectNode" ></VapDetail>
     </el-col>
-    <el-col :span="9">
+    <el-col :span="9" v-if="selectNode.fileType == 2">
       <VapCompressDetail :key="refreshKey" :node="selectNode"> </VapCompressDetail>
+    </el-col>
+    <el-col :span="18" v-if="selectNode.fileType == 1">
+        <DirDetail :node="selectNode"></DirDetail>
     </el-col>
   </el-row>
 
@@ -17,12 +20,14 @@ import VapList from "./view/list/list.vue";
 import VapDetail from "./view/detail/detail.vue";
 import VapCompressDetail from "./view/compress_detail/compress_detail.vue";
 import { FileNode } from "./sdk/file_node";
+import DirDetail from "./view/detail/dir_detail.vue";
 
 export default {
   components: {
     VapList,
     VapDetail,
-    VapCompressDetail
+    VapCompressDetail,
+    DirDetail
   },
   data() {
     return {

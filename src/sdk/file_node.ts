@@ -11,9 +11,9 @@ interface FileNodeCompressInterFace {
 }
 
 enum FileNodeType {
-    unknow,
-    dir,
-    vap
+    unknow = 0,
+    dir = 1,
+    vap = 2
 }
 
 class FileNode {
