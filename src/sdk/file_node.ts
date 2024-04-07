@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { UrlPathAcceptCompress, UrlPathQuitCompress, UrlPathStartCompress, UrlPathVapInfo, vapUrlForKey  } from './url_config';
 import { UrlPathFile, UrlPathCompressInfo } from './url_config';
+import { currentNodeCache } from './node_cache';
 
 interface FileNodeInterface {
     onNodeInfoLoaded: (node: FileNode) => void;
@@ -92,15 +93,14 @@ class FileNode {
                 }
                 var tempArray: FileNode[] = [];
                 for (let subFile of subFiles) {
-                    var newNode : FileNode | undefined = undefined;
-                    if (this.subNodesMap.has(subFile)) {
-                        newNode = this.subNodesMap.get(subFile);
-                    }else {
+                    var newNode : FileNode | null = null;
+                    newNode = currentNodeCache().getNodeByPath(subFile) as FileNode;
+                    if (newNode === null) {
                         newNode = new FileNode(subFile);
+                        currentNodeCache()?.cacheNode(newNode, subFile);
                     }
-                    if (newNode !== undefined) {
+                    if (newNode !== null) {
                         tempArray.push(newNode);
-                        tempSubMap.set(subFile, newNode);
                     }                                                    
                 }
                 this.subNodes = tempArray;
@@ -204,6 +204,16 @@ class FileNode {
             cb(-1, "操作失败: " + error);
         }
         })
+    }
+
+    getVapList(){
+        var vapList: FileNode[] = [];
+       
+       
+       
+       
+        }
+        return vapList;
     }
 }
 

@@ -128,6 +128,94 @@ async function onFileRequest(req, params, res) {
 
 server_map.set("/file", onFileRequest);
 
+async function onVapFileListRequest(req, params, res) {
+    // 这里返回一个文件夹下的所有vap文件
+    var filePath = params.get("path")
+    console.log("get file info at path:", filePath);
+    var fileExist = fs.existsSync(filePath);
+    var result = {}
+    if (!fileExist) {
+        console.log("onFileRequest 1")
+        result = {
+            "code": -1,
+            "msg": "file not exist",
+            "file_info": {},
+            "is_dir": false,
+            "is_vap": false
+        }
+        res.writeHead(200, { 'Content-Type': 'application/jsonn' })
+        res.end(JSON.stringify(result))
+        return
+    }
+    var fileStat = fs.statSync(filePath)
+    var isDir = fileStat.isDirectory()
+    if (!isDir) {
+        console.log("onFlatFileListRequest 1")
+        result = {
+            "code": -1,
+            "msg": "file not directory",
+            "file_info": {},
+            "is_dir": false,
+            "is_vap": false
+        }
+        res.writeHead(200, { 'Content-Type': 'application/jsonn' })
+        res.end(JSON.stringify(result))
+        return
+    }
+    var vapFiles = get_vap_list_recursive(filePath)
+    result["code"] = 0
+    result["msg"] = ""
+    result["file_list"] = vapFiles
+    res.writeHead(200, { 'Content-Type': 'application/jsonn' })
+    res.end(JSON.stringify(result))
+
+}
+
+function get_vap_list_recursive(filePath, vapFiles = []) {
+    var stat = fs.statSync(filePath)
+    if (!stat.isDirectory()) {
+        var file_info = {}
+        file_info["size"] = stat.size;
+        // is mp4
+        if (filePath.endsWith(".mp4")) {
+            var vapJson = getVapInfo(filePath);
+            if (vapJson != null) {
+                const fileMetaData = ffprobe(filePath, { path: ffprobeStatic.path })
+                if (fileMetaData.streams.length > 0) {
+                    for (var info in fileMetaData.streams) {
+                        var stream = fileMetaData.streams[info]
+                        if (stream.codec_type == "video") {
+                            file_info["video_info"] = {
+                                "codec_name": stream.codec_name,
+                                "width": stream.width,
+                                "height": stream.height,
+                                "duration_ts": stream.duration,
+                                "bit_rate": stream.bit_rate,
+                            }
+                            break;
+                        }
+                    }
+                }
+                isVap = true
+                file_info["vap_info"] = vapJson
+                file_info["path"] = filePath
+                vapFiles.push(file_info)
+            }
+        }
+    }else {
+        var files = fs.readdirSync(filePath)
+        for (var fileIndex in files) {
+            var file = files[fileIndex]
+            var subFilePath = path.join(filePath, file)
+            get_vap_list_recursive(subFilePath, vapFiles)
+        }
+    }
+    return vapFiles
+}
+
+server_map.set("/vap-file-list", onFlatFileListRequest);
+
+
 async function vapInfo(req, params, res) {
     // get vap info avoid complex logic copy up function
     var filePath = params.get("path")

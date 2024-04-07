@@ -1,5 +1,7 @@
 import {FileNode} from './file_node';
 import { isMP4File } from './file_util';
+import { setNodeCache } from './node_cache';
+import { vapUrlForKey } from './url_config';
 
 interface VapCenterInterface {
   onNodeAdded: (node: FileNode) => void;
@@ -7,27 +9,19 @@ interface VapCenterInterface {
 
 class VapCenter {
   nodes: FileNode[];
+  nodeMap: Map<string, FileNode> = new Map();
   delegate: VapCenterInterface | null = null;
   constructor() {
     this.nodes = [];
+    this.nodeMap = new Map();
+    setNodeCache(this);
   }
 
-  createFileNode(src: string): [number, FileNode | null] {
-    let stat = fs.statSync(src)
-    if (stat.isDirectory()) {
-      return [0, new FileNode(src)];
-    }
-    //读取文件信息判断是否是 .mp4文件
-    if (isMP4File(src)) {
-      return [-2, null];
-    }
-    return [-3, null];
-  }
 
   createFileNodeFromFiles(files) {
     console.log("createFileNodeFromFiles");
     for (let file of files) {
-      var node = new FileNode(file.path);
+      var node = this.getNodeByPath(file.path);
       if (node !== null) {
         this.nodes.unshift(node);
         if (this.delegate !== null) {
@@ -36,6 +30,17 @@ class VapCenter {
       }
     }
   }
+  getNodeByPath(path: string): FileNode | null {
+    var node;
+    if (this.nodeMap.has(path)) {
+      node = this.nodeMap.get(path);      
+    }else {
+      node = new FileNode(path);
+      this.nodeMap.set(path, node);
+    }
+    return node;  
+  }  
+  
 }
 
 let shared_center = new VapCenter();

@@ -7,6 +7,7 @@ export var UrlPathAcceptCompress = 'accept-compress';
 export var UrlPathVapInfo = 'vap-info';
 export var UrlPathDownload = 'download';
 export var UrlPathVapJson = 'vap-json';
+export var UrlPathVapList = 'vap-file-list';
 
 var vapServerPort = 3000;
 
