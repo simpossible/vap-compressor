@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { UrlPathAcceptCompress, UrlPathQuitCompress, UrlPathStartCompress, UrlPathVapInfo, vapUrlForKey  } from './url_config';
+import { UrlPathAcceptCompress, UrlPathQuitCompress, UrlPathStartCompress, UrlPathVapInfo, UrlPathVapList, vapUrlForKey  } from './url_config';
 import { UrlPathFile, UrlPathCompressInfo } from './url_config';
 import { currentNodeCache } from './node_cache';
 
@@ -207,13 +207,12 @@ class FileNode {
     }
 
     getVapList(){
-        var vapList: FileNode[] = [];
-       
-       
-       
-       
-        }
-        return vapList;
+        var url = vapUrlForKey(UrlPathVapList, {path: this.src});
+        axios.get(url).then(response => {
+            console.log("getVapList", response.data);
+        }).catch(error => {
+            console.log("getVapList", error);
+        })
     }
 }
 
