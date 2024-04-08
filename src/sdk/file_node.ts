@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { UrlPathAcceptCompress, UrlPathQuitCompress, UrlPathStartCompress, UrlPathVapInfo, UrlPathVapList, vapUrlForKey  } from './url_config';
+import { UrlPathAcceptCompress, UrlPathQuitCompress, UrlPathStartCompress, UrlPathVapInfo, UrlPathVapList, vapUrlForKey } from './url_config';
 import { UrlPathFile, UrlPathCompressInfo } from './url_config';
 import { currentNodeCache } from './node_cache';
 
@@ -18,7 +18,7 @@ enum FileNodeType {
 }
 
 class FileNode {
-    src: string;    
+    src: string;
     subNodes: FileNode[] = [];
     subNodesMap: Map<string, FileNode> = new Map();
     fileInfo: any = {};
@@ -32,33 +32,33 @@ class FileNode {
     isQuitCompressing: boolean = false;
     isAcceptCompressing: boolean = false;
     isOutputNode: boolean = false; // 是否是输出节点的node    
-    delegates: Array<FileNodeInterface> = [];    
+    delegates: Array<FileNodeInterface> = [];
     constructor(src: string) {
         this.src = src;
     }
 
-    addCompresseDelegate(delegate: any){
-        if (this.compressDelegates.indexOf(delegate) >= 0){
+    addCompresseDelegate(delegate: any) {
+        if (this.compressDelegates.indexOf(delegate) >= 0) {
             return
         }
         this.compressDelegates.push(delegate);
     }
-    deleteCompresseDelegate(delegate: any){
+    deleteCompresseDelegate(delegate: any) {
         var index = this.compressDelegates.indexOf(delegate);
-        if (index >= 0){
+        if (index >= 0) {
             this.compressDelegates.splice(index, 1);
         }
     }
 
-    addDelegates(delegate: FileNodeInterface){
-        if (this.delegates.indexOf(delegate) >= 0){
+    addDelegates(delegate: FileNodeInterface) {
+        if (this.delegates.indexOf(delegate) >= 0) {
             return
         }
         this.delegates.push(delegate);
     }
-    deleteDelegates(delegate: FileNodeInterface){
+    deleteDelegates(delegate: FileNodeInterface) {
         var index = this.delegates.indexOf(delegate);
-        if (index >= 0){
+        if (index >= 0) {
             this.delegates.splice(index, 1);
         }
     }
@@ -71,10 +71,10 @@ class FileNode {
         this.isLoading = true;
         var fileUrl = ""
         if (this.isOutputNode) {
-            fileUrl = vapUrlForKey(UrlPathVapInfo, {path: this.src, output: 1})
-        }else {
-            var fileUrl = vapUrlForKey(UrlPathFile, {path: this.src})
-        }        
+            fileUrl = vapUrlForKey(UrlPathVapInfo, { path: this.src, output: 1 })
+        } else {
+            var fileUrl = vapUrlForKey(UrlPathFile, { path: this.src })
+        }
         axios.get(fileUrl)
             .then(response => {
                 this.isLoading = false;
@@ -83,17 +83,17 @@ class FileNode {
                 var tempSubMap = new Map();
                 var isDir = responseJson["is_dir"];
                 var isVap = responseJson["is_vap"];
-                if (isDir){
+                if (isDir) {
                     this.fileType = FileNodeType.dir;
-                }else {
-                    if (isVap){
+                } else {
+                    if (isVap) {
                         this.fileType = FileNodeType.vap;
                         this.fileInfo = responseJson["file_info"];
                     }
                 }
                 var tempArray: FileNode[] = [];
                 for (let subFile of subFiles) {
-                    var newNode : FileNode | null = null;
+                    var newNode: FileNode | null = null;
                     newNode = currentNodeCache().getNodeByPath(subFile) as FileNode;
                     if (newNode === null) {
                         newNode = new FileNode(subFile);
@@ -101,14 +101,14 @@ class FileNode {
                     }
                     if (newNode !== null) {
                         tempArray.push(newNode);
-                    }                                                    
+                    }
                 }
                 this.subNodes = tempArray;
                 this.subNodesMap = tempSubMap;
                 if (this.delegate !== null) {
                     this.delegate.onNodeInfoLoaded(this);
                 }
-                for(let delegate of this.delegates){
+                for (let delegate of this.delegates) {
                     delegate.onNodeInfoLoaded(this);
                 }
             })
@@ -116,20 +116,20 @@ class FileNode {
                 this.isLoading = false;
                 console.log(error);
             });
-    }        
+    }
 
-    loadCompressInfo(){
+    loadCompressInfo() {
         // get current compress info
         console.log("loadCompressInfo");
-        if  (this.isCompressingLoadding){
+        if (this.isCompressingLoadding) {
             return
         }
         this.isCompressingLoadding = true
-        axios.get(vapUrlForKey(UrlPathCompressInfo, {path: this.src})).then(response => {
+        axios.get(vapUrlForKey(UrlPathCompressInfo, { path: this.src })).then(response => {
             console.log("on compress info back", response.data);
             this.isCompressingLoadding = false
             this.compressInfo = response.data;
-            for(let delegate of this.compressDelegates){
+            for (let delegate of this.compressDelegates) {
                 delegate.onNodeCompressInfoUpdated(this);
             }
         }).catch(error => {
@@ -137,12 +137,12 @@ class FileNode {
         })
     }
 
-    startCompress(params){
+    startCompress(params) {
         console.log("start compress");
-        if (this.isCompressing){
+        if (this.isCompressing) {
             return
         }
-        if (this.fileType != FileNodeType.vap){
+        if (this.fileType != FileNodeType.vap) {
             return
         }
         if (this.compressInfo.state == 1) {
@@ -155,7 +155,7 @@ class FileNode {
             this.isCompressing = false
             this.loadCompressInfo();
             this.compressInfo = response.data;
-            for(let delegate of this.compressDelegates){
+            for (let delegate of this.compressDelegates) {
                 delegate.onNodeCompressInfoUpdated(this);
             }
         }).catch(error => {
@@ -164,50 +164,50 @@ class FileNode {
         })
     }
 
-    quitCompress(cb: Function){
+    quitCompress(cb: Function) {
         console.log("to quit compress");
-        if (this.isQuitCompressing){
+        if (this.isQuitCompressing) {
             cb(-1, "操作正在进行中");
             return
         }
         this.isQuitCompressing = true
-        axios.get(vapUrlForKey(UrlPathQuitCompress, {path: this.src})).then(response => {
+        axios.get(vapUrlForKey(UrlPathQuitCompress, { path: this.src })).then(response => {
             this.isQuitCompressing = false
-            if (cb != null && cb != undefined){
+            if (cb != null && cb != undefined) {
                 cb(0, "");
             }
-            this.loadCompressInfo();            
+            this.loadCompressInfo();
         }).catch(error => {
             this.isQuitCompressing = false
-            if (cb != null && cb != undefined){
-            cb(-1, "操作失败: " + error);
-        }
+            if (cb != null && cb != undefined) {
+                cb(-1, "操作失败: " + error);
+            }
         })
     }
-    acceptCompress(cb: Function){
+    acceptCompress(cb: Function) {
         console.log("to accept compress");
-        if (this.isAcceptCompressing ){
+        if (this.isAcceptCompressing) {
             cb(-1, "操作正在进行中");
             return
         }
         this.isQuitCompressing = true
-        axios.get(vapUrlForKey(UrlPathAcceptCompress, {path: this.src})).then(response => {
+        axios.get(vapUrlForKey(UrlPathAcceptCompress, { path: this.src })).then(response => {
             this.isAcceptCompressing = false
-            if (cb != null && cb != undefined){
+            if (cb != null && cb != undefined) {
                 cb(0, "");
             }
-            this.loadCompressInfo(); 
-            this.initialData();           
+            this.loadCompressInfo();
+            this.initialData();
         }).catch(error => {
             this.isAcceptCompressing = false
-            if (cb != null && cb != undefined){
-            cb(-1, "操作失败: " + error);
-        }
+            if (cb != null && cb != undefined) {
+                cb(-1, "操作失败: " + error);
+            }
         })
     }
 
-    getVapList(){
-        var url = vapUrlForKey(UrlPathVapList, {path: this.src});
+    getVapList() {
+        var url = vapUrlForKey(UrlPathVapList, { path: this.src });
         axios.get(url).then(response => {
             console.log("getVapList", response.data);
         }).catch(error => {
@@ -218,4 +218,4 @@ class FileNode {
 
 
 
-export  {FileNode, FileNodeType};
+export { FileNode, FileNodeType };
