@@ -100,6 +100,7 @@ class FileNode {
                         currentNodeCache()?.cacheNode(newNode, subFile);
                     }
                     if (newNode !== null) {
+                        this.subNodesMap.set(subFile, newNode);
                         tempArray.push(newNode);
                     }
                 }
@@ -206,13 +207,31 @@ class FileNode {
         })
     }
 
-    getVapList() {
-        var url = vapUrlForKey(UrlPathVapList, { path: this.src });
-        axios.get(url).then(response => {
-            console.log("getVapList", response.data);
-        }).catch(error => {
-            console.log("getVapList", error);
-        })
+    getVapList(): Promise<FileNode[]> {
+        return new Promise<FileNode[]>((resolve, reject) => {
+            var url = vapUrlForKey(UrlPathVapList, { path: this.src });
+            axios.get(url)
+                .then(response => {
+                    console.log("getVapList", response.data);
+                    var file_list = response.data["file_list"];
+                    var tempArray: FileNode[] = [];
+                    for (let fileInfo of file_list) {
+                        var file_path = fileInfo["path"];
+                        var cachedNode = currentNodeCache().getNodeByPath(file_path);
+                        if (cachedNode == null) {
+                            cachedNode = new FileNode(file_path);
+                            currentNodeCache().cacheNode(cachedNode, file_path);
+                        }
+                        cachedNode.fileInfo = fileInfo;
+                        tempArray.push(cachedNode);
+                    }
+                    resolve(tempArray);
+                })
+                .catch(error => {
+                    reject(error);
+                    console.log("getVapList", error);
+                });
+        });
     }
 }
 

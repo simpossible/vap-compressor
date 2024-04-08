@@ -28,12 +28,32 @@
           @change="onCompressSpeedQualityChange" />
       </el-col>
       <el-col :span="3" style="margin-top: 5px;padding-left: 6px;"> <el-text class="mx-1" size="small">{{
-          compressSpeedTip }}</el-text> </el-col>
+    compressSpeedTip }}</el-text> </el-col>
+    </el-row>
+    <el-row>
+      <!-- 这里加一个列表用来显示所有的压缩任务的进度 -->
+      <el-table :data="taskList" style="width: 100%">
+        <el-table-column prop="name" label="路径" width="180">
+        </el-table-column>
+        <el-table-column prop="progress" label="分辨率" width="180">
+        </el-table-column>
+        <el-table-column prop="progress" label="时长" width="180">
+        </el-table-column>
+        <el-table-column prop="progress" label="原始大小" width="180">
+        </el-table-column>
+        <el-table-column prop="status" label="原始码率" width="180">
+        </el-table-column>
+        <el-table-column prop="speed" label="大小" width="180">
+        </el-table-column>
+        <el-table-column prop="time" label="码率" width="180">
+        </el-table-column>
+      </el-table>
     </el-row>
   </div>
 </template>
 <script>
 import { FileNode } from '../../sdk/file_node';
+import { CompressTask } from '../../sdk/compress_task';
 import Vap from 'video-animation-player';
 import { vapUrlForKey, UrlPathDownload, UrlPathVapJson } from '../../sdk/url_config';
 import { CompressSpeedOptions, compressSpeedOptionDisplayName } from '../../sdk/compress_params';
@@ -61,10 +81,24 @@ export default {
       compressSpeedValue: 4,
       compressSpeedMaxValue: CompressSpeedOptions.length - 1,
       compressSpeedTip: '',
-
+      taskList: []
     };
   },
   methods: {
+    loadAllTask() {
+      // 加载所有的压缩任务
+      this.node.getVapList().then((vapList) => {
+        var tempTaskList = []
+        for (node of vapList) {
+          var task = new CompressTask(node)
+          tempTaskList.push(task)
+        }
+        this.taskList = tempTaskList
+      }).catch((error) => {
+        console.log('load all task error:', error)
+      })
+
+    },
     qualityTip(number) {
       return (number * 100 / 102).toFixed(2) + "%";
     },
@@ -84,5 +118,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>
