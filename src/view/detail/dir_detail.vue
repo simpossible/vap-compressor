@@ -33,19 +33,19 @@
     <el-row>
       <!-- 这里加一个列表用来显示所有的压缩任务的进度 -->
       <el-table :data="taskList" style="width: 100%">
-        <el-table-column prop="name" label="路径" width="180">
+        <el-table-column prop="displayPath" label="路径">
         </el-table-column>
-        <el-table-column prop="progress" label="分辨率" width="180">
+        <el-table-column prop="resolution" label="分辨率">
         </el-table-column>
-        <el-table-column prop="progress" label="时长" width="180">
+        <el-table-column prop="duration" label="时长">
         </el-table-column>
-        <el-table-column prop="progress" label="原始大小" width="180">
+        <el-table-column prop="orgFileSizeStr" label="原始大小">
         </el-table-column>
-        <el-table-column prop="status" label="原始码率" width="180">
+        <el-table-column prop="orgBitRateStr" label="原始码率">
         </el-table-column>
-        <el-table-column prop="speed" label="大小" width="180">
+        <el-table-column prop="compressedFileSizeStr" label="输出大小">
         </el-table-column>
-        <el-table-column prop="time" label="码率" width="180">
+        <el-table-column prop="compressedBitRateStr" label="输出码率">
         </el-table-column>
       </el-table>
     </el-row>
@@ -57,6 +57,8 @@ import { CompressTask } from '../../sdk/compress_task';
 import Vap from 'video-animation-player';
 import { vapUrlForKey, UrlPathDownload, UrlPathVapJson } from '../../sdk/url_config';
 import { CompressSpeedOptions, compressSpeedOptionDisplayName } from '../../sdk/compress_params';
+import { CompressState } from '../../file_server/compress_state';
+import { setTransitionHooks } from 'vue';
 
 export default {
   name: 'DirDetail',
@@ -70,8 +72,11 @@ export default {
 
   },
   mounted() {
+    this.loadAllTask()
   },
   unmounted() {
+    this.taskList = []
+
   },
 
   data() {
@@ -87,17 +92,19 @@ export default {
   methods: {
     loadAllTask() {
       // 加载所有的压缩任务
+      console.log('load all task')
       this.node.getVapList().then((vapList) => {
         var tempTaskList = []
         for (node of vapList) {
           var task = new CompressTask(node)
+          task.displayPath = node.src.replace(this.node.src, '')
+          task.delegate = this
           tempTaskList.push(task)
         }
         this.taskList = tempTaskList
       }).catch((error) => {
         console.log('load all task error:', error)
       })
-
     },
     qualityTip(number) {
       return (number * 100 / 102).toFixed(2) + "%";
@@ -112,6 +119,34 @@ export default {
     onCompressSpeedQualityChange() {
       var value = CompressSpeedOptions[this.compressSpeedValue];
       this.compressSpeedTip = compressSpeedOptionDisplayName(value);
+    },
+    onCompressClicked() {
+      this.startCompress()
+    },
+
+    startCompress() {
+      // 开始压缩任务
+      var alreadyFinish = true
+      for (task of this.taskList) {
+        if (task.status == CompressState.none) {
+          task.start({
+            quality: this.compressQualityValue / 2,
+            speed: CompressSpeedOptions[this.compressSpeedValue]
+          })
+          alreadyFinish = false
+          break
+        }
+      }
+      if (alreadyFinish) {
+        this.$message({
+          message: '所有任务已经完成',
+          type: 'warning'
+        });
+      }
+    },
+
+    taskStateChanged(task) {
+      this.startCompress()
     }
   }
 

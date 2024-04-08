@@ -1,12 +1,10 @@
 const http = require('http')
 const fs = require('fs')
-const ffprobe = require('ffprobe')
-const ffprobeStatic = require('ffprobe-static')
+
 const path = require('path')
 
-import { getVapBoxes, addVapInfoToMp4 } from './vap_parser.js'
-import {CompressState} from './compress_state.js'
-import { exit } from 'process'
+import { getVapBoxes, addVapInfoToMp4, getFileInfoOfVap, getVapInfo, ffprobe, ffprobeStatic } from './vap_parser.js'
+import { CompressState } from './compress_state.js'
 // md文件访问在electron完全不行。搞个服务来做吧。
 
 var codeOk = 666
@@ -25,23 +23,11 @@ function isFileInnerPath(fileName) {
     return false
 }
 
-function getVapInfo(filePath) {
-    var allBoxes = getVapBoxes(filePath)
-    for (var boxIndex in allBoxes) {
-        var box = allBoxes[boxIndex]
-        if (box.boxType == "vapc") {
-            var vapJson = box.content
-            return JSON.parse(vapJson)
-        }
-    }
-    return null
 
-}
 
 async function onFileRequest(req, params, res) {
 
     var filePath = params.get("path")
-    console.log("get file info at path:", filePath);
     var fileExist = fs.existsSync(filePath);
     var result = {}
     if (!fileExist) {
@@ -162,7 +148,7 @@ async function onVapFileListRequest(req, params, res) {
         res.end(JSON.stringify(result))
         return
     }
-    var vapFiles = get_vap_list_recursive(filePath)
+    var vapFiles = await get_vap_list_recursive(filePath)
     result["code"] = 0
     result["msg"] = ""
     result["file_list"] = vapFiles
@@ -171,49 +157,27 @@ async function onVapFileListRequest(req, params, res) {
 
 }
 
-function get_vap_list_recursive(filePath, vapFiles = []) {
+
+
+async function get_vap_list_recursive(filePath, vapFiles = []) {
     var stat = fs.statSync(filePath)
     if (!stat.isDirectory()) {
-        var file_info = {}
-        file_info["size"] = stat.size;
-        // is mp4
-        if (filePath.endsWith(".mp4")) {
-            var vapJson = getVapInfo(filePath);
-            if (vapJson != null) {
-                const fileMetaData = ffprobe(filePath, { path: ffprobeStatic.path })
-                if (fileMetaData.streams.length > 0) {
-                    for (var info in fileMetaData.streams) {
-                        var stream = fileMetaData.streams[info]
-                        if (stream.codec_type == "video") {
-                            file_info["video_info"] = {
-                                "codec_name": stream.codec_name,
-                                "width": stream.width,
-                                "height": stream.height,
-                                "duration_ts": stream.duration,
-                                "bit_rate": stream.bit_rate,
-                            }
-                            break;
-                        }
-                    }
-                }
-                isVap = true
-                file_info["vap_info"] = vapJson
-                file_info["path"] = filePath
-                vapFiles.push(file_info)
-            }
+        var file_info = await getFileInfoOfVap(filePath)
+        if (file_info != null) {
+            vapFiles.push(file_info);
         }
-    }else {
+    } else {
         var files = fs.readdirSync(filePath)
         for (var fileIndex in files) {
             var file = files[fileIndex]
             var subFilePath = path.join(filePath, file)
-            get_vap_list_recursive(subFilePath, vapFiles)
+            await get_vap_list_recursive(subFilePath, vapFiles)
         }
     }
     return vapFiles
 }
 
-server_map.set("/vap-file-list", onFlatFileListRequest);
+server_map.set("/vap-file-list", onVapFileListRequest);
 
 
 async function vapInfo(req, params, res) {
@@ -377,7 +341,7 @@ async function getCompressInfo(req, params, res) {
     var compressInfo = {}
     if (compressInfoMap.has(filePath)) {
         compressInfo = compressInfoMap.get(filePath)
-    }else {
+    } else {
         var tempVapPath = tempVapPathFrom(filePath)
         if (fs.existsSync(tempVapPath)) {
             var tempVapInfo = getVapInfo(tempVapPath)
@@ -387,20 +351,20 @@ async function getCompressInfo(req, params, res) {
                     state: CompressState.none,
                     org_path: filePath
                 }
-            }else {
+            } else {
                 compressInfo = {
                     state: CompressState.done,
                     org_path: filePath,
-                    outputPath: tempVapPath                    
+                    outputPath: tempVapPath
                 }
                 compressInfoMap[filePath] = compressInfo
             }
-        }else {
+        } else {
             compressInfo = {
                 state: 0,
             }
         }
-        
+
     }
     res.writeHead(200, { 'Content-Type': 'application/json' })
     res.end(JSON.stringify(compressInfo))
@@ -477,17 +441,26 @@ async function toCompressVideo(inputPath, outputPath, speed, quality) {
             compressInfo.state = CompressState.done
             compressInfo.progress = 100
             compressInfo.outputPath = outputPath
-            compressInfo.end_time = new Date().getTime()
-            var oldVapInfo = getVapInfo(inputPath)
-            if (oldVapInfo != null) {
-                var code, errorMsg = addVapInfoToMp4(outputPath, oldVapInfo)
-                compressInfo.errorCode = code
-                compressInfo.errorMsg = errorMsg
-                compressInfo
-            } else {
+            getFileInfoOfVap(outputPath).then((outputFileInfo) => {
+                if (outputFileInfo != null) {
+                    compressInfo.outputFileInfo = outputFileInfo
+                }
+                compressInfo.end_time = new Date().getTime()
+                var oldVapInfo = getVapInfo(inputPath)
+                if (oldVapInfo != null) {
+                    var code, errorMsg = addVapInfoToMp4(outputPath, oldVapInfo)
+                    compressInfo.errorCode = code
+                    compressInfo.errorMsg = errorMsg
+                    compressInfo
+                } else {
+                    compressInfo.errorCode = -1
+                    compressInfo.errorMsg = "get vap info error"
+                }
+            }).catch((error) => {
                 compressInfo.errorCode = -1
-                compressInfo.errorMsg = "get vap info error"
-            }
+                compressInfo.errorMsg = error
+            })
+
         })
         .catch(console.error);
 
@@ -501,11 +474,11 @@ async function quitCompress(req, params, res) {
     var tempVapPath = tempVapPathFrom(filePath)
     if (fs.existsSync(tempVapPath)) {
         // 404
-        fs.unlinkSync(tempVapPath) 
+        fs.unlinkSync(tempVapPath)
         res.writeHead(200, { 'Content-Type': 'text/plain' })
-        res.end()    
-        return 
-    }    
+        res.end()
+        return
+    }
     if (compressInfoMap.has(orgVapPath)) {
         var info = compressInfoMap.get(orgVapPath)
         info.state = CompressState.quitting

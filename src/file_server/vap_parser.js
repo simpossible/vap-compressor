@@ -2,8 +2,10 @@
 
 const fs = require('fs')
 const path = require('path')
+export const ffprobe = require('ffprobe')
+export const ffprobeStatic = require('ffprobe-static')
 
-class Mp4Box {    
+class Mp4Box {
     constructor(boxType, start, size, content) {
         this.boxType = boxType
         this.start = start
@@ -48,8 +50,8 @@ export function getVapBoxes(file_path) {
         }
         position += 4
         var boxType = boxTypeReadBuffer.toString()
-        
-        if (boxSize == 1){
+
+        if (boxSize == 1) {
             var largeSizeReadBuffer = Buffer.alloc(8)
             var largeSizeRead = fs.readSync(fd, largeSizeReadBuffer, {
                 position: position,
@@ -78,13 +80,13 @@ export function getVapBoxes(file_path) {
                 console.log("read file error - 3")
                 break;
             }
-            boxContent = contentReadBuffer.toString()            
+            boxContent = contentReadBuffer.toString()
         }
-        var box = new Mp4Box(boxType, boxStart, boxSize, boxContent)        
-        allBoxes.push(box)        
+        var box = new Mp4Box(boxType, boxStart, boxSize, boxContent)
+        allBoxes.push(box)
         position = boxStart + boxSize
-    }    
-    return allBoxes    
+    }
+    return allBoxes
 }
 
 export function addVapInfoToMp4(filePath, vapJson) {
@@ -104,13 +106,13 @@ export function addVapInfoToMp4(filePath, vapJson) {
     console.log("ready len is ", vapcBoxSize)
     var vapcBoxBuffer = Buffer.alloc(vapcBoxSize)
     vapcBoxBuffer.writeUInt32BE(vapcBoxSize, 0)
-    vapcBoxBuffer.write("vapc", 4)    
+    vapcBoxBuffer.write("vapc", 4)
     vapJsonBuffer.copy(vapcBoxBuffer, 8)
 
     var fileBaseName = path.basename(filePath)
     var fileDir = path.dirname(filePath)
     var tempFilePath = path.join(fileDir, "__temp" + fileBaseName)
-    var fd = fs.openSync(tempFilePath, 'w')    
+    var fd = fs.openSync(tempFilePath, 'w')
     var oldFd = fs.openSync(filePath, 'r')
     var position = 0
     for (var oldBox of allBoxes) {
@@ -142,11 +144,72 @@ export function addVapInfoToMp4(filePath, vapJson) {
     if (boxOk === true) {
         //cover filePath with tempFilePath       
         fs.unlinkSync(filePath)
-        fs.renameSync(tempFilePath, filePath)  
+        fs.renameSync(tempFilePath, filePath)
         return 0, ""
-    }else {
+    } else {
         fs.unlinkSync(tempFilePath)
         return -2, "add vapc failed"
     }
     return 0, ""
+}
+
+export function getVapInfo(filePath) {
+    var allBoxes = getVapBoxes(filePath)
+    for (var boxIndex in allBoxes) {
+        var box = allBoxes[boxIndex]
+        if (box.boxType == "vapc") {
+            var vapJson = box.content
+            return JSON.parse(vapJson)
+        }
+    }
+    return null
+
+}
+
+export function getFileInfoOfVap(filePath) {
+    return new Promise((resolve, reject) => {
+        console.log("get file info of vap: ", filePath)
+        var stat = fs.statSync(filePath)
+        var file_info = {}
+        file_info["size"] = stat.size;
+        // is mp4
+        if (filePath.endsWith(".mp4")) {
+            var vapJson = getVapInfo(filePath);
+            if (vapJson != null) {
+                ffprobe(filePath, { path: ffprobeStatic.path })
+                    .then(fileMetaData => {
+                        if (fileMetaData == undefined || fileMetaData.streams == undefined) {
+                            console.log("ffprobe failed: ", filePath)
+                            resolve(null);
+                        }
+                        if (fileMetaData.streams.length > 0) {
+                            for (var info in fileMetaData.streams) {
+                                var stream = fileMetaData.streams[info]
+                                if (stream.codec_type == "video") {
+                                    file_info["video_info"] = {
+                                        "codec_name": stream.codec_name,
+                                        "width": stream.width,
+                                        "height": stream.height,
+                                        "duration_ts": stream.duration,
+                                        "bit_rate": stream.bit_rate,
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                        file_info["vap_info"] = vapJson
+                        file_info["path"] = filePath
+                        resolve(file_info);
+                    })
+                    .catch(error => {
+                        console.log("ffprobe failed: ", filePath)
+                        resolve(null);
+                    });
+            } else {
+                resolve(null);
+            }
+        } else {
+            resolve(null);
+        }
+    });
 }

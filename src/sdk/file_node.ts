@@ -2,6 +2,7 @@ import axios from 'axios';
 import { UrlPathAcceptCompress, UrlPathQuitCompress, UrlPathStartCompress, UrlPathVapInfo, UrlPathVapList, vapUrlForKey } from './url_config';
 import { UrlPathFile, UrlPathCompressInfo } from './url_config';
 import { currentNodeCache } from './node_cache';
+import { CompressState } from '../file_server/compress_state';
 
 interface FileNodeInterface {
     onNodeInfoLoaded: (node: FileNode) => void;
@@ -33,6 +34,8 @@ class FileNode {
     isAcceptCompressing: boolean = false;
     isOutputNode: boolean = false; // 是否是输出节点的node    
     delegates: Array<FileNodeInterface> = [];
+
+    timer: any = null; // 定时器持续获取压缩信息
     constructor(src: string) {
         this.src = src;
     }
@@ -133,9 +136,27 @@ class FileNode {
             for (let delegate of this.compressDelegates) {
                 delegate.onNodeCompressInfoUpdated(this);
             }
+            if (this.compressInfo.state != CompressState.compressing) {
+                this.stopTimer()
+            }
         }).catch(error => {
             this.isCompressingLoadding = false
         })
+    }
+
+    startTimer() {
+        if (this.timer != null) {
+            return
+        }
+        this.timer = setInterval(() => {
+            this.loadCompressInfo();
+        }, 5000);
+    }
+    stopTimer() {
+        if (this.timer != null) {
+            clearInterval(this.timer);
+            this.timer = null;
+        }
     }
 
     startCompress(params) {
@@ -153,6 +174,7 @@ class FileNode {
         this.isCompressing = true
         axios.get(vapUrlForKey(UrlPathStartCompress, params)).then(response => {
             console.log("start compress 1", response.data);
+            this.startTimer()
             this.isCompressing = false
             this.loadCompressInfo();
             this.compressInfo = response.data;

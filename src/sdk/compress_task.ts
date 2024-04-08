@@ -2,6 +2,7 @@ import { en, th } from "element-plus/es/locale";
 import { FileNode } from "./file_node";
 import { CompressState } from "../file_server/compress_state"
 import { error } from "console";
+import { Nullable } from "element-plus/es/utils";
 
 
 var statusDealerMap = new Map<number, Function>([
@@ -20,25 +21,28 @@ enum CompressTaskState {
 
 }
 
+interface CompressTaskStateInterface {
+  taskStateChanged: (task: CompressTask) => void;
+}
+
 class CompressTask {
   node: FileNode;
-  compressedNode: FileNode | null = null;
   compressInfo: any = {};
-  orgFileSize: number = 0; // 原始文件大小
-  orgBitRate: number = 0; // 原始码率
   resolution: string = ""; // 分辨率
-  duration: number = 0; // 时长
-  compressedFileSize: number = 0; // 压缩后文件大小
-  compressedBitRate: number = 0; // 压缩后码率
+  duration: string = ""; // 时长
   compressParams: any = {}; // 压缩参数
   taskState: CompressTaskState = CompressTaskState.done; // 任务状态
   error: string = ""; // 错误信息  
 
+  compressedFileInfo: any | null = null; // 压缩后的文件
   compressStateStr: string = ""; // 压缩状态
   orgFileSizeStr: string = ""; // 原始文件大小
   orgBitRateStr: string = ""; // 原始码率
   compressedFileSizeStr: string = ""; // 压缩后文件大小
   compressedBitRateStr: string = ""; // 压缩后码率
+  displayPath: string = ""; // 显示路径
+
+  delegate: CompressTaskStateInterface | null = null;
 
   constructor(node: FileNode) {
     this.node = node;
@@ -48,18 +52,66 @@ class CompressTask {
     // 先加载压缩的信息
     this.compressParams = compressParams;
     this.node.loadCompressInfo();
+    this.refreshInfos()
+  }
+
+  refreshInfos() {
+    var fileSizeBytes = this.node.fileInfo.size;
+    this.resolution = this.node.fileInfo.video_info.width + "x" + this.node.fileInfo.video_info.height;
+    this.duration = this.formatTime(this.node.fileInfo.video_info.duration_ts)
+    this.orgFileSizeStr = this.formatBytes(fileSizeBytes)
+    this.orgBitRateStr = this.node.fileInfo.video_info.bit_rate
+    if (this.compressedFileInfo != null) {
+      var compresscfileSizeBytes = this.compressedFileInfo.size;
+      this.compressedFileSizeStr = this.formatBytes(compresscfileSizeBytes)
+      this.compressedBitRateStr = this.compressedFileInfo.video_info.bit_rate
+    }
+  }
+  formatBytes(bytes) {
+    if (bytes < 1024) {
+      return bytes + " Bytes";
+    } else if (bytes < 1048576) {
+      return (bytes / 1024).toFixed(2) + " KB";
+    } else {
+      return (bytes / 1048576).toFixed(2) + " MB";
+    }
+  }
+  formatTime(seconds: number) {
+    let hours = Math.floor(seconds / 3600);
+    let minutes = Math.floor((seconds % 3600) / 60);
+    let secs = parseFloat((seconds % 60).toFixed(1));
+
+    let timeStr = "";
+
+    if (hours > 0) {
+      timeStr += hours + "小时";
+    }
+    if (minutes > 0) {
+      timeStr += minutes + "分钟";
+    }
+    if (secs > 0) {
+      timeStr += secs + "秒";
+    }
+
+    return timeStr;
   }
 
   onCompressInfoLoaded(node: FileNode) {
     if (node.src == this.node.src) {
       this.compressInfo = node.compressInfo
+      if (this.compressInfo.outputFileInfo != undefined) {
+        this.compressedFileInfo = this.compressInfo.outputFileInfo
+      }
       var func = statusDealerMap.get(this.compressInfo.compressState);
       if (func) {
         func(this);
       }
+      this.delegate?.taskStateChanged(this);
     }
   }
 }
+
+
 
 function statusDealerForNone(task: CompressTask) {
   if (task.taskState == CompressTaskState.none) {
@@ -76,13 +128,10 @@ function statusDealerForCompressing(task: CompressTask) {
 
 function statusDealerForDone(task: CompressTask) {
   if (task.taskState == CompressTaskState.excuting) {
-    task.node.acceptCompress((code, error) => {
-      if (code == -2) {
-        task.error = error;
-        task.taskState = CompressTaskState.done;
-      }
-    })
-
+    this.compressedNode = new FileNode(this.compressInfo.outputPath);
+    this.compressedNode.isOutputNode = true
+    this.compressedNode.delegate = this
+    this.compressedNode.initialData()
   }
 }
 
