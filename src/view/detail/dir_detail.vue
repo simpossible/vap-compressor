@@ -31,8 +31,8 @@
     compressSpeedTip }}</el-text> </el-col>
     </el-row>
     <el-row>
-      <!-- 这里加一个列表用来显示所有的压缩任务的进度 -->
-      <el-table :data="taskList" style="width: 100%">
+      <!-- 这里加一个列表用来显示 所有的压缩任务的进度 -->
+      <el-table :data="taskList" :key="refreshKey" style="width: 100%">
         <el-table-column label="路径">
           <template #default="scope">
             <el-text class="mx-1" size="small">
@@ -43,11 +43,16 @@
         <el-table-column align="center" label="分辨率">
           <template #default="scope">
             <el-text class="mx-1" size="small">
-              {{ scope.row.resolution}}
+              {{ scope.row.resolution }}
             </el-text>
           </template>
         </el-table-column>
         <el-table-column prop="duration" label="时长">
+          <template #default="scope">
+            <el-text class="mx-1" size="small">
+              {{ scope.row.duration}}
+            </el-text>
+          </template>
         </el-table-column>
         <el-table-column prop="orgFileSizeStr" label="原始大小">
         </el-table-column>
@@ -96,7 +101,9 @@ export default {
       compressSpeedValue: 4,
       compressSpeedMaxValue: CompressSpeedOptions.length - 1,
       compressSpeedTip: '',
-      taskList: []
+      taskList: [],
+      refreshKey: "",
+      needUpdate: false //避免频繁刷新。刷新频率yis
     };
   },
   methods: {
@@ -115,6 +122,22 @@ export default {
       }).catch((error) => {
         console.log('load all task error:', error)
       })
+    },
+    taskInfoChanged(task) {
+      console.log('taskInfoChanged:', task.node.src)
+      this.needUpdate = true;
+      // update after 1s
+      setTimeout(() => {
+        this.checkListUpdate()
+      }, 160)
+    },
+    checkListUpdate() {
+      if (this.needUpdate) {
+        console.log("want to update list")
+        this.needUpdate = false
+        this.refreshKey = "" + (new Date().getTime())
+        this.taskList = this.taskList
+      }
     },
     qualityTip(number) {
       return (number * 100 / 102).toFixed(2) + "%";

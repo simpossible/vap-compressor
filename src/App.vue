@@ -1,16 +1,16 @@
 <template>
   <el-row style="height: 100%;width: 100%;">
     <el-col :span="6">
-      <VapList :onVapChoosed="onListVapChoosed"/>
+      <VapList :onVapChoosed="onListVapChoosed" />
     </el-col>
     <el-col :span="9" v-if="selectNode.fileType == 2">
-      <VapDetail :key="refreshKey" :node="selectNode" ></VapDetail>
+      <VapDetail :key="refreshKey" :node="selectNode"></VapDetail>
     </el-col>
     <el-col :span="9" v-if="selectNode.fileType == 2">
       <VapCompressDetail :key="refreshKey" :node="selectNode"> </VapCompressDetail>
     </el-col>
     <el-col :span="18" v-if="selectNode.fileType == 1">
-        <DirDetail :node="selectNode"></DirDetail>
+      <DirDetail :key="selectNode.src" :node="selectNode"></DirDetail>
     </el-col>
   </el-row>
 
@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       count: 0,
-      selectNode:new FileNode(""),
+      selectNode: new FileNode(""),
       refreshKey: 0
     }
   },
@@ -40,7 +40,7 @@ export default {
     increment() {
       this.count++
     },
-    onListVapChoosed(node){
+    onListVapChoosed(node) {
       console.log("listVapChoosed", node)
       this.refreshKey = this.refreshKey + 1
       this.selectNode = node
@@ -58,6 +58,7 @@ body {
   margin: 0rem;
   padding: 0rem;
 }
+
 .app {
   height: 100%;
 }

@@ -32,6 +32,7 @@ function getATaskId() {
 
 interface CompressTaskStateInterface {
   taskStateChanged: (task: CompressTask) => void;
+  taskInfoChanged: (task: CompressTask) => void;
 }
 
 class CompressTask {
@@ -50,9 +51,12 @@ class CompressTask {
   compressedFileSizeStr: string = ""; // 压缩后文件大小
   compressedBitRateStr: string = ""; // 压缩后码率
   displayPath: string = ""; // 显示路径
-  refreshKey: number = getATaskId(); // 刷新时间
+  refreshKey: string = ""; // 刷新时间
+
+  delegate: CompressTaskStateInterface | null = null;
 
   constructor(node: FileNode) {
+    this.refreshKey = node.src
     this.node = node;
     this.node.addDelegates(this)
     this.node.addCompresseDelegate(this);
@@ -63,7 +67,7 @@ class CompressTask {
     console.log("onNodeInfoLoaded at task")
     this.refreshInfos()
     this.taskState = CompressTaskState.prepaired;
-    this.refreshKey = getATaskId();
+    this.delegate?.taskInfoChanged(this);
   }
 
   start(compressParams: any) {
