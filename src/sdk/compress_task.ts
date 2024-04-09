@@ -4,6 +4,7 @@ import { CompressState } from "../file_server/compress_state"
 import { error } from "console";
 import { Nullable } from "element-plus/es/utils";
 import { randomUUID } from "crypto";
+import { compose } from "element-plus/es/components/table/src/util";
 
 
 var statusDealerMap = new Map<number, Function>([
@@ -47,7 +48,16 @@ class CompressTask {
   orgFileSizeStr: string = ""; // 原始文件大小
   orgBitRateStr: string = ""; // 原始码率
   compressedFileSizeStr: string = ""; // 压缩后文件大小
+  compressedBitRateStr: string = ""; // 压缩后码率
+  displayPath: string = ""; // 显示路径
   refreshKey: number = getATaskId(); // 刷新时间
+
+  constructor(node: FileNode) {
+    this.node = node;
+    this.node.addDelegates(this)
+    this.node.addCompresseDelegate(this);
+    this.node.initialData()
+  }
 
   onNodeInfoLoaded(node) {
     console.log("onNodeInfoLoaded at task")
@@ -74,6 +84,7 @@ class CompressTask {
       this.compressedFileSizeStr = this.formatBytes(compresscfileSizeBytes)
       this.compressedBitRateStr = this.compressedFileInfo.video_info.bit_rate
     }
+    console.log("resolution ", this.resolution, "duration :", this.duration, "filesize:", this.orgFileSizeStr, "bitrate:", this.orgBitRateStr)
   }
   formatBytes(bytes) {
     if (bytes < 1024) {
