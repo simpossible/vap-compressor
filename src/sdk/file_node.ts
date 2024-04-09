@@ -150,7 +150,7 @@ class FileNode {
         }
         this.timer = setInterval(() => {
             this.loadCompressInfo();
-        }, 5000);
+        }, 160);
     }
     stopTimer() {
         if (this.timer != null) {

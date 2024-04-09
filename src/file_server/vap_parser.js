@@ -166,7 +166,7 @@ export function getVapInfo(filePath) {
 
 }
 
-export function getFileInfoOfVap(filePath) {
+export function getFileInfoOfVap(filePath, forceVap = true) {
     return new Promise((resolve, reject) => {
         console.log("get file info of vap: ", filePath)
         var stat = fs.statSync(filePath)
@@ -175,7 +175,7 @@ export function getFileInfoOfVap(filePath) {
         // is mp4
         if (filePath.endsWith(".mp4")) {
             var vapJson = getVapInfo(filePath);
-            if (vapJson != null) {
+            if (vapJson != null || forceVap == false) {
                 ffprobe(filePath, { path: ffprobeStatic.path })
                     .then(fileMetaData => {
                         if (fileMetaData == undefined || fileMetaData.streams == undefined) {
@@ -206,9 +206,11 @@ export function getFileInfoOfVap(filePath) {
                         resolve(null);
                     });
             } else {
+                console.log("ffprobe failed2: ", filePath)
                 resolve(null);
             }
         } else {
+            console.log("ffprobe failed3: ", filePath)
             resolve(null);
         }
     });

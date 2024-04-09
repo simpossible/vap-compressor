@@ -352,10 +352,12 @@ async function getCompressInfo(req, params, res) {
                     org_path: filePath
                 }
             } else {
+                var fileInfo = await getFileInfoOfVap(tempVapPath)
                 compressInfo = {
                     state: CompressState.done,
                     org_path: filePath,
-                    outputPath: tempVapPath
+                    outputPath: tempVapPath,
+                    outputFileInfo: fileInfo,
                 }
                 compressInfoMap[filePath] = compressInfo
             }
@@ -438,12 +440,15 @@ async function toCompressVideo(inputPath, outputPath, speed, quality) {
             }
             console.log("add vapc info")
             var compressInfo = compressInfoMap.get(inputPath)
-            compressInfo.state = CompressState.done
-            compressInfo.progress = 100
             compressInfo.outputPath = outputPath
-            getFileInfoOfVap(outputPath).then((outputFileInfo) => {
+            getFileInfoOfVap(outputPath, false).then((outputFileInfo) => {
+                console.log("这里究竟是什么鬼啊:", outputFileInfo)
+                compressInfo.state = CompressState.done
+                compressInfo.progress = 100
                 if (outputFileInfo != null) {
                     compressInfo.outputFileInfo = outputFileInfo
+                } else {
+                    compressInfo.outputFileInfo = "发生了未知错误"
                 }
                 compressInfo.end_time = new Date().getTime()
                 var oldVapInfo = getVapInfo(inputPath)

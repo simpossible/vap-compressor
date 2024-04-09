@@ -7,16 +7,8 @@ import { randomUUID } from "crypto";
 import { compose } from "element-plus/es/components/table/src/util";
 
 
-var statusDealerMap = new Map<number, Function>([
-  [CompressState.None, statusDealerForNone],
-  [CompressState.compressing, statusDealerForCompressing],
-  [CompressState.done, statusDealerForDone],
-  [CompressState.acceptting, statusDealerForAcceptting],
-  [CompressState.quitting, statusDealerForQuitting],
 
-]);
-
-enum CompressTaskState {
+export enum CompressTaskState {
   none = 0,
   preparing = 1,
   prepaired = 2,
@@ -52,6 +44,7 @@ class CompressTask {
   compressedBitRateStr: string = ""; // 压缩后码率
   displayPath: string = ""; // 显示路径
   refreshKey: string = ""; // 刷新时间
+  progressStr: string = ""; // 进度
 
   delegate: CompressTaskStateInterface | null = null;
 
@@ -60,21 +53,35 @@ class CompressTask {
     this.node = node;
     this.node.addDelegates(this)
     this.node.addCompresseDelegate(this);
+    this.taskState = CompressTaskState.preparing;
     this.node.initialData()
   }
 
   onNodeInfoLoaded(node) {
     console.log("onNodeInfoLoaded at task")
+    this.node.loadCompressInfo();
     this.refreshInfos()
-    this.taskState = CompressTaskState.prepaired;
-    this.delegate?.taskInfoChanged(this);
+  }
+  onNodeCompressInfoUpdated(node) {
+    console.log("onNodeCompressInfoUpdated at task")
+    this.compressInfo = node.compressInfo
+    if (this.taskState == CompressTaskState.preparing) {
+      this.taskState = CompressTaskState.prepaired;
+    }
+    if (this.compressInfo.outputFileInfo != undefined) { // 压缩完成
+      this.compressedFileInfo = this.compressInfo.outputFileInfo
+      this.taskState = CompressTaskState.done;
+    }
+    if (this.compressInfo.state == CompressState.compressing) {
+      this.taskState = CompressTaskState.excuting;
+    }
+    this.refreshInfos()
   }
 
   start(compressParams: any) {
     // 先加载压缩的信息
     this.compressParams = compressParams;
-    this.node.loadCompressInfo();
-    this.refreshInfos()
+    this.node.startCompress(this.compressParams);
   }
 
   refreshInfos() {
@@ -83,11 +90,21 @@ class CompressTask {
     this.duration = this.formatTime(this.node.fileInfo.video_info.duration_ts)
     this.orgFileSizeStr = this.formatBytes(fileSizeBytes)
     this.orgBitRateStr = this.node.fileInfo.video_info.bit_rate
+    if (this.compressInfo.state == CompressState.done) {
+      console.log("what happen ????")
+    }
     if (this.compressedFileInfo != null) {
       var compresscfileSizeBytes = this.compressedFileInfo.size;
       this.compressedFileSizeStr = this.formatBytes(compresscfileSizeBytes)
       this.compressedBitRateStr = this.compressedFileInfo.video_info.bit_rate
+      this.progressStr = "100%"
+    } else {
+      if (this.compressInfo.state == CompressState.compressing) {
+        // limit progrexx with xx.xx format
+        this.progressStr = this.compressInfo.progress.toFixed(2) + "%"
+      }
     }
+    this.delegate?.taskInfoChanged(this);
     console.log("resolution ", this.resolution, "duration :", this.duration, "filesize:", this.orgFileSizeStr, "bitrate:", this.orgBitRateStr)
   }
   formatBytes(bytes) {
@@ -121,49 +138,17 @@ class CompressTask {
 
   onCompressInfoLoaded(node: FileNode) {
     if (node.src == this.node.src) {
-      this.compressInfo = node.compressInfo
-      if (this.compressInfo.outputFileInfo != undefined) {
-        this.compressedFileInfo = this.compressInfo.outputFileInfo
-      }
+
       var func = statusDealerMap.get(this.compressInfo.compressState);
       if (func) {
         func(this);
       }
-      this.delegate?.taskStateChanged(this);
     }
   }
 }
 
 
 
-function statusDealerForNone(task: CompressTask) {
-  if (task.taskState == CompressTaskState.none) {
-    task.taskState = CompressTaskState.excuting;
-    task.node.startCompress(task.compressParams);
-  } else if (task.taskState == CompressTaskState.excuting) {
-    task.taskState = CompressTaskState.done;
-  }
-}
 
-function statusDealerForCompressing(task: CompressTask) {
-
-}
-
-function statusDealerForDone(task: CompressTask) {
-  if (task.taskState == CompressTaskState.excuting) {
-    this.compressedNode = new FileNode(this.compressInfo.outputPath);
-    this.compressedNode.isOutputNode = true
-    this.compressedNode.delegate = this
-    this.compressedNode.initialData()
-  }
-}
-
-function statusDealerForAcceptting(task: CompressTask) {
-
-}
-
-function statusDealerForQuitting(task: CompressTask) {
-
-}
 
 export { CompressTask }

@@ -62,13 +62,15 @@
         </el-table-column>
         <el-table-column prop="compressedBitRateStr" label="输出码率">
         </el-table-column>
+        <el-table-column prop="progressStr" label="压缩进度">
+        </el-table-column>
       </el-table>
     </el-row>
   </div>
 </template>
 <script>
 import { FileNode } from '../../sdk/file_node';
-import { CompressTask } from '../../sdk/compress_task';
+import { CompressTask, CompressTaskState } from '../../sdk/compress_task';
 import Vap from 'video-animation-player';
 import { vapUrlForKey, UrlPathDownload, UrlPathVapJson } from '../../sdk/url_config';
 import { CompressSpeedOptions, compressSpeedOptionDisplayName } from '../../sdk/compress_params';
@@ -158,10 +160,11 @@ export default {
     },
 
     startCompress() {
+      console.log("go to compress")
       // 开始压缩任务
       var alreadyFinish = true
-      for (task of this.taskList) {
-        if (task.status == CompressState.none) {
+      for (let task of this.taskList) {
+        if (task.taskState == CompressTaskState.prepaired) {
           task.start({
             quality: this.compressQualityValue / 2,
             speed: CompressSpeedOptions[this.compressSpeedValue]
