@@ -33,9 +33,19 @@
     <el-row>
       <!-- 这里加一个列表用来显示所有的压缩任务的进度 -->
       <el-table :data="taskList" style="width: 100%">
-        <el-table-column prop="displayPath" label="路径">
+        <el-table-column label="路径">
+          <template #default="scope">
+            <el-text class="mx-1" size="small">
+              {{ scope.row.displayPath }}
+            </el-text>
+          </template>
         </el-table-column>
-        <el-table-column prop="resolution" label="分辨率">
+        <el-table-column align="center" label="分辨率">
+          <template #default="scope">
+            <el-text class="mx-1" size="small">
+              {{ scope.row.resolution}}
+            </el-text>
+          </template>
         </el-table-column>
         <el-table-column prop="duration" label="时长">
         </el-table-column>
@@ -95,7 +105,7 @@ export default {
       console.log('load all task')
       this.node.getVapList().then((vapList) => {
         var tempTaskList = []
-        for (node of vapList) {
+        for (var node of vapList) {
           var task = new CompressTask(node)
           task.displayPath = node.src.replace(this.node.src, '')
           task.delegate = this

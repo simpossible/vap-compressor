@@ -3,6 +3,7 @@ import { FileNode } from "./file_node";
 import { CompressState } from "../file_server/compress_state"
 import { error } from "console";
 import { Nullable } from "element-plus/es/utils";
+import { randomUUID } from "crypto";
 
 
 var statusDealerMap = new Map<number, Function>([
@@ -16,9 +17,16 @@ var statusDealerMap = new Map<number, Function>([
 
 enum CompressTaskState {
   none = 0,
-  excuting = 1,
-  done = 2,
+  preparing = 1,
+  prepaired = 2,
+  excuting = 3,
+  done = 4,
 
+}
+
+var ____global_uuid_task = 0;
+function getATaskId() {
+  return ____global_uuid_task++;
 }
 
 interface CompressTaskStateInterface {
@@ -39,15 +47,15 @@ class CompressTask {
   orgFileSizeStr: string = ""; // 原始文件大小
   orgBitRateStr: string = ""; // 原始码率
   compressedFileSizeStr: string = ""; // 压缩后文件大小
-  compressedBitRateStr: string = ""; // 压缩后码率
-  displayPath: string = ""; // 显示路径
+  refreshKey: number = getATaskId(); // 刷新时间
 
-  delegate: CompressTaskStateInterface | null = null;
-
-  constructor(node: FileNode) {
-    this.node = node;
-    this.node.addCompresseDelegate(this);
+  onNodeInfoLoaded(node) {
+    console.log("onNodeInfoLoaded at task")
+    this.refreshInfos()
+    this.taskState = CompressTaskState.prepaired;
+    this.refreshKey = getATaskId();
   }
+
   start(compressParams: any) {
     // 先加载压缩的信息
     this.compressParams = compressParams;
