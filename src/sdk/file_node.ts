@@ -130,7 +130,6 @@ class FileNode {
         }
         this.isCompressingLoadding = true
         axios.get(vapUrlForKey(UrlPathCompressInfo, { path: this.src })).then(response => {
-            console.log("on compress info back", response.data);
             this.isCompressingLoadding = false
             this.compressInfo = response.data;
             for (let delegate of this.compressDelegates) {

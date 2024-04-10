@@ -127,6 +127,10 @@ export default {
     },
     taskInfoChanged(task) {
       console.log('taskInfoChanged:', task.node.src)
+      if (task.taskState == CompressTaskState.done) {
+
+      } else {
+      }
       this.needUpdate = true;
       // update after 1s
       setTimeout(() => {

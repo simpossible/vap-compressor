@@ -47,6 +47,7 @@ class CompressTask {
   progressStr: string = ""; // 进度
 
   delegate: CompressTaskStateInterface | null = null;
+  auto_accept: boolean = true;
 
   constructor(node: FileNode) {
     this.refreshKey = node.src
@@ -70,17 +71,18 @@ class CompressTask {
     }
     if (this.compressInfo.outputFileInfo != undefined) { // 压缩完成
       this.compressedFileInfo = this.compressInfo.outputFileInfo
-      this.taskState = CompressTaskState.done;
-    }
-    if (this.compressInfo.state == CompressState.compressing) {
-      this.taskState = CompressTaskState.excuting;
+      if (this.taskState == CompressTaskState.excuting) {
+        this.taskState = CompressTaskState.done
+      }
     }
     this.refreshInfos()
   }
 
   start(compressParams: any) {
     // 先加载压缩的信息
+    compressParams.auto_accept = this.auto_accept;
     this.compressParams = compressParams;
+    this.taskState = CompressTaskState.excuting
     this.node.startCompress(this.compressParams);
   }
 
@@ -98,12 +100,18 @@ class CompressTask {
       this.compressedFileSizeStr = this.formatBytes(compresscfileSizeBytes)
       this.compressedBitRateStr = this.compressedFileInfo.video_info.bit_rate
       this.progressStr = "100%"
+      if (this.compressInfo.errorMsg != undefined && this.compressInfo.errorMsg != "") {
+        this.progressStr = this.compressInfo.errorMsg
+      }
     } else {
       if (this.compressInfo.state == CompressState.compressing) {
         // limit progrexx with xx.xx format
         this.progressStr = this.compressInfo.progress.toFixed(2) + "%"
       }
     }
+
+
+
     this.delegate?.taskInfoChanged(this);
     console.log("resolution ", this.resolution, "duration :", this.duration, "filesize:", this.orgFileSizeStr, "bitrate:", this.orgBitRateStr)
   }
@@ -136,15 +144,6 @@ class CompressTask {
     return timeStr;
   }
 
-  onCompressInfoLoaded(node: FileNode) {
-    if (node.src == this.node.src) {
-
-      var func = statusDealerMap.get(this.compressInfo.compressState);
-      if (func) {
-        func(this);
-      }
-    }
-  }
 }
 
 

@@ -403,6 +403,7 @@ async function startCompress(req, params, res) {
     var filePath = params.get("path")
     var speed = params.get("speed")
     var quality = params.get("quality")
+    var needAutoAccept = params.get("auto_accept")
     var tempVapPath = tempVapPathFrom(filePath)
     if (fs.existsSync(tempVapPath)) {
         getCompressInfo(req, params, res)
@@ -417,8 +418,9 @@ async function startCompress(req, params, res) {
         res.end(JSON.stringify(compressInfo))
         return
     }
-    compressInfo.state = CompressState.compressing,
-        compressInfo.start_time = new Date().getTime()
+    compressInfo.state = CompressState.compressing;
+    compressInfo.needAutoAccept = needAutoAccept === 'true'  // 是否自动保存
+    compressInfo.start_time = new Date().getTime()
     compressInfo.org_path = filePath
     compressInfoMap.set(filePath, compressInfo)
     // start compress
@@ -441,10 +443,10 @@ async function toCompressVideo(inputPath, outputPath, speed, quality) {
             console.log("add vapc info")
             var compressInfo = compressInfoMap.get(inputPath)
             compressInfo.outputPath = outputPath
+            // 获取到压缩后的文件信息
             getFileInfoOfVap(outputPath, false).then((outputFileInfo) => {
                 console.log("这里究竟是什么鬼啊:", outputFileInfo)
-                compressInfo.state = CompressState.done
-                compressInfo.progress = 100
+
                 if (outputFileInfo != null) {
                     compressInfo.outputFileInfo = outputFileInfo
                 } else {
@@ -456,12 +458,39 @@ async function toCompressVideo(inputPath, outputPath, speed, quality) {
                     var code, errorMsg = addVapInfoToMp4(outputPath, oldVapInfo)
                     compressInfo.errorCode = code
                     compressInfo.errorMsg = errorMsg
-                    compressInfo
+                    // 自动合并
+                    if (compressInfo.needAutoAccept != undefined && compressInfo.needAutoAccept == true) {
+                        // 判断是否比原始文件小
+                        var inputSize = fs.statSync(inputPath).size
+                        var outputSize = fs.statSync(outputPath).size
+                        if (outputSize > inputSize) {
+                            fs.unlinkSync(outputPath)
+                            compressInfo.errorCode = -2
+                            compressInfo.errorMsg = "压缩后变大了"
+                        } else {
+                            var orgVapPath = inputPath
+                            if (fs.existsSync(orgVapPath)) {
+                                fs.unlinkSync(orgVapPath)
+                            }
+                            fs.renameSync(outputPath, orgVapPath)
+                            compressInfoMap.delete(orgVapPath)
+                            compressInfo.state = CompressState.done
+                            compressInfo.progress = 100
+                        }
+
+
+                    } else {
+                        compressInfo.state = CompressState.done
+                        compressInfo.progress = 100
+                    }
+
                 } else {
+                    compressInfo.state = CompressState.done
                     compressInfo.errorCode = -1
                     compressInfo.errorMsg = "get vap info error"
                 }
             }).catch((error) => {
+                compressInfo.state = CompressState.done
                 compressInfo.errorCode = -1
                 compressInfo.errorMsg = error
             })
