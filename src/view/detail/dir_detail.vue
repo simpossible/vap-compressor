@@ -1,7 +1,7 @@
 <template>
-  <div v-if="node.src.length != 0" style="background-color: aqua;">
+  <div v-if="node.src.length != 0">
     <!-- 这里显示开始压缩按钮 -->
-    <el-row style="margin-top: 100px;">
+    <el-row v-if="started === false" style="margin-top: 64px;">
       <el-col :span="8"></el-col>
       <el-col :span="8"> <el-button @click="onCompressClicked" circle style="width: 100px;height: 100px;">
           开始压缩
@@ -9,9 +9,10 @@
       <el-col :span="8"></el-col>
     </el-row>
     <!-- 加一个压缩质量的可选进度条 -->
-    <el-row style="background-color: antiquewhite;">
+    <el-row v-if="started === false" style="margin-top: 20px;">
       <el-col :span="1"></el-col>
-      <el-col :span="5" style="margin-top: 5px;"><el-text class="mx-1">压缩质量</el-text></el-col>
+      <el-col :span="5" style="margin-top: 5px; width: 60px; max-width: 60px;"><el-text
+          class="mx-1">压缩质量</el-text></el-col>
       <el-col :span="14">
         <el-slider v-model="compressQualityValue" :step="1" :max="102" :format-tooltip="qualityTip"
           @change="onCompressQualityChange" />
@@ -20,15 +21,24 @@
     compressQualityPercentage }}</el-text> </el-col>
     </el-row>
     <!-- 加一个压缩速度的可选进度条 -->
-    <el-row style="background-color:brown;">
+    <el-row v-if="started === false" style="margin-top: 20px;">
       <el-col :span="1"></el-col>
-      <el-col :span="5" style="margin-top: 5px;"><el-text class="mx-1">压缩速度</el-text></el-col>
+      <el-col :span="5" style="margin-top: 5px; max-width: 60px;"><el-text class="mx-1">压缩速度</el-text></el-col>
       <el-col :span="14">
         <el-slider v-model="compressSpeedValue" :step="1" :max="compressSpeedMaxValue" :format-tooltip="speedQualityTip"
           @change="onCompressSpeedQualityChange" />
       </el-col>
       <el-col :span="3" style="margin-top: 5px;padding-left: 6px;"> <el-text class="mx-1" size="small">{{
     compressSpeedTip }}</el-text> </el-col>
+    </el-row>
+    <el-row v-if="started === false">
+      <el-col :span="1"></el-col>
+      <el-col :span="22">
+        <el-text class="mx-1" size="small" style="margin-top: 6px;">Tip: 压缩速度约快 压缩率越低。压缩质量越大，耗时就越久</el-text>
+      </el-col>
+    </el-row>
+    <el-row>
+      
     </el-row>
     <el-row>
       <!-- 这里加一个列表用来显示 所有的压缩任务的进度 -->
@@ -108,7 +118,9 @@ export default {
       compressSpeedTip: '',
       taskList: [],
       refreshKey: "",
-      needUpdate: false //避免频繁刷新。刷新频率yis
+      needUpdate: false, //避免频繁刷新。刷新频率yis
+      started: false, //  是否已经开始了
+      finished: false
     };
   },
   methods: {
@@ -163,6 +175,7 @@ export default {
       this.compressSpeedTip = compressSpeedOptionDisplayName(value);
     },
     onCompressClicked() {
+      this.started = true
       this.startCompress()
     },
 

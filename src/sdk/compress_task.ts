@@ -52,10 +52,13 @@ class CompressTask {
   constructor(node: FileNode) {
     this.refreshKey = node.src
     this.node = node;
+    this.compressInfo = this.node.compressInfo
+    this.refreshInfos()
     this.node.addDelegates(this)
     this.node.addCompresseDelegate(this);
     this.taskState = CompressTaskState.preparing;
     this.node.initialData()
+
   }
 
   onNodeInfoLoaded(node) {
@@ -144,7 +147,7 @@ class CompressTask {
 
     return timeStr;
   }
-  clear (){
+  clear() {
     this.node.deleteDelegates(this)
     this.node.deleteCompresseDelegate(this)
     this.delegate = null
