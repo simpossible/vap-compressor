@@ -75,6 +75,7 @@ class CompressTask {
         this.taskState = CompressTaskState.done
       }
     }
+    console.log("gogogo", this.compressInfo)
     this.refreshInfos()
   }
 
@@ -106,14 +107,14 @@ class CompressTask {
     } else {
       if (this.compressInfo.state == CompressState.compressing) {
         // limit progrexx with xx.xx format
-        this.progressStr = this.compressInfo.progress.toFixed(2) + "%"
+        var progress = this.compressInfo.progress
+        if (progress != undefined) {
+          this.progressStr = progress.toFixed(2) + "%"
+        }
+
       }
     }
-
-
-
     this.delegate?.taskInfoChanged(this);
-    console.log("resolution ", this.resolution, "duration :", this.duration, "filesize:", this.orgFileSizeStr, "bitrate:", this.orgBitRateStr)
   }
   formatBytes(bytes) {
     if (bytes < 1024) {
@@ -142,6 +143,11 @@ class CompressTask {
     }
 
     return timeStr;
+  }
+  clear (){
+    this.node.deleteDelegates(this)
+    this.node.deleteCompresseDelegate(this)
+    this.delegate = null
   }
 
 }

@@ -92,6 +92,9 @@ export default {
     this.loadAllTask()
   },
   unmounted() {
+    for (let task of this.taskList) {
+      task.clear()
+    }
     this.taskList = []
 
   },
@@ -126,9 +129,9 @@ export default {
       })
     },
     taskInfoChanged(task) {
-      console.log('taskInfoChanged:', task.node.src)
+      console.log('taskInfoChanged:', task.taskState)
       if (task.taskState == CompressTaskState.done) {
-
+        this.startCompress()
       } else {
       }
       this.needUpdate = true;

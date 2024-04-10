@@ -8,6 +8,7 @@ export var UrlPathVapInfo = 'vap-info';
 export var UrlPathDownload = 'download';
 export var UrlPathVapJson = 'vap-json';
 export var UrlPathVapList = 'vap-file-list';
+export var UrlPathVapClearFiles = 'clear-files';
 
 var vapServerPort = 3000;
 

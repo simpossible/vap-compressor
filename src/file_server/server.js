@@ -465,6 +465,8 @@ async function toCompressVideo(inputPath, outputPath, speed, quality) {
                         var outputSize = fs.statSync(outputPath).size
                         if (outputSize > inputSize) {
                             fs.unlinkSync(outputPath)
+                            compressInfo.state = CompressState.done
+                            compressInfo.progress = 100
                             compressInfo.errorCode = -2
                             compressInfo.errorMsg = "压缩后变大了"
                         } else {
@@ -473,7 +475,6 @@ async function toCompressVideo(inputPath, outputPath, speed, quality) {
                                 fs.unlinkSync(orgVapPath)
                             }
                             fs.renameSync(outputPath, orgVapPath)
-                            compressInfoMap.delete(orgVapPath)
                             compressInfo.state = CompressState.done
                             compressInfo.progress = 100
                         }
@@ -552,6 +553,25 @@ async function acceptCompress(req, params, res) {
     res.end('')
 }
 server_map.set("/accept-compress", acceptCompress);
+
+async function clear_files(req, params, res) {
+    let body = '';
+    req.on('data', chunk => {
+        body += chunk.toString(); // 将接收到的数据块转换为字符串并添加到body变量中
+    });
+    req.on('end', () => {
+        const postParams = JSON.parse(body); // 解析POST参数
+        var files = postParams["files"]
+        for (var fileIndex in files) {
+            var filePath = files[fileIndex]
+            if (compressInfoMap.has(filePath)) {
+                compressInfoMap.delete(filePath)
+            }
+        }
+        res.end('ok')
+    });
+}
+server_map.set("/clear-files", clear_files);
 
 const server = http.createServer((req, res) => {
 
