@@ -57,7 +57,7 @@
         <el-table-column prop="duration" label="时长">
           <template #default="scope">
             <el-text class="mx-1" size="small">
-              {{ scope.row.duration}}
+              {{ scope.row.duration }}
             </el-text>
           </template>
         </el-table-column>
@@ -73,9 +73,14 @@
         </el-table-column>
       </el-table>
     </el-row>
-    <div style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.3);">
+    <div v-if="finished == true"
+      style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.3); z-index: 999; display: flex; justify-content: center; align-items: center;">
       <!-- 盖一个半透明的的上面。加个按钮 -->
-      哈哈哈
+      <div>
+        <!-- BEGIN: ed8c6549bwf9 -->
+        <el-button @click="clearButtonClicked" circle style="width: 100px;height: 100px;">clear</el-button>
+        <!-- END: ed8c6549bwf9 -->
+      </div>
     </div>
   </div>
 </template>
@@ -85,8 +90,7 @@ import { CompressTask, CompressTaskState } from '../../sdk/compress_task';
 import Vap from 'video-animation-player';
 import { vapUrlForKey, UrlPathDownload, UrlPathVapJson } from '../../sdk/url_config';
 import { CompressSpeedOptions, compressSpeedOptionDisplayName } from '../../sdk/compress_params';
-import { CompressState } from '../../file_server/compress_state';
-import { setTransitionHooks } from 'vue';
+import { shared_center } from '../../sdk/vap_center';
 
 export default {
   name: 'DirDetail',
@@ -194,14 +198,28 @@ export default {
           break
         }
       }
-      if (alreadyFinish) {
+      if (alreadyFinish && this.finished == false) {
+        this.finished = true
         this.$message({
           message: '所有任务已经完成',
           type: 'warning'
         });
       }
     },
-
+    clearButtonClicked() {
+      console.log("ready to clear all task")
+      var pathList = []
+      for (let task of this.taskList) {
+        pathList.push(task.node.src)
+        task.clear()
+      }
+      shared_center.clearCompressInfoForFiles(pathList).then(() => {
+        this.loadAllTask()
+        this.finished = false
+      }).catch((e) => {
+        console.log(e)
+      })
+    },
     taskStateChanged(task) {
       this.startCompress()
     }

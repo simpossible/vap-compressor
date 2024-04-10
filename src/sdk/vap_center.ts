@@ -1,7 +1,8 @@
+import axios from 'axios';
 import { FileNode } from './file_node';
 import { isMP4File } from './file_util';
 import { setNodeCache } from './node_cache';
-import { vapUrlForKey } from './url_config';
+import { UrlPathVapClearFiles, vapUrlForKey } from './url_config';
 
 interface VapCenterInterface {
   onNodeAdded: (node: FileNode) => void;
@@ -43,6 +44,18 @@ class VapCenter {
 
   cacheNode(node: any, path: string): void {
     this.nodeMap.set(path, node);
+  }
+
+  clearCompressInfoForFiles(pathList) {
+    // 删除这些文件的压缩信息 compressinfo
+    var params = { files: pathList };
+    var url = vapUrlForKey(UrlPathVapClearFiles)    
+    // 使用axios发送post请求content-type为application/json
+    return axios.post(url, params, {
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })    
   }
 }
 

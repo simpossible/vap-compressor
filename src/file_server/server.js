@@ -514,10 +514,6 @@ async function quitCompress(req, params, res) {
         res.end()
         return
     }
-    if (compressInfoMap.has(orgVapPath)) {
-        var info = compressInfoMap.get(orgVapPath)
-        info.state = CompressState.quitting
-    }
     if (compressInfoMap.has(filePath)) {
         compressInfoMap.delete(filePath)
     }
@@ -537,18 +533,12 @@ async function acceptCompress(req, params, res) {
         res.end('404 Not Found');
         return
     }
-    if (compressInfoMap.has(orgVapPath)) {
-        var info = compressInfoMap.get(orgVapPath)
-        info.state = CompressState.acceptting
-    }
+
     var orgVapPath = filePath
     if (fs.existsSync(orgVapPath)) {
         fs.unlinkSync(orgVapPath)
     }
     fs.renameSync(tempVapPath, orgVapPath)
-    if (compressInfoMap.has(orgVapPath)) {
-        compressInfoMap.delete(orgVapPath)
-    }
     res.writeHead(200, { 'Content-Type': 'text/plain' })
     res.end('')
 }
@@ -557,6 +547,7 @@ server_map.set("/accept-compress", acceptCompress);
 async function clear_files(req, params, res) {
     let body = '';
     req.on('data', chunk => {
+        console.log('Partial body: ' + body)
         body += chunk.toString(); // 将接收到的数据块转换为字符串并添加到body变量中
     });
     req.on('end', () => {
@@ -564,6 +555,10 @@ async function clear_files(req, params, res) {
         var files = postParams["files"]
         for (var fileIndex in files) {
             var filePath = files[fileIndex]
+            var tempVapPath = tempVapPathFrom(filePath)
+            if (fs.existsSync(tempVapPath)) {
+                fs.unlinkSync(tempVapPath)
+            }
             if (compressInfoMap.has(filePath)) {
                 compressInfoMap.delete(filePath)
             }
@@ -580,6 +575,14 @@ const server = http.createServer((req, res) => {
     var pathName = urlObj.pathname
     // if pathname in server_map
     res.setHeader('Access-Control-Allow-Origin', '*');
+    if (req.method === "OPTIONS") {
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'POST');
+        res.setHeader('Access-Control-Allow-Headers', 'content-type');
+        res.writeHead(200);
+        res.end();
+        return;
+    }
     if (server_map.has(pathName)) {
         var func = server_map.get(pathName)
         var params = urlObj.searchParams;
