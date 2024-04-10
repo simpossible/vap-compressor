@@ -1,7 +1,7 @@
 <template>
-  <div v-if="node.src.length != 0">
+  <div v-if="node.src.length != 0" style="position: relative; height: 100%;">
     <!-- 这里显示开始压缩按钮 -->
-    <el-row v-if="started === false" style="margin-top: 64px;">
+    <el-row v-if="started === false" style="padding-top: 64px;">
       <el-col :span="8"></el-col>
       <el-col :span="8"> <el-button @click="onCompressClicked" circle style="width: 100px;height: 100px;">
           开始压缩
@@ -36,9 +36,6 @@
       <el-col :span="22">
         <el-text class="mx-1" size="small" style="margin-top: 6px;">Tip: 压缩速度约快 压缩率越低。压缩质量越大，耗时就越久</el-text>
       </el-col>
-    </el-row>
-    <el-row>
-      
     </el-row>
     <el-row>
       <!-- 这里加一个列表用来显示 所有的压缩任务的进度 -->
@@ -76,6 +73,10 @@
         </el-table-column>
       </el-table>
     </el-row>
+    <div style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; background-color: rgba(0, 0, 0, 0.3);">
+      <!-- 盖一个半透明的的上面。加个按钮 -->
+      哈哈哈
+    </div>
   </div>
 </template>
 <script>

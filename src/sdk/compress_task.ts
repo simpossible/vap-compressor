@@ -1,10 +1,5 @@
-import { en, th } from "element-plus/es/locale";
 import { FileNode } from "./file_node";
 import { CompressState } from "../file_server/compress_state"
-import { error } from "console";
-import { Nullable } from "element-plus/es/utils";
-import { randomUUID } from "crypto";
-import { compose } from "element-plus/es/components/table/src/util";
 
 
 
