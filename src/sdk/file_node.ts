@@ -3,6 +3,7 @@ import { UrlPathAcceptCompress, UrlPathQuitCompress, UrlPathStartCompress, UrlPa
 import { UrlPathFile, UrlPathCompressInfo } from './url_config';
 import { currentNodeCache } from './node_cache';
 import { CompressState } from '../file_server/compress_state';
+import { tr } from 'element-plus/es/locale';
 
 interface FileNodeInterface {
     onNodeInfoLoaded: (node: FileNode) => void;
@@ -35,10 +36,14 @@ class FileNode {
     isAcceptCompressing: boolean = false;
     isOutputNode: boolean = false; // 是否是输出节点的node    
     delegates: Array<FileNodeInterface> = [];
+    initialed: boolean = false
 
     timer: any = null; // 定时器持续获取压缩信息
     constructor(src: string) {
         this.src = src;
+        if (this.src === "/Users/liangjinfeng/Downloads/aaaa/bbb/xxx/video.mp4") {
+            console.log("debug -----2")
+        }
     }
 
     addCompresseDelegate(delegate: any) {
@@ -69,7 +74,13 @@ class FileNode {
 
 
     initialData() {
+        if (this.src === "/Users/liangjinfeng/Downloads/aaaa/bbb/xxx/video.mp4") {
+            console.log("debug -----")
+        }
         if (this.isLoading) {
+            return
+        }
+        if (this.initialed === true) {
             return
         }
         this.isLoading = true;
@@ -81,6 +92,7 @@ class FileNode {
         }
         axios.get(fileUrl)
             .then(response => {
+                this.initialed = true
                 this.isLoading = false;
                 var responseJson = response.data;
                 var subFiles = responseJson["sub_files"]
@@ -93,6 +105,7 @@ class FileNode {
                     if (isVap) {
                         this.fileType = FileNodeType.vap;
                         this.fileInfo = responseJson["file_info"];
+                        console.log("file_info_changed 2", this.src)
                     }
                 }
                 var tempArray: FileNode[] = [];
@@ -243,8 +256,9 @@ class FileNode {
                         if (cachedNode == null) {
                             cachedNode = new FileNode(file_path);
                             currentNodeCache().cacheNode(cachedNode, file_path);
+                            console.log("file_info_changed 1", cachedNode.src)
+                            cachedNode.fileInfo = fileInfo;
                         }
-                        cachedNode.fileInfo = fileInfo;
                         tempArray.push(cachedNode);
                     }
                     resolve(tempArray);
@@ -257,9 +271,11 @@ class FileNode {
     }
 
     triggerCompressCleared() {
+        this.initialed = false
         for (let delegate of this.compressDelegates) {
             delegate?.onNodeCompressCleared(this);
         }
+        this.initialData();
     }
 }
 

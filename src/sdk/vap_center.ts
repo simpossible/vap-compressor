@@ -12,6 +12,8 @@ class VapCenter {
   nodes: FileNode[];
   nodeMap: Map<string, FileNode> = new Map();
   delegate: VapCenterInterface | null = null;
+  dealingNodeSrc: string = '';
+    
   constructor() {
     this.nodes = [];
     this.nodeMap = new Map();

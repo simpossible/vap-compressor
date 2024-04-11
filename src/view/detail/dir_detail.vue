@@ -148,8 +148,12 @@ export default {
     },
     taskInfoChanged(task) {
       console.log('taskInfoChanged:', task.taskState)
-      if (task.taskState == CompressTaskState.done && this.started == true) {
-        this.startCompress()
+      if (task.taskState == CompressTaskState.done) {
+        if (this.started == true) {
+          this.startCompress()
+        } else {
+          this.checkfinish()
+        }
       } else {
       }
       this.needUpdate = true;
@@ -183,11 +187,12 @@ export default {
     onCompressClicked() {
       this.started = true
       this.startCompress()
+      shared_center.dealingNodeSrc = this.node.src
     },
 
     startCompress() {
       console.log("go to compress")
-      // 开始压缩任务
+      // 开始压缩任务      
       var alreadyFinish = true
       for (let task of this.taskList) {
         if (task.taskState == CompressTaskState.prepaired) {
@@ -200,11 +205,18 @@ export default {
         }
       }
       if (alreadyFinish && this.finished == false) {
-        this.finished = true
+        this.dealFinish()
         this.$message({
           message: '所有任务已经完成',
           type: 'warning'
         });
+      }
+    },
+
+    dealFinish() {
+      this.finished = true
+      if (shared_center.dealingNodeSrc === this.node.src) {
+        shared_center.dealingNodeSrc = ""
       }
     },
 
@@ -218,7 +230,7 @@ export default {
         }
       }
       if (alreadyFinish && this.finished == false) {
-        this.finished = true
+        this.dealFinish()
         this.$message({
           message: '所有任务已经完成',
           type: 'warning'
@@ -236,6 +248,7 @@ export default {
         for (let task of this.taskList) {
           task.clear()
           task.node.triggerCompressCleared()
+          
         }
         this.loadAllTask()
         this.finished = false

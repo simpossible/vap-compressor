@@ -52,7 +52,12 @@ class CompressTask {
     this.node.addDelegates(this)
     this.node.addCompresseDelegate(this);
     this.taskState = CompressTaskState.preparing;
-    this.node.initialData()
+    console.log("发生了妹子")
+    if (!this.node.initialed) {
+      this.node.initialData()
+    } else {
+      this.node.loadCompressInfo();
+    }
 
   }
 

@@ -21,6 +21,7 @@ import VapDetail from "./view/detail/detail.vue";
 import VapCompressDetail from "./view/compress_detail/compress_detail.vue";
 import { FileNode } from "./sdk/file_node";
 import DirDetail from "./view/detail/dir_detail.vue";
+import { shared_center } from "./sdk/vap_center";
 
 export default {
   components: {
@@ -41,6 +42,13 @@ export default {
       this.count++
     },
     onListVapChoosed(node) {
+      if (shared_center.dealingNodeSrc != "" && shared_center.dealingNodeSrc != node.src) {
+        this.$message({
+          message: '任务正在处理中',
+          type: 'warning'
+        });
+        return
+      }
       console.log("listVapChoosed", node)
       this.refreshKey = this.refreshKey + 1
       this.selectNode = node
