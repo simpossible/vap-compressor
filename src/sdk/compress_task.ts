@@ -69,7 +69,7 @@ class CompressTask {
     }
     if (this.compressInfo.outputFileInfo != undefined) { // 压缩完成
       this.compressedFileInfo = this.compressInfo.outputFileInfo
-      if (this.taskState == CompressTaskState.excuting) {
+      if (this.taskState != CompressTaskState.done) {
         this.taskState = CompressTaskState.done
       }
     }
