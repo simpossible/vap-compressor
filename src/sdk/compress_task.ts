@@ -77,6 +77,26 @@ class CompressTask {
     this.refreshInfos()
   }
 
+  onNodeCompressCleared(node) {
+    this.compressInfo = {};
+    this.resolution = ""; // 分辨率
+    this.duration = ""; // 时长
+    this.compressParams = {}; // 压缩参数
+    this.taskState = CompressTaskState.done; // 任务状态
+    this.error = ""; // 错误信息  
+
+    this.compressedFileInfo = null; // 压缩后的文件
+    this.compressStateStr = ""; // 压缩状态
+    this.orgFileSizeStr = ""; // 原始文件大小
+    this.orgBitRateStr = ""; // 原始码率
+    this.compressedFileSizeStr = ""; // 压缩后文件大小
+    this.compressedBitRateStr = ""; // 压缩后码率
+    this.displayPath = ""; // 显示路径
+    this.refreshKey = ""; // 刷新时间
+    this.progressStr = ""; // 进度
+    this.delegate?.taskInfoChanged(this);
+  }
+
   start(compressParams: any) {
     // 先加载压缩的信息
     compressParams.auto_accept = this.auto_accept;

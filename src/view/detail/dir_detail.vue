@@ -141,13 +141,14 @@ export default {
           tempTaskList.push(task)
         }
         this.taskList = tempTaskList
+        this.checkfinish()
       }).catch((error) => {
         console.log('load all task error:', error)
       })
     },
     taskInfoChanged(task) {
       console.log('taskInfoChanged:', task.taskState)
-      if (task.taskState == CompressTaskState.done) {
+      if (task.taskState == CompressTaskState.done && this.started == true) {
         this.startCompress()
       } else {
       }
@@ -206,14 +207,36 @@ export default {
         });
       }
     },
+
+    checkfinish() {
+      console.log("task checkfinish")
+      var alreadyFinish = true
+      for (let task of this.taskList) {
+        if (task.taskState != CompressTaskState.done) {
+          alreadyFinish = false
+          break
+        }
+      }
+      if (alreadyFinish && this.finished == false) {
+        this.finished = true
+        this.$message({
+          message: '所有任务已经完成',
+          type: 'warning'
+        });
+      }
+    },
     clearButtonClicked() {
       console.log("ready to clear all task")
       var pathList = []
       for (let task of this.taskList) {
         pathList.push(task.node.src)
-        task.clear()
       }
+
       shared_center.clearCompressInfoForFiles(pathList).then(() => {
+        for (let task of this.taskList) {
+          task.clear()
+          task.node.triggerCompressCleared()
+        }
         this.loadAllTask()
         this.finished = false
       }).catch((e) => {

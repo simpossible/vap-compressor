@@ -10,6 +10,7 @@ interface FileNodeInterface {
 
 interface FileNodeCompressInterFace {
     onNodeCompressInfoUpdated: (node: FileNode) => void;
+    onNodeCompressCleared: (node: FileNode) => void;
 }
 
 enum FileNodeType {
@@ -26,7 +27,7 @@ class FileNode {
     delegate: any = null;
     isLoading: boolean = false;
     compressInfo: any = {};
-    compressDelegates: Array<any> = [];
+    compressDelegates: Array<any | null> = [];
     isCompressingLoadding: boolean = false;
     isCompressing: boolean = false;
     fileType: FileNodeType = FileNodeType.unknow;
@@ -253,6 +254,12 @@ class FileNode {
                     console.log("getVapList", error);
                 });
         });
+    }
+
+    triggerCompressCleared() {
+        for (let delegate of this.compressDelegates) {
+            delegate?.onNodeCompressCleared(this);
+        }
     }
 }
 
