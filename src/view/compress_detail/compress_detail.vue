@@ -1,6 +1,6 @@
 <template>
     <div v-if="node != null && node != undefined && node.src != ''">
-        <div v-if="compressInfo.state == 0">
+        <div v-if="task.state == prepaired">
             <!-- 这里显示开始压缩按钮 -->
             <el-row style="margin-top: 100px;">
                 <el-col :span="8"></el-col>
@@ -30,7 +30,7 @@
                 </el-col>
                 <el-col :span="4" style="margin-top: 5px; padding-left: 12px;">
                     <el-text class="mx-1" size="small">
-                        {{compressSpeedTip}}
+                        {{ compressSpeedTip }}
                     </el-text>
                 </el-col>
 
@@ -44,12 +44,12 @@
             </el-row>
 
         </div>
-        <div v-if="compressInfo.state == 1">
+        <div v-if="task.state == 3">
             <!-- 这里显示压缩进度 -->
             <el-row style="margin-top: 100px;">
                 <el-col :span="8"></el-col>
                 <el-col :span="8">
-                    <el-progress type="circle" :percentage="progress" :color="colors" :width="100" />
+                    <el-progress type="circle" :percentage="task.progress" :color="colors" :width="100" />
                 </el-col>
                 <el-col :span="8"></el-col>
             </el-row>
@@ -91,6 +91,7 @@ import { FileNode } from '../../sdk/file_node';
 import Vap from 'video-animation-player';
 import { vapUrlForKey, UrlPathDownload, UrlPathVapJson } from '../../sdk/url_config';
 import { CompressSpeedOptions, compressSpeedOptionDisplayName } from '../../sdk/compress_params';
+import { CompressTask } from '../../sdk/compress_task'
 
 export default {
     name: 'VapCompressDetail',
@@ -105,10 +106,10 @@ export default {
     },
     mounted() {
         console.log("this .node is ", this.node)
-        this.node.addCompresseDelegate(this)
-        this.compressInfo = this.node.compressInfo
         if (this.node.src != '') {
-            this.node.loadCompressInfo()
+            this.task = CompressTask(this.node)
+            this.task.auto_accept = false
+            this.task.delegate = this
             this.onCompressSpeedQualityChange()
         }
     },
@@ -118,20 +119,13 @@ export default {
 
     data() {
         return {
+            task: null,
             compressInfo: { state: 0 }, //当前的压缩信息
             compressQualityValue: 46, // 压缩质量
             compressQualityPercentage: '45%',
             compressSpeedValue: 5,
             compressSpeedMaxValue: CompressSpeedOptions.length - 1,
             compressSpeedTip: '',
-            progress: 0, // 压缩进度
-            compressNode: null, // 压缩后的文件节点
-            fileSize: "",
-            resolution: "",
-            vapJson: "",
-            bitRate: "",
-            duration: "",
-            timer: null,
             colors: [
                 { color: '#f56c6c', percentage: 20 },
                 { color: '#e6a23c', percentage: 40 },
@@ -139,7 +133,6 @@ export default {
                 { color: '#1989fa', percentage: 80 },
                 { color: '#6f7ad3', percentage: 100 },
             ],
-            compressNode: null,
             vap: null,
             fileUrl: "",
             vapJsonUrl: "",
@@ -147,6 +140,12 @@ export default {
         };
     },
     methods: {
+        taskStateChanged(){
+
+        },
+        taskInfoChanged(){
+
+        },
         checkTimer() {
             if (this.compressInfo.state == 1) {
                 if (this.timer == null) {
@@ -175,7 +174,7 @@ export default {
         },
 
         onCompressClicked() {
-            this.node.startCompress({
+            this.task.start({
                 quality: this.compressQualityValue / 2,
                 speed: CompressSpeedOptions[this.compressSpeedValue]
             })

@@ -1,5 +1,6 @@
 import { FileNode } from "./file_node";
 import { CompressState } from "../file_server/compress_state"
+import { th } from "element-plus/es/locale";
 
 
 
@@ -40,6 +41,7 @@ class CompressTask {
   displayPath: string = ""; // 显示路径
   refreshKey: string = ""; // 刷新时间
   progressStr: string = ""; // 进度
+  progress: number = 0; // 进度
 
   delegate: CompressTaskStateInterface | null = null;
   auto_accept: boolean = true;
@@ -99,6 +101,7 @@ class CompressTask {
     this.displayPath = ""; // 显示路径
     this.refreshKey = ""; // 刷新时间
     this.progressStr = ""; // 进度
+    this.progress = 0; // 进度
     this.delegate?.taskInfoChanged(this);
   }
 
@@ -130,9 +133,10 @@ class CompressTask {
     } else {
       if (this.compressInfo.state == CompressState.compressing) {
         // limit progrexx with xx.xx format
-        var progress = this.compressInfo.progress
-        if (progress != undefined) {
-          this.progressStr = progress.toFixed(2) + "%"
+        var progress = this.compressInfo.progress.toFixed(2)
+        if (progress != undefined) {          
+          this.progress = progress
+          this.progressStr = progress + "%"
         }
 
       }
