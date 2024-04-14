@@ -1,6 +1,5 @@
 import { FileNode } from "./file_node";
 import { CompressState } from "../file_server/compress_state"
-import { th } from "element-plus/es/locale";
 
 
 
@@ -54,7 +53,6 @@ class CompressTask {
     this.node.addDelegates(this)
     this.node.addCompresseDelegate(this);
     this.taskState = CompressTaskState.preparing;
-    console.log("发生了妹子")
     if (!this.node.initialed) {
       this.node.initialData()
     } else {
@@ -134,7 +132,7 @@ class CompressTask {
       if (this.compressInfo.state == CompressState.compressing) {
         // limit progrexx with xx.xx format
         var progress = this.compressInfo.progress.toFixed(2)
-        if (progress != undefined) {          
+        if (progress != undefined) {
           this.progress = progress
           this.progressStr = progress + "%"
         }

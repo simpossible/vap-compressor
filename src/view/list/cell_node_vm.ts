@@ -1,13 +1,12 @@
-import {FileNode, FileNodeType} from "../../sdk/file_node";
+import { FileNode, FileNodeType } from "../../sdk/file_node";
 import * as path from 'path';
-import {shared_center} from '../../sdk/vap_center';
-import { el } from "element-plus/es/locale";
+import { shared_center } from '../../sdk/vap_center';
 class CellNodeVm {
     node: FileNode;
     label: string = "";
-    children: CellNodeVm[] = [];   
+    children: CellNodeVm[] = [];
     childrenMap: Map<string, CellNodeVm> = new Map();
-    uuid: string = "" 
+    uuid: string = ""
     constructor(node: FileNode) {
         this.node = node;
         this.uuid = node.src;
@@ -21,11 +20,11 @@ class CellNodeVm {
         node.initialData();
     }
 
-    isVap(){
+    isVap() {
         return this.node.fileType == FileNodeType.vap;
     }
 
-    onNodeInfoLoaded(node: FileNode) {   
+    onNodeInfoLoaded(node: FileNode) {
         console.log("onNodeInfoLoaded");
         var tempSubMap = new Map();
         var newArray: CellNodeVm[] = [];
@@ -51,7 +50,7 @@ class CellNodeVm {
         if (hasDelete || hasNew) {
             shared_center.delegate.$refs.vap_list_tree.updateKeyChildren(this.uuid, this.children);
         }
-        
+
     }
 
     reloadFiles() {

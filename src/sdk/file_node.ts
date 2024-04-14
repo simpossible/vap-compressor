@@ -226,7 +226,7 @@ class FileNode {
             cb(-1, "操作正在进行中");
             return
         }
-        this.isQuitCompressing = true
+        this.isAcceptCompressing = true
         axios.get(vapUrlForKey(UrlPathAcceptCompress, { path: this.src })).then(response => {
             this.isAcceptCompressing = false
             if (cb != null && cb != undefined) {

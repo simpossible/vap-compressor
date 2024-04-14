@@ -507,6 +507,9 @@ server_map.set("/start-compress", startCompress);
 async function quitCompress(req, params, res) {
     var filePath = params.get("path")
     var tempVapPath = tempVapPathFrom(filePath)
+    if (compressInfoMap.has(filePath)) {
+        compressInfoMap.delete(filePath)
+    }
     if (fs.existsSync(tempVapPath)) {
         // 404
         fs.unlinkSync(tempVapPath)
@@ -514,9 +517,7 @@ async function quitCompress(req, params, res) {
         res.end()
         return
     }
-    if (compressInfoMap.has(filePath)) {
-        compressInfoMap.delete(filePath)
-    }
+
     res.writeHead(200, { 'Content-Type': 'text/plain' })
     res.end('')
 }
@@ -539,6 +540,9 @@ async function acceptCompress(req, params, res) {
         fs.unlinkSync(orgVapPath)
     }
     fs.renameSync(tempVapPath, orgVapPath)
+    if (compressInfoMap.has(filePath)) {
+        compressInfoMap.delete(filePath)
+    }
     res.writeHead(200, { 'Content-Type': 'text/plain' })
     res.end('')
 }

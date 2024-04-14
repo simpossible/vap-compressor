@@ -1,6 +1,6 @@
 <template>
-    <div v-if="node != null && node != undefined && node.src != ''">
-        <div v-if="task.state == prepaired">
+    <div v-if="node != null && node != undefined && node.src != '' && task != null">
+        <div v-if="task.taskState == 2">
             <!-- 这里显示开始压缩按钮 -->
             <el-row style="margin-top: 100px;">
                 <el-col :span="8"></el-col>
@@ -36,15 +36,12 @@
 
             </el-row>
             <el-row>
-
                 <el-col style="margin-left: 12px;">
                     <el-text class="mx-1" size="small">压缩率越高需要时间就越久</el-text>
                 </el-col>
-
             </el-row>
-
         </div>
-        <div v-if="task.state == 3">
+        <div v-if="task.taskState == 3">
             <!-- 这里显示压缩进度 -->
             <el-row style="margin-top: 100px;">
                 <el-col :span="8"></el-col>
@@ -55,18 +52,18 @@
             </el-row>
         </div>
 
-        <div v-if="compressInfo.state == 2">
+        <div v-if="canPreview === true">
             <!-- 这里显示播放 -->
             <el-row>
                 <!-- 这里是预览区域,区域的高度定为300px -->
-                <div ref="anim" class="vap_anim">
+                <div ref="anim_area" class="vap_anim">
                 </div>
             </el-row>
             <el-row>
                 <el-table :data="tableData">
                     <el-table-column prop="resolution" label="分辨率"></el-table-column>
-                    <el-table-column prop="fileSize" label="文件大小"></el-table-column>
-                    <el-table-column prop="bitRate" label="比特率"></el-table-column>
+                    <el-table-column prop="compressedFileSizeStr" label="文件大小"></el-table-column>
+                    <el-table-column prop="compressedBitRateStr" label="比特率"></el-table-column>
                     <el-table-column prop="duration" label="时长"></el-table-column>
                 </el-table>
             </el-row>
@@ -91,7 +88,8 @@ import { FileNode } from '../../sdk/file_node';
 import Vap from 'video-animation-player';
 import { vapUrlForKey, UrlPathDownload, UrlPathVapJson } from '../../sdk/url_config';
 import { CompressSpeedOptions, compressSpeedOptionDisplayName } from '../../sdk/compress_params';
-import { CompressTask } from '../../sdk/compress_task'
+import { CompressTask, CompressTaskState } from '../../sdk/compress_task'
+import { shared_center } from '../../sdk/vap_center'
 
 export default {
     name: 'VapCompressDetail',
@@ -106,13 +104,9 @@ export default {
     },
     mounted() {
         console.log("this .node is ", this.node)
-        if (this.node.src != '') {
-            this.task = CompressTask(this.node)
-            this.task.auto_accept = false
-            this.task.delegate = this
-            this.onCompressSpeedQualityChange()
-        }
+        this.refreshTask()
     },
+
     unmounted() {
         this.node.deleteCompresseDelegate(this)
     },
@@ -120,7 +114,6 @@ export default {
     data() {
         return {
             task: null,
-            compressInfo: { state: 0 }, //当前的压缩信息
             compressQualityValue: 46, // 压缩质量
             compressQualityPercentage: '45%',
             compressSpeedValue: 5,
@@ -136,96 +129,79 @@ export default {
             vap: null,
             fileUrl: "",
             vapJsonUrl: "",
-            tableData: []
+            tableData: [],
+            canPreview: false,
+            isOperated: false
         };
     },
     methods: {
-        taskStateChanged(){
+        refreshTask() {
+            this.canPreview = false
+            this.isOperated = false
+            this.fileUrl = ""
+            this.vapJsonUrl = ""
+            this.stopPlay()
+            if (this.node.src != '') {
+                this.task = new CompressTask(this.node)
+                this.task.auto_accept = false
+                this.task.delegate = this
+                this.tableData = [this.task]
+                this.onCompressSpeedQualityChange()
+            }
+        },
+        taskStateChanged() {
 
         },
-        taskInfoChanged(){
+        taskInfoChanged(task) {
+            console.log("taskInfoChanged:state", task.taskState)
+            if (task.taskState == CompressTaskState.done) {
+                shared_center.dealingNodeSrc = ''
+                if (task.compressedFileInfo != null) {
+                    if (task.compressedFileInfo.video_info != undefined && task.compressedFileInfo.video_info != null) {
+                        if (this.canPreview === false && this.isOperated === false) {
+                            this.canPreview = true
+                            var targetFile = task.compressedFileInfo.path
+                            this.fileUrl = vapUrlForKey(UrlPathDownload, { path: targetFile });
+                            this.vapJsonUrl = vapUrlForKey(UrlPathVapJson, { path: targetFile });
+                            setTimeout(() => {
+                                this.checkVapPlay()
+                            }, 1000);
+                        }
+                    }
 
-        },
-        checkTimer() {
-            if (this.compressInfo.state == 1) {
-                if (this.timer == null) {
-                    this.timer = setInterval(() => {
-                        this.node.loadCompressInfo()
-                    }, 1000)
+                } else {
+                    console.log("task.compressedFileInfo is null")
                 }
             } else {
-                if (this.timer != null) {
-                    clearInterval(this.timer)
-                    this.timer = null
-                }
+
             }
         },
 
+
         checkVapPlay() {
-            if (this.compressInfo.state == 2 && this.fileUrl != "") {
-                if (this.vap == null) {
-                    this.play()
-                }
-            } else {
-                if (this.vap != null) {
-                    this.vap.pause()
-                }
+            if (this.vap == null) {
+                this.play()
             }
         },
 
         onCompressClicked() {
-            this.task.start({
-                quality: this.compressQualityValue / 2,
-                speed: CompressSpeedOptions[this.compressSpeedValue]
-            })
-        },
-        onNodeInfoLoaded(node) {
-            console.log("onNodeInfoLoadedd");
-            if (node == this.compressNode) {
-                var fileSizeBytes = this.compressNode.fileInfo.size;
-                this.fileSize = this.formatBytes(fileSizeBytes)
-                this.resolution = this.compressNode.fileInfo.video_info.width + "x" + this.compressNode.fileInfo.video_info.height
-                this.vapJson = JSON.stringify(this.compressNode.fileInfo.vap_info, null, 0)
-                this.duration = this.formatTime(this.compressNode.fileInfo.video_info.duration_ts)
-                this.bitRate = this.compressNode.fileInfo.video_info.bit_rate
-                this.fileUrl = vapUrlForKey(UrlPathDownload, { path: this.compressNode.src });
-                this.vapJsonUrl = vapUrlForKey(UrlPathVapJson, { path: this.compressNode.src });
-                this.tableData = [{
-                    resolution: this.resolution,
-                    fileSize: this.fileSize,
-                    bitRate: this.bitRate,
-                    duration: this.duration
-                }]
-                this.checkVapPlay()
-                this.onCompressQualityChange()
-            }
-        },
-        onNodeCompressInfoUpdated(node) {
-            console.log('onNodeCompressInfoUpdated', node.compressInfo)
-            if (node.src == this.node.src) {
-                this.compressInfo = node.compressInfo;
-                if (this.compressInfo.progress != undefined) {
-                    this.progress = parseFloat(this.compressInfo.progress).toFixed(2);
-                }
-                if (this.compressInfo.state == 2) {
-                    var targetFile = this.compressInfo.outputPath
-                    if (this.compressNode == null) {
-                        this.compressNode = new FileNode(targetFile)
-                        this.compressNode.isOutputNode = true
-                        this.compressNode.delegate = this
-                        this.compressNode.initialData()
-                    }
-                }
-                this.checkTimer()
+            if (this.task.taskState == CompressTaskState.prepaired) {
+                shared_center.dealingNodeSrc = this.node.src
+                this.task.start({
+                    quality: this.compressQualityValue / 2,
+                    speed: CompressSpeedOptions[this.compressSpeedValue]
+                })
             }
         },
         play() {
             console.log("start play vap");
             const that = this
-            var divWidth = this.$refs.anim.offsetWidth;
-            var divHeight = this.$refs.anim.offsetHeight;
+            var divWidth = this.$refs.anim_area.offsetWidth;
+            console.log("start play vap: w ", divWidth);
+            var divHeight = this.$refs.anim_area.offsetHeight;
+            console.log("start play vap: h ", divHeight);
             this.vap = new Vap().play(Object.assign({}, {
-                container: this.$refs.anim,
+                container: this.$refs.anim_area,
                 // 素材视频链接
                 src: this.fileUrl,
                 // 素材配置json对象
@@ -261,39 +237,43 @@ export default {
                 this.vap.play()
             }
         },
-        formatBytes(bytes) {
-            if (bytes < 1024) {
-                return bytes + " Bytes";
-            } else if (bytes < 1048576) {
-                return (bytes / 1024).toFixed(2) + " KB";
-            } else {
-                return (bytes / 1048576).toFixed(2) + " MB";
+        stopPlay() {
+            if (this.vap != null) {
+                this.vap = null
             }
-        },
-        formatTime(seconds) {
-            let hours = Math.floor(seconds / 3600);
-            let minutes = Math.floor((seconds % 3600) / 60);
-            let secs = (seconds % 60).toFixed(1);
-
-            let timeStr = "";
-
-            if (hours > 0) {
-                timeStr += hours + "小时";
-            }
-            if (minutes > 0) {
-                timeStr += minutes + "分钟";
-            }
-            if (secs > 0) {
-                timeStr += secs + "秒";
-            }
-
-            return timeStr;
         },
         quitCompress() {
-            this.node.quitCompress()
+            this.task.clear()
+            this.canPreview = false
+            this.isOperated = true
+            this.stopPlay()
+            this.node.quitCompress((code, error) => {
+                if (code == 0) {
+                    this.refreshTask()
+                } else {
+                    this.$message({
+                        message: error,
+                        type: 'warning'
+                    });
+                }
+            })
         },
         acceptCompress() {
-            this.node.acceptCompress()
+            this.task.clear()
+            this.canPreview = false
+            this.isOperated = true
+            this.stopPlay()
+            this.task.cle
+            this.node.acceptCompress((code, error) => {
+                if (code == 0) {
+                    this.refreshTask()
+                } else {
+                    this.$message({
+                        message: error,
+                        type: 'warning'
+                    });
+                }
+            })
         },
         qualityTip(number) {
             return (number * 100 / 102).toFixed(2) + "%";
