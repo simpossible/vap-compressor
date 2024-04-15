@@ -12,7 +12,8 @@
             <!-- 加一个压缩质量的可选进度条 -->
             <el-row style="margin-top: 12px;">
                 <el-col :span="1"></el-col>
-                <el-col :span="5" style="margin-top: 5px;"><el-text class="mx-1">压缩质量</el-text></el-col>
+                <el-col :span="5" style="margin-top: 5px; width: 60px; max-width: 60px;"><el-text
+                        class="mx-1">压缩质量</el-text></el-col>
                 <el-col :span="14">
                     <el-slider v-model="compressQualityValue" :step="1" :max="102" :format-tooltip="qualityTip"
                         @change="onCompressQualityChange" />
@@ -23,7 +24,8 @@
             <!-- 加一个压缩速度的可选进度条 -->
             <el-row style="margin-top: 12px;">
                 <el-col :span="1"></el-col>
-                <el-col :span="4" style="margin-top: 5px;"><el-text class="mx-1">压缩率</el-text></el-col>
+                <el-col :span="5" style="margin-top: 5px; max-width: 60px;"><el-text
+                        class="mx-1">压缩速度</el-text></el-col>
                 <el-col :span="14">
                     <el-slider v-model="compressSpeedValue" :step="1" :max="compressSpeedMaxValue"
                         :format-tooltip="speedQualityTip" @change="onCompressSpeedQualityChange" />
@@ -37,7 +39,7 @@
             </el-row>
             <el-row>
                 <el-col style="margin-left: 12px;">
-                    <el-text class="mx-1" size="small">压缩率越高需要时间就越久</el-text>
+                    <el-text class="mx-1" size="small" style="margin-top: 6px;">Tip: 压缩速度约快 压缩率越低。压缩质量越大，耗时就越久</el-text>
                 </el-col>
             </el-row>
         </div>
@@ -116,7 +118,7 @@ export default {
             task: null,
             compressQualityValue: 46, // 压缩质量
             compressQualityPercentage: '45%',
-            compressSpeedValue: 5,
+            compressSpeedValue: 4,
             compressSpeedMaxValue: CompressSpeedOptions.length - 1,
             compressSpeedTip: '',
             colors: [
@@ -287,7 +289,6 @@ export default {
             return compressSpeedOptionDisplayName(value);
         },
         onCompressSpeedQualityChange() {
-            console.log("????")
             var value = CompressSpeedOptions[this.compressSpeedValue];
             this.compressSpeedTip = compressSpeedOptionDisplayName(value);
         }
