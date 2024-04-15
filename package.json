@@ -12,22 +12,13 @@
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
   },
-  "extraResources": [
-    {
-      "from": "./bin/mac",
-      "to": "bin",
-      "filter": [
-        "**/*"
-      ]
-    }
-  ],
   "devDependencies": {
     "@electron-forge/cli": "^7.3.0",
     "@electron-forge/maker-deb": "^7.3.0",
     "@electron-forge/maker-rpm": "^7.3.0",
     "@electron-forge/maker-squirrel": "^7.3.0",
     "@electron-forge/maker-zip": "^7.3.0",
-    "@electron-forge/plugin-auto-unpack-natives": "^7.3.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
     "@electron-forge/plugin-fuses": "^7.3.0",
     "@electron-forge/plugin-vite": "^7.3.0",
     "@electron/fuses": "^1.7.0",
@@ -47,6 +38,7 @@
     "axios": "^1.6.8",
     "electron-squirrel-startup": "^1.0.0",
     "element-plus": "^2.6.1",
+    "ffmpeg-static": "^5.2.0",
     "ffprobe": "^1.1.2",
     "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.2",

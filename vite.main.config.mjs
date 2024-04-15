@@ -6,12 +6,14 @@ import {
   pluginHotRestart,
 } from './vite.base.config.mjs';
 
+
 // https://vitejs.dev/config
 export default defineConfig((env) => {
   /** @type {import('vite').ConfigEnv<'build'>} */
   const forgeEnv = env;
   const { forgeConfigSelf } = forgeEnv;
   const define = getBuildDefine(forgeEnv);
+
   const config = {
     build: {
       lib: {
@@ -21,9 +23,10 @@ export default defineConfig((env) => {
       },
       rollupOptions: {
         external,
-      },
+      }
     },
-    plugins: [pluginHotRestart('restart')],
+    plugins: [
+      pluginHotRestart('restart')],
     define,
     resolve: {
       // Load the Node.js entry.

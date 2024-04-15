@@ -2,8 +2,14 @@
 
 const fs = require('fs')
 const path = require('path')
+export const ffmpeg = require('fluent-ffmpeg')
+
+
+
 export const ffprobe = require('ffprobe')
 export const ffprobeStatic = require('ffprobe-static')
+
+
 
 class Mp4Box {
     constructor(boxType, start, size, content) {

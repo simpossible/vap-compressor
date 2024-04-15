@@ -3,7 +3,7 @@ const fs = require('fs')
 
 const path = require('path')
 
-import { getVapBoxes, addVapInfoToMp4, getFileInfoOfVap, getVapInfo, ffprobe, ffprobeStatic } from './vap_parser.js'
+import { getVapBoxes, addVapInfoToMp4, getFileInfoOfVap, getVapInfo, ffprobe, ffprobeStatic,ffmpeg } from './vap_parser.js'
 import { CompressState } from './compress_state.js'
 // md文件访问在electron完全不行。搞个服务来做吧。
 
@@ -377,7 +377,6 @@ server_map.set("/compress-info", getCompressInfo);
 
 function compressVideo(inputPath, outputPath, speed, quality) {
     console.log("real compress with params spped:", speed, "quality:", quality);
-    const ffmpeg = require('fluent-ffmpeg');
     return new Promise((resolve, reject) => {
         const command = ffmpeg(inputPath)
             .outputOptions('-crf', quality) // 设置视频质量，值越小质量越高
