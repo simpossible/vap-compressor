@@ -41,9 +41,6 @@ class FileNode {
     timer: any = null; // 定时器持续获取压缩信息
     constructor(src: string) {
         this.src = src;
-        if (this.src === "/Users/liangjinfeng/Downloads/aaaa/bbb/xxx/video.mp4") {
-            console.log("debug -----2")
-        }
     }
 
     addCompresseDelegate(delegate: any) {
@@ -74,9 +71,6 @@ class FileNode {
 
 
     initialData() {
-        if (this.src === "/Users/liangjinfeng/Downloads/aaaa/bbb/xxx/video.mp4") {
-            console.log("debug -----")
-        }
         if (this.isLoading) {
             return
         }

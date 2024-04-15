@@ -248,6 +248,7 @@ export default {
             this.isOperated = true
             this.stopPlay()
             this.node.quitCompress((code, error) => {
+                node.triggerCompressCleared()
                 if (code == 0) {
                     this.refreshTask()
                 } else {
@@ -263,8 +264,8 @@ export default {
             this.canPreview = false
             this.isOperated = true
             this.stopPlay()
-            this.task.cle
             this.node.acceptCompress((code, error) => {
+                this.node.triggerCompressCleared()
                 if (code == 0) {
                     this.refreshTask()
                 } else {

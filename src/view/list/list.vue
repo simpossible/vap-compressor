@@ -1,17 +1,17 @@
 <template>
-  <div id="vap_list_area"  :class="vap_list_style_class">
-    <el-tree
-    style="max-width: 600px"
-    ref="vap_list_tree"
-    :data="vm_list"
-    node-key="uuid"
-    :props="defaultProps"
-    @node-click="handleNodeClick"
-  />
+  <div id="vap_list_area" :class="vap_list_style_class" style="position: relative;">
+    <el-tree v-if="vm_list.length > 0" style="max-width: 600px" ref="vap_list_tree" :data="vm_list" node-key="uuid"
+      :props="defaultProps" @node-click="handleNodeClick">
+    </el-tree>
+    <div v-if="vm_list.length === 0"
+      style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;  display: flex; justify-content: center; align-items: center;">
+      <el-text style="color: white;">将文件或者文件夹拖入这里</el-text>
+    </div>
   </div>
+
 </template>
 <script>
-import {shared_center} from '../../sdk/vap_center';
+import { shared_center } from '../../sdk/vap_center';
 import CellNodeVm from './cell_node_vm';
 
 export default {
@@ -37,7 +37,7 @@ export default {
 
       element.addEventListener("dragleave", this.on_space_dragleave, false);
     }, 2000);
-    var node_list =  shared_center.nodes;
+    var node_list = shared_center.nodes;
     for (var i = 0; i < node_list.length; i++) {
       let node = node_list[i]
       var vm = new CellNodeVm(node)
@@ -49,7 +49,7 @@ export default {
 
   data() {
     return {
-      vap_list_style_class: 'vap_list_style_normal',   
+      vap_list_style_class: 'vap_list_style_normal',
       vm_list: [],
       vm_list_map: new Map(),
       defaultProps: {
@@ -87,20 +87,23 @@ export default {
     },
     onNodeAdded(node) {
       console.log('onNodeAdded', node)
-      if (this.vm_list_map.has(node.src)){
+      if (this.vm_list_map.has(node.src)) {
         console.log("node exist");
         return
       }
       var vm = new CellNodeVm(node)
       this.vm_list.unshift(vm)
       this.vm_list_map.set(node.src, vm)
-      // shared_center.delegate.$refs.vap_list_tree.updateKeyChildren(node.src, this.vm_list)
+      this.onVapChoosed(vm)
+      if (this.$refs.vap_list_tree != undefined) {
         this.$refs.vap_list_tree.updateKeyChildren(node.src, this.vm_list);
+      }
+
     },
-    handleNodeClick(ele, nodeinfo, treeNode, e){
-      console.log("on node clicked")      
+    handleNodeClick(ele, nodeinfo, treeNode, e) {
+      console.log("on node clicked")
       ele.reloadFiles();
-        this.onVapChoosed(ele.node);
+      this.onVapChoosed(ele.node);
     }
   },
 }
@@ -108,13 +111,12 @@ export default {
 
 <style>
 .vap_list_style_normal {
- height: 100%;
- background-color: red;
+  height: 100%;
+  background-color: #79bbff;
 }
+
 .vap_list_style_highlight {
   height: 100%;
-  border-color: red;
   border-style: solid;
-  background-color: yellow;
 }
 </style>
