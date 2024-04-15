@@ -3,7 +3,7 @@ const fs = require('fs')
 
 const path = require('path')
 
-import { getVapBoxes, addVapInfoToMp4, getFileInfoOfVap, getVapInfo, ffprobe, ffprobeStatic,ffmpeg } from './vap_parser.js'
+import { getVapBoxes, addVapInfoToMp4, getFileInfoOfVap, getVapInfo, ffprobe, ffprobeStaticPath, ffmpeg } from './vap_parser.js'
 import { CompressState } from './compress_state.js'
 // md文件访问在electron完全不行。搞个服务来做吧。
 
@@ -54,7 +54,7 @@ async function onFileRequest(req, params, res) {
         if (filePath.endsWith(".mp4")) {
             var vapJson = getVapInfo(filePath);
             if (vapJson != null) {
-                const fileMetaData = await ffprobe(filePath, { path: ffprobeStatic.path })
+                const fileMetaData = await ffprobe(filePath, { path: ffprobeStaticPath })
                 if (fileMetaData.streams.length > 0) {
                     for (var info in fileMetaData.streams) {
                         var stream = fileMetaData.streams[info]
@@ -247,7 +247,7 @@ async function vapInfo(req, params, res) {
         res.end(JSON.stringify(result))
         return
     }
-    const fileMetaData = await ffprobe(filePath, { path: ffprobeStatic.path })
+    const fileMetaData = await ffprobe(filePath, { path: ffprobeStaticPath })
     if (fileMetaData.streams.length > 0) {
         for (var info in fileMetaData.streams) {
             var stream = fileMetaData.streams[info]

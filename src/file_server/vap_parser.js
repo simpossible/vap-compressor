@@ -2,12 +2,20 @@
 
 const fs = require('fs')
 const path = require('path')
+
+
 export const ffmpeg = require('fluent-ffmpeg')
 
+const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
+const ffmpegPath = ffmpegInstaller.path;
+const ffprobeStatic = require('ffprobe-static')
 
+ffmpeg.setFfmpegPath(ffmpegPath)
+ffmpeg.setFfprobePath(ffprobeStatic.path)
 
+export const ffprobeStaticPath = ffprobeStatic.path
 export const ffprobe = require('ffprobe')
-export const ffprobeStatic = require('ffprobe-static')
+
 
 
 
@@ -182,7 +190,7 @@ export function getFileInfoOfVap(filePath, forceVap = true) {
         if (filePath.endsWith(".mp4")) {
             var vapJson = getVapInfo(filePath);
             if (vapJson != null || forceVap == false) {
-                ffprobe(filePath, { path: ffprobeStatic.path })
+                ffprobe(filePath, { path: ffprobeStaticPath })
                     .then(fileMetaData => {
                         if (fileMetaData == undefined || fileMetaData.streams == undefined) {
                             console.log("ffprobe failed: ", filePath)

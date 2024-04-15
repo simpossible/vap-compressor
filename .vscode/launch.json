@@ -5,7 +5,7 @@
             "type": "node",
             "request": "launch",
             "name": "Launch via NPM",
-            "runtimeExecutable": "npm",
+            "runtimeExecutable": "/Users/liangjinfeng/.nvm/versions/node/v19.9.0/bin/npm",
             "runtimeArgs": [
                 "run-script",
                 "start"
