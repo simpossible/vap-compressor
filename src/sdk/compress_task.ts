@@ -78,7 +78,6 @@ class CompressTask {
         this.taskState = CompressTaskState.done
       }
     }
-    console.log("gogogo", this.compressInfo)
     this.refreshInfos()
   }
 
@@ -131,7 +130,7 @@ class CompressTask {
     } else {
       if (this.compressInfo.state == CompressState.compressing) {
         // limit progrexx with xx.xx format
-        var progress = this.compressInfo.progress.toFixed(2)
+        var progress = Number(this.compressInfo.progress.toFixed(2));
         if (progress != undefined) {
           this.progress = progress
           this.progressStr = progress + "%"
