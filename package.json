@@ -39,10 +39,10 @@
     "axios": "^1.6.8",
     "electron-squirrel-startup": "^1.0.0",
     "element-plus": "^2.6.1",
-    "ffmpeg-static": "^5.2.0",
     "ffprobe": "^1.1.2",
     "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.2",
+    "node": "^18.20.2",
     "video-animation-player": "^1.0.5",
     "vite-plugin-optimizer": "^1.4.3"
   }

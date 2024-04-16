@@ -9,11 +9,16 @@ export const ffmpeg = require('fluent-ffmpeg')
 const ffmpegInstaller = require('@ffmpeg-installer/ffmpeg');
 const ffmpegPath = ffmpegInstaller.path;
 const ffprobeStatic = require('ffprobe-static')
+export const ffprobeStaticPath = ffprobeStatic.path.replace(
+    'app.asar',
+    'app.asar.unpacked'
+)
+console.log("ffprobeStatic path is ", ffprobeStaticPath)
 
 ffmpeg.setFfmpegPath(ffmpegPath)
-ffmpeg.setFfprobePath(ffprobeStatic.path)
+ffmpeg.setFfprobePath(ffprobeStaticPath)
 
-export const ffprobeStaticPath = ffprobeStatic.path
+
 export const ffprobe = require('ffprobe')
 
 
