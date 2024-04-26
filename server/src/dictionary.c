@@ -10,9 +10,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include "hashmap.h"
+#include <pthread.h>
+
 
 typedef struct   {
    struct hashmap *map;
+    pthread_mutex_t lock;
 } __Dictionary;
 
 
@@ -35,31 +38,43 @@ static uint64_t node_hash(const void *item, uint64_t seed0, uint64_t seed1) {
 }
 
 Dictionary *dicCreate(void) {
-    __Dictionary *dic = malloc(sizeof(__Dictionary));
-    memset(dic, 0, sizeof(__Dictionary));
-    return (Dictionary *)dic;
+    __Dictionary *_dic = malloc(sizeof(__Dictionary));
+    memset(_dic, 0, sizeof(__Dictionary));
+    if (_dic->map == NULL) {
+        _dic->map = hashmap_new(sizeof(struct DictionaryNode), 0, 0, 0,
+                              node_hash, node_compare, NULL, NULL);
+        pthread_mutex_init(&_dic->lock, NULL);
+    }
+    return (Dictionary *)_dic;
 }
 
 
 void dicSetValue(Dictionary*dic, char *key, void *value) {
     __Dictionary *_dic = (__Dictionary *)dic;
+    
+    pthread_mutex_lock(&_dic->lock);
     if (_dic->map == NULL) {
-        _dic->map = hashmap_new(sizeof(struct DictionaryNode), 0, 0, 0,
-                              node_hash, node_compare, NULL, NULL);
+        pthread_mutex_unlock(&_dic->lock);
+        return;
     }
     struct DictionaryNode *node = malloc(sizeof(struct DictionaryNode));
     node->obj = value;
     node->key = key;
     hashmap_set(_dic->map, node);
+    pthread_mutex_unlock(&_dic->lock);
 }
 
 void* dicGetValue(Dictionary*dic, char *key) {
     __Dictionary *_dic = (__Dictionary *)dic;
+    pthread_mutex_lock(&_dic->lock);
     if (_dic->map == NULL) {
+        pthread_mutex_unlock(&_dic->lock);
         return NULL;
     }   
     struct DictionaryNode *node = (DictionaryNode *)hashmap_get(_dic->map, &(struct DictionaryNode){.key=key});
+    pthread_mutex_unlock(&_dic->lock);
     if (node == NULL) {
+        
         return NULL;
     }
     return node->obj;
