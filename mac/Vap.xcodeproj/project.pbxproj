@@ -161,6 +161,8 @@
 		26DFCDCE2BDB78FE00228FE8 /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 26DFCBDF2BDB3F7800228FE8 /* libswscale.a */; };
 		26DFCDCF2BDB78FE00228FE8 /* libx264.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 26DFCBE02BDB3F7800228FE8 /* libx264.a */; };
 		26DFCDD02BDB78FE00228FE8 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 26DFCBDB2BDB3F7800228FE8 /* libavformat.a */; };
+		26DFCDD32BDBD8F800228FE8 /* server_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCDD12BDBD8F800228FE8 /* server_util.h */; };
+		26DFCDD42BDBD8F800228FE8 /* server_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDD22BDBD8F800228FE8 /* server_util.c */; };
 		26EB1BD72BD0357800AD1AF4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 26EB1BD62BD0357800AD1AF4 /* AppDelegate.m */; };
 		26EB1BDA2BD0357800AD1AF4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26EB1BD92BD0357800AD1AF4 /* ViewController.m */; };
 		26EB1BDC2BD0357B00AD1AF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26EB1BDB2BD0357B00AD1AF4 /* Assets.xcassets */; };
@@ -363,6 +365,8 @@
 		26DFCDB62BDB40DE00228FE8 /* vap-server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "vap-server.h"; sourceTree = "<group>"; };
 		26DFCDB82BDB40DE00228FE8 /* transcode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = transcode.h; sourceTree = "<group>"; };
 		26DFCDB92BDB40DE00228FE8 /* vap-server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "vap-server.c"; sourceTree = "<group>"; };
+		26DFCDD12BDBD8F800228FE8 /* server_util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = server_util.h; sourceTree = "<group>"; };
+		26DFCDD22BDBD8F800228FE8 /* server_util.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = server_util.c; sourceTree = "<group>"; };
 		26EB1BD22BD0357800AD1AF4 /* Vap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26EB1BD52BD0357800AD1AF4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		26EB1BD62BD0357800AD1AF4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -709,6 +713,8 @@
 				26DFCDB52BDB40DE00228FE8 /* transcode.c */,
 				26DFCDB62BDB40DE00228FE8 /* vap-server.h */,
 				26DFCDB92BDB40DE00228FE8 /* vap-server.c */,
+				26DFCDD12BDBD8F800228FE8 /* server_util.h */,
+				26DFCDD22BDBD8F800228FE8 /* server_util.c */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -933,6 +939,7 @@
 				26DFCD762BDB400600228FE8 /* channel_layout.h in Headers */,
 				26DFCD372BDB400600228FE8 /* replaygain.h in Headers */,
 				26DFCD3B2BDB400600228FE8 /* samplefmt.h in Headers */,
+				26DFCDD32BDBD8F800228FE8 /* server_util.h in Headers */,
 				26DFCD342BDB400600228FE8 /* fifo.h in Headers */,
 				26DFCD912BDB400600228FE8 /* version_major.h in Headers */,
 				26DFCD592BDB400600228FE8 /* dovi_meta.h in Headers */,
@@ -1123,6 +1130,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26DFCDD42BDBD8F800228FE8 /* server_util.c in Sources */,
 				26DFCDBF2BDB40DE00228FE8 /* vap-server.c in Sources */,
 				26DFCDBB2BDB40DE00228FE8 /* transcode.c in Sources */,
 			);

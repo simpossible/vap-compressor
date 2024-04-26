@@ -6,8 +6,9 @@
 //
 
 #include "vap-server.h"
-#import "civetweb.h"
+#include "civetweb.h"
 #include <string.h>
+#include "server_util.h"
 
 
 
@@ -17,13 +18,27 @@ static int handleHellowWord(struct mg_connection *conn, void *ignored)
     printf("hahaha");
     const char *msg = "Hello world";
     unsigned long len = (unsigned long)strlen(msg);
-    
+    char *test = getParamsFromRequest(conn, "test");
+    if (test != NULL){
+        printf("a");
+    }
     mg_send_http_ok(conn, "text/plain", len);
     
     mg_write(conn, msg, len);
     
     return 200; /* HTTP state 200 = OK */
 }
+
+
+
+static int onFileRequest(struct mg_connection *conn, void *ignored) {
+    const struct mg_request_info *request_info = mg_get_request_info(conn);
+    char param[100];
+   
+    
+    return 1;
+}
+
 
 
 void startVapServer(void) {
