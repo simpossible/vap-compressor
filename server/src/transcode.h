@@ -8,6 +8,14 @@
 #ifndef transcode_h
 #define transcode_h
 
-#include <stdio.h>
+typedef struct VideoInfo {
+    int width;
+    float height;
+    int64_t duration;
+    float bitrate;
+} VideoInfo;
+
+extern VideoInfo *getMp4Info(char * input);
 
 #endif /* transcode_h */
+

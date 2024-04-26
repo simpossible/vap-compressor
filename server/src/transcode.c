@@ -30,6 +30,8 @@
  * audio and video streams.
  */
 
+#ifndef transcode_c
+#define transcode_c
 #include "libavcodec/avcodec.h"
 #include "libavformat/avformat.h"
 #include "libavfilter/buffersink.h"
@@ -37,8 +39,8 @@
 #include "libavutil/channel_layout.h"
 #include "libavutil/opt.h"
 #include "libavutil/pixdesc.h"
-
-
+#include "transcode.h"
+#endif
 typedef struct FilteringContext {
     AVFilterContext *buffersink_ctx;
     AVFilterContext *buffersrc_ctx;
@@ -687,3 +689,45 @@ end:
 
     return ret ? 1 : 0;
 }
+
+
+
+
+
+
+VideoInfo *getMp4Info(char * input) {
+    AVFormatContext *pFormatCtx = NULL;
+    
+    // 打开文件并读取头部
+    if (avformat_open_input(&pFormatCtx, input, NULL, NULL) != 0)
+        return NULL; // 无法打开文件
+    
+    // 获取流信息
+    if (avformat_find_stream_info(pFormatCtx, NULL) < 0)
+        return NULL; // 无法获取流信息
+    
+    // 找到第一个视频流
+    int videoStream = -1;
+    for (int i = 0; i < pFormatCtx->nb_streams; i++)
+        if (pFormatCtx->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
+            videoStream = i;
+            break;
+        }
+    
+    if (videoStream == -1)
+        return NULL; // 没有找到视频流
+    
+    // 获取编解码器上下文
+    
+    AVCodecParameters *codecInfo = pFormatCtx->streams[videoStream]->codecpar;
+    VideoInfo *info = (VideoInfo *)malloc(sizeof(VideoInfo));
+    info->width = codecInfo->width;
+    info->height = codecInfo->height;
+    info->bitrate = codecInfo->bit_rate;
+    info->duration = pFormatCtx->streams[videoStream]->duration;
+    // 打印视频信息
+    // 关闭文件
+    avformat_close_input(&pFormatCtx);
+    return info;
+}
+
