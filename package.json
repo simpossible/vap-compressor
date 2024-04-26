@@ -1,6 +1,6 @@
 {
-  "name": "my-vue-app",
-  "productName": "my-vue-app",
+  "name": "vap-compress",
+  "productName": "VapCompress",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": ".vite/build/main.js",
@@ -38,7 +38,7 @@
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "axios": "^1.6.8",
     "electron-squirrel-startup": "^1.0.0",
-    "element-plus": "^2.6.1",
+    "element-plus": "^2.7.0",
     "ffprobe": "^1.1.2",
     "ffprobe-static": "^3.1.0",
     "fluent-ffmpeg": "^2.1.2",

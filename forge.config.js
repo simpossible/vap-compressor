@@ -3,7 +3,47 @@ const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 
 module.exports = {
   packagerConfig: {
-    asar: true,
+    asar: false,
+    osxSign: {
+      optionsForFile: (filePath) => {
+        // Here, we keep it simple and return a single entitlements.plist file.
+        // You can use this callback to map different sets of entitlements
+        // to specific files in your packaged app.
+        return {
+          entitlements: './config/sign.plist'
+        };
+      }
+    },
+    osxNotarize: {
+      tool: 'notarytool',
+      appleId: process.env.APPLE_ID,
+      appleIdPassword: process.env.APPLE_PASSWORD,
+      teamId: process.env.APPLE_TEAM_ID
+    }
+    // ignore: (file) => {
+    //   // 检查文件路径是否包含'ffprobe-static/bin'，并且不是当前平台的文件夹
+    //   const isGitFolder = file.includes('.git');
+    //   if (isGitFolder) {
+    //     return true;
+    //   }
+    //   if (file.includes('.vscode')) {
+    //     return true;
+    //   }
+    //   if (file.includes('.gitignore')) {
+    //     return true;
+    //   }
+    //   console.log("----------------", file);
+
+
+    //   // if (file.includes('ffprobe-static/bin')) {
+    //   //   console.log("---------------- 2", process.platform)
+    //   //   if (!file.includes(process.platform)) {
+    //   //     return true;
+    //   //   }
+    //   //   return true;
+    //   // }
+    //   return false
+    // },
   },
   rebuildConfig: {},
   makers: [

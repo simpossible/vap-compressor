@@ -6,7 +6,6 @@ import {
   pluginHotRestart,
 } from './vite.base.config.mjs';
 
-
 // https://vitejs.dev/config
 export default defineConfig((env) => {
   /** @type {import('vite').ConfigEnv<'build'>} */
@@ -15,6 +14,9 @@ export default defineConfig((env) => {
   const define = getBuildDefine(forgeEnv);
 
   const config = {
+    optimizeDeps: {
+      exclude: ['vue-demi']
+    },
     build: {
       lib: {
         entry: forgeConfigSelf.entry,
@@ -26,7 +28,8 @@ export default defineConfig((env) => {
       }
     },
     plugins: [
-      pluginHotRestart('restart')],
+      pluginHotRestart('restart'),
+    ],
     define,
     resolve: {
       // Load the Node.js entry.

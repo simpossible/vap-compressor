@@ -3,7 +3,6 @@ import { UrlPathAcceptCompress, UrlPathQuitCompress, UrlPathStartCompress, UrlPa
 import { UrlPathFile, UrlPathCompressInfo } from './url_config';
 import { currentNodeCache } from './node_cache';
 import { CompressState } from '../file_server/compress_state';
-import { tr } from 'element-plus/es/locale';
 
 interface FileNodeInterface {
     onNodeInfoLoaded: (node: FileNode) => void;

@@ -16,12 +16,18 @@ export const getBuildConfig = (env) => {
     root,
     mode,
     build: {
+      optimizeDeps: {
+        exclude: ['vue-demi']
+      },
       // Prevent multiple builds from interfering with each other.
       emptyOutDir: false,
       // 🚧 Multiple builds may conflict.
       outDir: '.vite/build',
       watch: command === 'serve' ? {} : null,
       minify: command === 'build',
+    },
+    optimizeDeps: {
+      exclude: ['vue-demi']
     },
     clearScreen: false,
   };
