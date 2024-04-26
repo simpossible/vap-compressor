@@ -167,6 +167,8 @@
 		26DFCDDE2BDC0A5C00228FE8 /* hashmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCDDC2BDC0A5C00228FE8 /* hashmap.h */; };
 		26DFCDE12BDC0C6A00228FE8 /* dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCDDF2BDC0C6A00228FE8 /* dictionary.h */; };
 		26DFCDE22BDC0C6A00228FE8 /* dictionary.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDE02BDC0C6A00228FE8 /* dictionary.c */; };
+		26DFCDE72BDC21A500228FE8 /* libcjson.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 26DFCDE62BDC21A500228FE8 /* libcjson.a */; };
+		26DFCDE92BDC224B00228FE8 /* cJSON.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCDE82BDC224B00228FE8 /* cJSON.h */; };
 		26EB1BD72BD0357800AD1AF4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 26EB1BD62BD0357800AD1AF4 /* AppDelegate.m */; };
 		26EB1BDA2BD0357800AD1AF4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26EB1BD92BD0357800AD1AF4 /* ViewController.m */; };
 		26EB1BDC2BD0357B00AD1AF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26EB1BDB2BD0357B00AD1AF4 /* Assets.xcassets */; };
@@ -375,6 +377,8 @@
 		26DFCDDC2BDC0A5C00228FE8 /* hashmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hashmap.h; sourceTree = "<group>"; };
 		26DFCDDF2BDC0C6A00228FE8 /* dictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dictionary.h; sourceTree = "<group>"; };
 		26DFCDE02BDC0C6A00228FE8 /* dictionary.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = dictionary.c; sourceTree = "<group>"; };
+		26DFCDE62BDC21A500228FE8 /* libcjson.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcjson.a; sourceTree = "<group>"; };
+		26DFCDE82BDC224B00228FE8 /* cJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cJSON.h; sourceTree = "<group>"; };
 		26EB1BD22BD0357800AD1AF4 /* Vap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26EB1BD52BD0357800AD1AF4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		26EB1BD62BD0357800AD1AF4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -426,6 +430,7 @@
 				26EB1DD92BD199A600AD1AF4 /* AudioToolbox.framework in Frameworks */,
 				26DFCDCD2BDB78FD00228FE8 /* libswresample.a in Frameworks */,
 				26EB1DD72BD199A000AD1AF4 /* AudioUnit.framework in Frameworks */,
+				26DFCDE72BDC21A500228FE8 /* libcjson.a in Frameworks */,
 				26EB1DD52BD1999A00AD1AF4 /* CoreFoundation.framework in Frameworks */,
 				26DFCDC92BDB78FD00228FE8 /* libcivetweb.a in Frameworks */,
 				26DFCDC82BDB78FD00228FE8 /* libavutil.a in Frameworks */,
@@ -471,6 +476,7 @@
 		26DFCBD72BDB3F7800228FE8 /* arm64 */ = {
 			isa = PBXGroup;
 			children = (
+				26DFCDE62BDC21A500228FE8 /* libcjson.a */,
 				26DFCBD82BDB3F7800228FE8 /* libavutil.a */,
 				26DFCBD92BDB3F7800228FE8 /* libavfilter.a */,
 				26DFCBDA2BDB3F7800228FE8 /* libavcodec.a */,
@@ -487,6 +493,7 @@
 		26DFCBEA2BDB3F8B00228FE8 /* include */ = {
 			isa = PBXGroup;
 			children = (
+				26DFCDE32BDC215400228FE8 /* cjson */,
 				26DFCC942BDB400600228FE8 /* codec */,
 				26DFCC8F2BDB3FC700228FE8 /* cvetweb */,
 			);
@@ -731,6 +738,14 @@
 			path = src;
 			sourceTree = "<group>";
 		};
+		26DFCDE32BDC215400228FE8 /* cjson */ = {
+			isa = PBXGroup;
+			children = (
+				26DFCDE82BDC224B00228FE8 /* cJSON.h */,
+			);
+			path = cjson;
+			sourceTree = "<group>";
+		};
 		26EB1BC92BD0357800AD1AF4 = {
 			isa = PBXGroup;
 			children = (
@@ -941,6 +956,7 @@
 				26DFCD532BDB400600228FE8 /* threadmessage.h in Headers */,
 				26DFCD3A2BDB400600228FE8 /* stereo3d.h in Headers */,
 				26DFCD952BDB400600228FE8 /* swscale.h in Headers */,
+				26DFCDE92BDC224B00228FE8 /* cJSON.h in Headers */,
 				26DFCD5E2BDB400600228FE8 /* display.h in Headers */,
 				26DFCD4C2BDB400600228FE8 /* cast5.h in Headers */,
 				26DFCD652BDB400600228FE8 /* common.h in Headers */,
