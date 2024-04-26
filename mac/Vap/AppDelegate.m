@@ -6,10 +6,8 @@
 //
 
 #import "AppDelegate.h"
-#import "VapUtil.h"
 
 extern void startVapServer(void);
-extern int compressMp4(char * inputPath, char *outputPath, char * crf, char * preset, ProgressCallback callback);
 extern int transcode_vap(char* inputPath, char *outputPath);
 
 @interface AppDelegate ()
@@ -68,15 +66,10 @@ void onProgress(int p){
 }
 
 - (void)startCompress {
-    NSString *input = @"video_a.mp4";
-    NSString *output = @"video_aa.mp4";
+    NSString *input = @"/Users/liangjinfeng/Downloads/aaaa/b.mp4";
+    NSString *output = @"/Users/liangjinfeng/Downloads/aaaa/b_1.mp4";
     transcode_vap(input.UTF8String, output.UTF8String);
     return;
-    int result = compressMp4(input.UTF8String, output.UTF8String, "23", "slow", onProgress);
-    if (result < 0) {
-        NSLog(@"haha");
-    }
-    
 }
 
 @end
