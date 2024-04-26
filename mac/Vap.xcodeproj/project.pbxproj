@@ -163,6 +163,10 @@
 		26DFCDD02BDB78FE00228FE8 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 26DFCBDB2BDB3F7800228FE8 /* libavformat.a */; };
 		26DFCDD32BDBD8F800228FE8 /* server_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCDD12BDBD8F800228FE8 /* server_util.h */; };
 		26DFCDD42BDBD8F800228FE8 /* server_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDD22BDBD8F800228FE8 /* server_util.c */; };
+		26DFCDDD2BDC0A5C00228FE8 /* hashmap.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDDB2BDC0A5C00228FE8 /* hashmap.c */; };
+		26DFCDDE2BDC0A5C00228FE8 /* hashmap.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCDDC2BDC0A5C00228FE8 /* hashmap.h */; };
+		26DFCDE12BDC0C6A00228FE8 /* dictionary.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCDDF2BDC0C6A00228FE8 /* dictionary.h */; };
+		26DFCDE22BDC0C6A00228FE8 /* dictionary.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDE02BDC0C6A00228FE8 /* dictionary.c */; };
 		26EB1BD72BD0357800AD1AF4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 26EB1BD62BD0357800AD1AF4 /* AppDelegate.m */; };
 		26EB1BDA2BD0357800AD1AF4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26EB1BD92BD0357800AD1AF4 /* ViewController.m */; };
 		26EB1BDC2BD0357B00AD1AF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26EB1BDB2BD0357B00AD1AF4 /* Assets.xcassets */; };
@@ -367,6 +371,10 @@
 		26DFCDB92BDB40DE00228FE8 /* vap-server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "vap-server.c"; sourceTree = "<group>"; };
 		26DFCDD12BDBD8F800228FE8 /* server_util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = server_util.h; sourceTree = "<group>"; };
 		26DFCDD22BDBD8F800228FE8 /* server_util.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = server_util.c; sourceTree = "<group>"; };
+		26DFCDDB2BDC0A5C00228FE8 /* hashmap.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hashmap.c; sourceTree = "<group>"; };
+		26DFCDDC2BDC0A5C00228FE8 /* hashmap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hashmap.h; sourceTree = "<group>"; };
+		26DFCDDF2BDC0C6A00228FE8 /* dictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dictionary.h; sourceTree = "<group>"; };
+		26DFCDE02BDC0C6A00228FE8 /* dictionary.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = dictionary.c; sourceTree = "<group>"; };
 		26EB1BD22BD0357800AD1AF4 /* Vap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26EB1BD52BD0357800AD1AF4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		26EB1BD62BD0357800AD1AF4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -709,12 +717,16 @@
 		26DFCDB32BDB40DE00228FE8 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				26DFCDDC2BDC0A5C00228FE8 /* hashmap.h */,
+				26DFCDDB2BDC0A5C00228FE8 /* hashmap.c */,
 				26DFCDB82BDB40DE00228FE8 /* transcode.h */,
 				26DFCDB52BDB40DE00228FE8 /* transcode.c */,
 				26DFCDB62BDB40DE00228FE8 /* vap-server.h */,
 				26DFCDB92BDB40DE00228FE8 /* vap-server.c */,
 				26DFCDD12BDBD8F800228FE8 /* server_util.h */,
 				26DFCDD22BDBD8F800228FE8 /* server_util.c */,
+				26DFCDDF2BDC0C6A00228FE8 /* dictionary.h */,
+				26DFCDE02BDC0C6A00228FE8 /* dictionary.c */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -850,6 +862,7 @@
 				26DFCD332BDB400600228FE8 /* ambient_viewing_environment.h in Headers */,
 				26DFCD432BDB400600228FE8 /* lfg.h in Headers */,
 				26DFCD582BDB400600228FE8 /* timecode.h in Headers */,
+				26DFCDE12BDC0C6A00228FE8 /* dictionary.h in Headers */,
 				26DFCD942BDB400600228FE8 /* version.h in Headers */,
 				26DFCD602BDB400600228FE8 /* camellia.h in Headers */,
 				26DFCDAE2BDB400600228FE8 /* dv_profile.h in Headers */,
@@ -910,6 +923,7 @@
 				26DFCD7B2BDB400600228FE8 /* video_enc_params.h in Headers */,
 				26DFCD292BDB400600228FE8 /* version_major.h in Headers */,
 				26DFCD712BDB400600228FE8 /* rc4.h in Headers */,
+				26DFCDDE2BDC0A5C00228FE8 /* hashmap.h in Headers */,
 				26DFCD4B2BDB400600228FE8 /* md5.h in Headers */,
 				26DFCD632BDB400600228FE8 /* pixelutils.h in Headers */,
 				26DFCDA22BDB400600228FE8 /* avfft.h in Headers */,
@@ -1130,6 +1144,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26DFCDE22BDC0C6A00228FE8 /* dictionary.c in Sources */,
+				26DFCDDD2BDC0A5C00228FE8 /* hashmap.c in Sources */,
 				26DFCDD42BDBD8F800228FE8 /* server_util.c in Sources */,
 				26DFCDBF2BDB40DE00228FE8 /* vap-server.c in Sources */,
 				26DFCDBB2BDB40DE00228FE8 /* transcode.c in Sources */,

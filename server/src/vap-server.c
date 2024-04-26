@@ -9,6 +9,8 @@
 #include "civetweb.h"
 #include <string.h>
 #include "server_util.h"
+#include "hashmap.h"
+
 
 
 
