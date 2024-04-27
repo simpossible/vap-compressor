@@ -228,10 +228,11 @@ cJSON * getVapFileInfoJson(char * filePath) {
         return NULL;
     }
     cJSON *json = cJSON_CreateObject();
+    cJSON *videoInfoJson = getVapInfo(filePath);
     cJSON_AddStringToObject(json, "path", info->path);
     cJSON_AddNumberToObject(json, "size", info->size);
     cJSON_AddItemToObject(json, "vap_info", info->vap_info);
-    cJSON_AddItemToObject(json, "video_info", info->video_info);
+    cJSON_AddItemToObject(json, "video_info", videoInfoJson);
     free(info);
     free(info->vap_info);
     return json;
