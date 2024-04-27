@@ -13,6 +13,7 @@ typedef struct VideoInfo {
     float height;
     int64_t duration;
     float bitrate;
+    char * codec_name;
 } VideoInfo;
 
 extern VideoInfo *getMp4Info(char * input);

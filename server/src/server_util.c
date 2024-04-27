@@ -12,6 +12,11 @@
 #include "civetweb.h"
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdbool.h>
+
 #endif
 
 
@@ -36,4 +41,74 @@ char * getParamsFromRequest(struct mg_connection *conn, char *paramName){
         return  paramValue;
     }
     return NULL;
+}
+
+
+int file_exists(char *filename) {
+    return access(filename, F_OK);
+    return 0;
+}
+
+
+bool string_end_with(const char *filePath, const char * suffix) {
+    size_t len_str = strlen(filePath);
+    size_t len_suffix = strlen(suffix);
+    if(len_str < len_suffix)
+        return false;
+    return strncmp(filePath + len_str - len_suffix, suffix, len_suffix) == 0;
+}
+
+bool string_start_with(const char *str, const char *prefix) {
+    return strncmp(str, prefix, strlen(prefix)) == 0;
+}
+
+
+cJSON *videoInfnToJson(VideoInfo *videoInfo) {
+    cJSON *json =  cJSON_CreateObject();
+    cJSON_AddNumberToObject(json, "width", videoInfo->width);
+    cJSON_AddNumberToObject(json, "height", videoInfo->height);
+    cJSON_AddNumberToObject(json, "duration_ts", videoInfo->duration);
+    cJSON_AddStringToObject(json, "codec_name", videoInfo->codec_name);
+    cJSON_AddNumberToObject(json, "bit_rate", videoInfo->bitrate);
+    return json;
+}
+
+
+char * osJoinPath(const char* path1, const char* path2) {
+    size_t targetLen = strlen(path1) + strlen(path2);
+    if (path1[strlen(path1) - 1] != '/') {
+        targetLen = targetLen + 1;
+    }
+    char * destination = (char *)malloc(targetLen);
+    if(path1[strlen(path1) - 1] == '/') {
+        snprintf(destination, targetLen, "%s%s", path1, path2);
+    } else {
+        snprintf(destination, targetLen, "%s/%s", path1, path2);
+    }
+    return destination;
+    
+}
+
+
+bool isFileInnerPath(char *fileName) {
+    return string_start_with(fileName, "__compress_");
+}
+
+
+char **char_add_element(char **array, int *length, char *element) {
+    array = realloc(array, (*length + 1) * sizeof(char *));
+    array[*length] = malloc(strlen(element) + 1);
+    strcpy(array[*length], element);
+    (*length)++;
+    return array;
+}
+
+char **char_remove_element(char **array, int *length, int index) {
+    free(array[index]);
+    for(int i = index; i < *length - 1; i++) {
+        array[i] = array[i + 1];
+    }
+    array = realloc(array, (*length - 1) * sizeof(char *));
+    (*length)--;
+    return array;
 }
