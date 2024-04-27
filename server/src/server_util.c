@@ -75,7 +75,7 @@ cJSON *videoInfnToJson(VideoInfo *videoInfo) {
 
 
 char * osJoinPath(const char* path1, const char* path2) {
-    size_t targetLen = strlen(path1) + strlen(path2);
+    size_t targetLen = strlen(path1) + strlen(path2) + 1;
     if (path1[strlen(path1) - 1] != '/') {
         targetLen = targetLen + 1;
     }
