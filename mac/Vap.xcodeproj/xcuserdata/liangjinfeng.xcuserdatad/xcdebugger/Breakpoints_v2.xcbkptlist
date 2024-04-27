@@ -64,5 +64,53 @@
             </Locations>
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "046C71C6-AFFC-46E1-A385-E0924FC99EF8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../server/src/request_handler/on_start_compress.c"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "59"
+            endingLineNumber = "59"
+            landmarkName = "__compressVapFile(args)"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "046C71C6-AFFC-46E1-A385-E0924FC99EF8 - dfee6efa25f420da"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__compressVapFile"
+                  moduleName = "Vap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liangjinfeng/dev/my_apps/vap-compressor/server/src/request_handler/on_start_compress.c"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "80">
+               </Location>
+               <Location
+                  uuid = "046C71C6-AFFC-46E1-A385-E0924FC99EF8 - dfee6efa25f420da"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "__compressVapFile"
+                  moduleName = "Vap"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/liangjinfeng/dev/my_apps/vap-compressor/server/src/request_handler/on_start_compress.c"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "59"
+                  endingLineNumber = "59"
+                  offsetFromSymbolStart = "84">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>

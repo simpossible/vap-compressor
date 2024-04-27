@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include "CJSON.h"
 #include "dictionary.h"
+#include <stdbool.h>
 
 #endif /* compress_util_h */
 
@@ -29,12 +30,16 @@ typedef struct CompressInfo {
     char * org_path;
     char * outputPath;
     cJSON * outputFileInfo;
+    bool auto_accept;
+    float progress;
+    int errorCode;
+    char * errorMsg;
 } CompressInfo;
 
 
-extern CompressInfo* getCompressInfo(char *filePath);
+extern CompressInfo* cacheGetCompressInfo(char *filePath);
 
-extern void saveCompressInfo(char *filePath, CompressInfo *info);
+extern void cacheSaveCompressInfo(char *filePath, CompressInfo *info);
 
 
 extern cJSON *compressInfnToJson(CompressInfo *videoInfo);

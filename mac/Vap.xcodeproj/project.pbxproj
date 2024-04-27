@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		263763E02BDD584100968C9B /* on_start_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 263763DF2BDD584100968C9B /* on_start_compress.c */; };
 		26DFCC922BDB3FC700228FE8 /* civetweb.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCC902BDB3FC700228FE8 /* civetweb.h */; };
 		26DFCC932BDB3FC700228FE8 /* CivetServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCC912BDB3FC700228FE8 /* CivetServer.h */; };
 		26DFCD272BDB400600228FE8 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCC962BDB400600228FE8 /* version.h */; };
@@ -233,6 +234,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		263763DF2BDD584100968C9B /* on_start_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = on_start_compress.c; sourceTree = "<group>"; };
 		26DFCBD82BDB3F7800228FE8 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavutil.a; sourceTree = "<group>"; };
 		26DFCBD92BDB3F7800228FE8 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavfilter.a; sourceTree = "<group>"; };
 		26DFCBDA2BDB3F7800228FE8 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavcodec.a; sourceTree = "<group>"; };
@@ -790,6 +792,7 @@
 				26DFCE042BDD3F1500228FE8 /* on_download.c */,
 				26DFCE062BDD431F00228FE8 /* on_vap_json.c */,
 				26DFCE082BDD47A500228FE8 /* on_compress_info.c */,
+				263763DF2BDD584100968C9B /* on_start_compress.c */,
 			);
 			path = request_handler;
 			sourceTree = "<group>";
@@ -1225,6 +1228,7 @@
 				26DFCE0D2BDD481900228FE8 /* compress_util.c in Sources */,
 				26DFCE072BDD431F00228FE8 /* on_vap_json.c in Sources */,
 				26DFCE012BDD15CC00228FE8 /* string_util.c in Sources */,
+				263763E02BDD584100968C9B /* on_start_compress.c in Sources */,
 				26DFCDBF2BDB40DE00228FE8 /* vap-server.c in Sources */,
 				26DFCE052BDD3F1500228FE8 /* on_download.c in Sources */,
 				26DFCDEE2BDCA94100228FE8 /* vap_parser.c in Sources */,

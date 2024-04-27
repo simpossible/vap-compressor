@@ -17,6 +17,7 @@ typedef struct VideoInfo {
 } VideoInfo;
 
 extern VideoInfo *getMp4Info(char * input);
+extern int av_compress_video(char* inputPath, char *outputPath);
 
 #endif /* transcode_h */
 

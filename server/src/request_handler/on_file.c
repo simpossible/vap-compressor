@@ -49,7 +49,7 @@ int onFileRequest(struct mg_connection *conn, void *ignored) {
         cJSON_AddNumberToObject(file_info, "size", fileStat.st_size);
         cJSON_AddItemToObject(file_info, "sub_files", cJSON_CreateObject());
         if (string_end_with(filePath, ".mp4")) {
-            cJSON* vapInfo = getVapInfo(filePath);
+            cJSON* vapInfo = getVapcInfo(filePath);
             if (vapInfo != NULL) {
                 VideoInfo * videoInfo = getMp4Info(filePath);
                 if (videoInfo != NULL) {
@@ -84,7 +84,7 @@ int onFileRequest(struct mg_connection *conn, void *ignored) {
                     continue;
                 }
                 if (string_end_with(subName, ".mp4")) {
-                    cJSON* vapInfo = getVapInfo(absulutePath);
+                    cJSON* vapInfo = getVapcInfo(absulutePath);
                     if (vapInfo != NULL) {
                         absuluteSubFiles = char_add_element(absuluteSubFiles, &arrayLength, absulutePath);
                         cJSON_Delete(vapInfo);

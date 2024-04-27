@@ -187,20 +187,34 @@ BoxArray getVapBoxes(char *file_path) {
     return boxArray;
 }
 
-cJSON *getVapInfo(char *filePath) {
+cJSON *getVapcInfo(char *filePath) {
+    cJSON *vapJson = NULL;
     BoxArray array = getVapBoxes(filePath);
     for (int i = 0; i < array.length; i++) {
         Mp4Box *box = array.boxes[i];
         if (strcmp(box->boxType, "vapc") == 0) {
-            cJSON *vapJson = cJSON_Parse(box->content);
-            return vapJson;
+            vapJson = cJSON_Parse(box->content);
+            break;
         }
     }
-    return NULL;
+    return vapJson;
+}
+
+char * getVapcContent(char *filePath) {
+    char *vapJsonContent = NULL;
+    BoxArray array = getVapBoxes(filePath);
+    for (int i = 0; i < array.length; i++) {
+        Mp4Box *box = array.boxes[i];
+        if (strcmp(box->boxType, "vapc") == 0) {
+            vapJsonContent = box->content;
+            break;
+        }
+    }
+    return vapJsonContent;
 }
 
 
-VapFileInfo* getFileInfoOfVap(char *filePath) {
+VapFileInfo* _getFileInfoOfVap(char *filePath, bool forceVap) {
     if (!string_end_with(filePath, ".mp4")){
         return NULL;
     }
@@ -208,8 +222,9 @@ VapFileInfo* getFileInfoOfVap(char *filePath) {
     if(stat(filePath, &fileStat) < 0) {
         return NULL;
     }
-    cJSON *vapInfo = getVapInfo(filePath);
-    if (vapInfo == NULL) {
+    
+    cJSON *vapInfo = getVapcInfo(filePath);
+    if (vapInfo == NULL && forceVap) {
         return NULL;
     }
     
@@ -219,7 +234,13 @@ VapFileInfo* getFileInfoOfVap(char *filePath) {
     info->video_info = getMp4Info(filePath);
     info->path = filePath;
     return info;
-    
+}
+VapFileInfo* getFileInfoOfVap(char *filePath) {
+    return _getFileInfoOfVap(filePath, true);
+}
+
+VapFileInfo* getVapFileInfoAllowNotVap(char *filePath) {
+    return _getFileInfoOfVap(filePath, false);
 }
 
 cJSON * getVapFileInfoJson(char * filePath) {
@@ -238,3 +259,52 @@ cJSON * getVapFileInfoJson(char * filePath) {
     return json;
 }
 
+
+
+int addVapcToMp4File(char * outPath, char *vapc) {
+    BoxArray allBoxes = getVapBoxes(outPath);
+    for (int i = 0; i < allBoxes.length; i++) {
+        if (strcmp(allBoxes.boxes[i]->boxType, "vapc") == 0) {
+            return -1;
+        }
+    }
+
+    uint64_t vapcLen = strlen(vapc);
+    uint64_t vapcBoxSize = 8 + vapcLen;
+    char *vapcBoxBuffer = malloc(vapcBoxSize);
+    memcpy(vapcBoxBuffer, &vapcBoxSize, 4);
+    memcpy(vapcBoxBuffer + 4, "vapc", 4);
+    memcpy(vapcBoxBuffer + 8, vapc, vapcLen);
+
+    char tempFilePath[256];
+    sprintf(tempFilePath, "%s.temp", outPath);
+    FILE *fd = fopen(tempFilePath, "w");
+    FILE *oldFd = fopen(outPath, "r");
+    uint64_t position = 0;
+    for (int i = 0; i < allBoxes.length; i++) {
+        Mp4Box *oldBox = allBoxes.boxes[i];
+        char *oldBoxBuffer = readCharFromFile(oldFd, oldBox->start, oldBox->size);
+        fwrite(oldBoxBuffer, sizeof(char), oldBox->size, fd);
+        position = oldBox->start + oldBox->size;
+    }
+    fwrite(vapcBoxBuffer, sizeof(char), vapcBoxSize, fd);
+
+    BoxArray newAllBox = getVapBoxes(tempFilePath);
+    int boxOk = 0;
+    for (int i = 0; i < newAllBox.length; i++) {
+        if (strcmp(newAllBox.boxes[i]->boxType, "vapc") == 0) {
+            boxOk = 1;
+            break;
+        }
+    }
+    fclose(fd);
+    fclose(oldFd);
+    if (boxOk) {
+        remove(outPath);
+        rename(tempFilePath, outPath);
+        return 0;
+    } else {
+        remove(tempFilePath);
+        return -2;
+    }
+}

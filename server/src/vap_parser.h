@@ -19,8 +19,15 @@ typedef struct VapFileInfo {
     char * path;
 } VapFileInfo;
 
-extern cJSON *getVapInfo(char *filePath);
+// 获取vapcJson
+extern cJSON *getVapcInfo(char *filePath);
+// 获取vapc字符串
+char * getVapcContent(char *filePath);
+
+
 extern cJSON * getVapFileInfoJson(char * filePath);
 VapFileInfo* getFileInfoOfVap(char *filePath) ;
+VapFileInfo* getVapFileInfoAllowNotVap(char *filePath);
+int addVapcToMp4File(char * outPath, char *vapc);
 
 #endif /* vap_parser_h */

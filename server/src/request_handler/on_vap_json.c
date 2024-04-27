@@ -26,7 +26,7 @@ int onVapJsonRequest(struct mg_connection *conn, void *ignored) {
         free(filePath);
         return 404;
     }
-    cJSON *vapJson = getVapInfo(filePath);
+    cJSON *vapJson = getVapcInfo(filePath);
     if (vapJson == NULL) {
         char *resultStr = "not vap file";
         unsigned long len = strlen(resultStr);

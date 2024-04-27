@@ -549,7 +549,7 @@ static int flush_encoder(unsigned int stream_index, TranscodeManager *manager)
     return encode_write_frame(stream_index, 1, manager);
 }
 
-int transcode_vap(char* inputPath, char *outputPath)
+int av_compress_video(char* inputPath, char *outputPath)
 {
     int ret;
     AVPacket *packet = NULL;

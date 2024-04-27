@@ -30,14 +30,14 @@ int onCompressInfoRequest(struct mg_connection *conn, void *ignored) {
         goto finish;
     }
     
-    CompressInfo *compressInfo = getCompressInfo(filePath);
+    CompressInfo *compressInfo = cacheGetCompressInfo(filePath);
     if (compressInfo != NULL) {
         result = compressInfnToJson(compressInfo);
         goto finish;
     }
     char * tempPath = tempVapPathFrom(filePath);
     if (file_exists(tempPath) != -1) {
-        cJSON *vapInfo =  getVapInfo(tempPath);
+        cJSON *vapInfo =  getVapcInfo(tempPath);
         if (vapInfo == NULL) {
             // find temp path but not a vap file
             CompressInfo tempCompressInfo = {
@@ -55,7 +55,7 @@ int onCompressInfoRequest(struct mg_connection *conn, void *ignored) {
             compressInfo->outputPath = tempPath;
             compressInfo->outputFileInfo = vapFileInfoJson;
             result =compressInfnToJson(compressInfo);
-            saveCompressInfo(filePath, compressInfo);
+            cacheSaveCompressInfo(filePath, compressInfo);
             goto finish;
         }
     }else {

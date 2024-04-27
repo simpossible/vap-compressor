@@ -22,14 +22,14 @@ void initialDic(void) {
 }
 
 
-CompressInfo * getCompressInfo(char *filePath) {
+CompressInfo * cacheGetCompressInfo(char *filePath) {
     initialDic();
     CompressInfo *exist = (CompressInfo *)dicGetValue(shareDictionary, filePath);
     return exist;
     
 }
 
-void saveCompressInfo(char *filePath, CompressInfo *info) {
+void cacheSaveCompressInfo(char *filePath, CompressInfo *info) {
     initialDic();
     dicSetValue(shareDictionary, filePath, info);
 }
