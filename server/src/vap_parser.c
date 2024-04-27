@@ -222,3 +222,18 @@ VapFileInfo* getFileInfoOfVap(char *filePath) {
     
 }
 
+cJSON * getVapFileInfoJson(char * filePath) {
+    VapFileInfo *info = getFileInfoOfVap(filePath);
+    if (info == NULL) {
+        return NULL;
+    }
+    cJSON *json = cJSON_CreateObject();
+    cJSON_AddStringToObject(json, "path", info->path);
+    cJSON_AddNumberToObject(json, "size", info->size);
+    cJSON_AddItemToObject(json, "vap_info", info->vap_info);
+    cJSON_AddItemToObject(json, "video_info", info->video_info);
+    free(info);
+    free(info->vap_info);
+    return json;
+}
+

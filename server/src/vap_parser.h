@@ -27,6 +27,7 @@ typedef struct VapFileInfo {
 } VapFileInfo;
 
 extern cJSON *getVapInfo(char *filePath);
+extern cJSON * getVapFileInfoJson(char * filePath);
 VapFileInfo* getFileInfoOfVap(char *filePath) ;
 
 #endif /* vap_parser_h */
