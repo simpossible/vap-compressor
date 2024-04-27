@@ -174,6 +174,11 @@
 		26DFCDEE2BDCA94100228FE8 /* vap_parser.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDEB2BDCA94100228FE8 /* vap_parser.c */; };
 		26DFCDF12BDCB59700228FE8 /* on_file.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDF02BDCB59700228FE8 /* on_file.c */; };
 		26DFCDF22BDCB59700228FE8 /* on_file.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDF02BDCB59700228FE8 /* on_file.c */; };
+		26DFCDFB2BDD0C9F00228FE8 /* on_vap_file_list.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDF92BDD0C9F00228FE8 /* on_vap_file_list.c */; };
+		26DFCDFC2BDD0C9F00228FE8 /* on_vap_file_list.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDF92BDD0C9F00228FE8 /* on_vap_file_list.c */; };
+		26DFCDFF2BDD15CC00228FE8 /* string_util.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCDFD2BDD15CC00228FE8 /* string_util.h */; };
+		26DFCE002BDD15CC00228FE8 /* string_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDFE2BDD15CC00228FE8 /* string_util.c */; };
+		26DFCE012BDD15CC00228FE8 /* string_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDFE2BDD15CC00228FE8 /* string_util.c */; };
 		26EB1BD72BD0357800AD1AF4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 26EB1BD62BD0357800AD1AF4 /* AppDelegate.m */; };
 		26EB1BDA2BD0357800AD1AF4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26EB1BD92BD0357800AD1AF4 /* ViewController.m */; };
 		26EB1BDC2BD0357B00AD1AF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26EB1BDB2BD0357B00AD1AF4 /* Assets.xcassets */; };
@@ -387,6 +392,9 @@
 		26DFCDEA2BDCA94100228FE8 /* vap_parser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = vap_parser.h; sourceTree = "<group>"; };
 		26DFCDEB2BDCA94100228FE8 /* vap_parser.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = vap_parser.c; sourceTree = "<group>"; };
 		26DFCDF02BDCB59700228FE8 /* on_file.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = on_file.c; sourceTree = "<group>"; };
+		26DFCDF92BDD0C9F00228FE8 /* on_vap_file_list.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = on_vap_file_list.c; sourceTree = "<group>"; };
+		26DFCDFD2BDD15CC00228FE8 /* string_util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = string_util.h; sourceTree = "<group>"; };
+		26DFCDFE2BDD15CC00228FE8 /* string_util.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = string_util.c; sourceTree = "<group>"; };
 		26EB1BD22BD0357800AD1AF4 /* Vap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26EB1BD52BD0357800AD1AF4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		26EB1BD62BD0357800AD1AF4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -741,6 +749,8 @@
 				26DFCDB92BDB40DE00228FE8 /* vap-server.c */,
 				26DFCDD12BDBD8F800228FE8 /* server_util.h */,
 				26DFCDD22BDBD8F800228FE8 /* server_util.c */,
+				26DFCDFD2BDD15CC00228FE8 /* string_util.h */,
+				26DFCDFE2BDD15CC00228FE8 /* string_util.c */,
 				26DFCDDF2BDC0C6A00228FE8 /* dictionary.h */,
 				26DFCDE02BDC0C6A00228FE8 /* dictionary.c */,
 				26DFCDEA2BDCA94100228FE8 /* vap_parser.h */,
@@ -761,6 +771,7 @@
 			isa = PBXGroup;
 			children = (
 				26DFCDF02BDCB59700228FE8 /* on_file.c */,
+				26DFCDF92BDD0C9F00228FE8 /* on_vap_file_list.c */,
 			);
 			path = request_handler;
 			sourceTree = "<group>";
@@ -892,6 +903,7 @@
 				26DFCD5D2BDB400600228FE8 /* hwcontext_dxva2.h in Headers */,
 				26DFCD5F2BDB400600228FE8 /* buffer.h in Headers */,
 				26DFCD8F2BDB400600228FE8 /* version_major.h in Headers */,
+				26DFCDFF2BDD15CC00228FE8 /* string_util.h in Headers */,
 				26DFCD482BDB400600228FE8 /* hwcontext_vdpau.h in Headers */,
 				26DFCD332BDB400600228FE8 /* ambient_viewing_environment.h in Headers */,
 				26DFCD432BDB400600228FE8 /* lfg.h in Headers */,
@@ -1153,10 +1165,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26DFCDFB2BDD0C9F00228FE8 /* on_vap_file_list.c in Sources */,
 				26DFCDED2BDCA94100228FE8 /* vap_parser.c in Sources */,
 				26EB1BDA2BD0357800AD1AF4 /* ViewController.m in Sources */,
 				26DFCDF12BDCB59700228FE8 /* on_file.c in Sources */,
 				26EB1BE12BD0357B00AD1AF4 /* main.m in Sources */,
+				26DFCE002BDD15CC00228FE8 /* string_util.c in Sources */,
 				26EB1BD72BD0357800AD1AF4 /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1182,10 +1196,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26DFCDFC2BDD0C9F00228FE8 /* on_vap_file_list.c in Sources */,
 				26DFCDE22BDC0C6A00228FE8 /* dictionary.c in Sources */,
 				26DFCDF22BDCB59700228FE8 /* on_file.c in Sources */,
 				26DFCDDD2BDC0A5C00228FE8 /* hashmap.c in Sources */,
 				26DFCDD42BDBD8F800228FE8 /* server_util.c in Sources */,
+				26DFCE012BDD15CC00228FE8 /* string_util.c in Sources */,
 				26DFCDBF2BDB40DE00228FE8 /* vap-server.c in Sources */,
 				26DFCDEE2BDCA94100228FE8 /* vap_parser.c in Sources */,
 				26DFCDBB2BDB40DE00228FE8 /* transcode.c in Sources */,

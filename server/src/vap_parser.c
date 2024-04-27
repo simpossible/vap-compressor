@@ -11,6 +11,9 @@
 #include <string.h>
 #include <stdint.h>
 #include "CJSON.h"
+#include "string_util.h"
+#include <sys/stat.h>
+
 
 typedef struct {
     char *boxType;
@@ -184,22 +187,6 @@ BoxArray getVapBoxes(char *file_path) {
     return boxArray;
 }
 
-// The rest of the functions are left as an exercise for the reader.
-// They will follow a similar pattern to the getVapBoxes function.
-
-
-//function getVapInfo(filePath) {
-//    var allBoxes = getVapBoxes(filePath)
-//    for (var boxIndex in allBoxes) {
-//        var box = allBoxes[boxIndex]
-//        if (box.boxType == "vapc") {
-//            var vapJson = box.content
-//            return JSON.parse(vapJson)
-//        }
-//    }
-//    return null
-//
-//}
 cJSON *getVapInfo(char *filePath) {
     BoxArray array = getVapBoxes(filePath);
     for (int i = 0; i < array.length; i++) {
@@ -212,4 +199,26 @@ cJSON *getVapInfo(char *filePath) {
     return NULL;
 }
 
+
+VapFileInfo* getFileInfoOfVap(char *filePath) {
+    if (!string_end_with(filePath, ".mp4")){
+        return NULL;
+    }
+    struct stat fileStat;
+    if(stat(filePath, &fileStat) < 0) {
+        return NULL;
+    }
+    cJSON *vapInfo = getVapInfo(filePath);
+    if (vapInfo == NULL) {
+        return NULL;
+    }
+    
+    VapFileInfo *info = malloc(sizeof(VapFileInfo));
+    info->size = fileStat.st_size;
+    info->vap_info = vapInfo;
+    info->video_info = getMp4Info(filePath);
+    info->path = filePath;
+    return info;
+    
+}
 
