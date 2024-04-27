@@ -43,7 +43,7 @@ int onVapInfoRequest(struct mg_connection *conn, void *ignored) {
         cJSON_AddItemToObject(result, "file_info", file_info);
         goto finish;
     }
-    cJSON *jsonInfo =  getVapInfo(filePath);
+    cJSON *jsonInfo =  getVapFileInfoJson(filePath);
     if (jsonInfo == NULL) {
         cJSON_AddStringToObject(result, "msg", "not vap");
         cJSON_AddFalseToObject(result, "is_dir");

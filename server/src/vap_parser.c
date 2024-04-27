@@ -13,7 +13,7 @@
 #include "CJSON.h"
 #include "string_util.h"
 #include <sys/stat.h>
-
+#include "server_util.h"
 
 typedef struct {
     char *boxType;
@@ -228,7 +228,7 @@ cJSON * getVapFileInfoJson(char * filePath) {
         return NULL;
     }
     cJSON *json = cJSON_CreateObject();
-    cJSON *videoInfoJson = getVapInfo(filePath);
+    cJSON *videoInfoJson = videoInfnToJson(info->video_info);
     cJSON_AddStringToObject(json, "path", info->path);
     cJSON_AddNumberToObject(json, "size", info->size);
     cJSON_AddItemToObject(json, "vap_info", info->vap_info);

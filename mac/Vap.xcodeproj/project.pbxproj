@@ -181,6 +181,7 @@
 		26DFCE012BDD15CC00228FE8 /* string_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCDFE2BDD15CC00228FE8 /* string_util.c */; };
 		26DFCE032BDD32A300228FE8 /* on_vap_info.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCE022BDD32A300228FE8 /* on_vap_info.c */; };
 		26DFCE052BDD3F1500228FE8 /* on_download.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCE042BDD3F1500228FE8 /* on_download.c */; };
+		26DFCE072BDD431F00228FE8 /* on_vap_json.c in Sources */ = {isa = PBXBuildFile; fileRef = 26DFCE062BDD431F00228FE8 /* on_vap_json.c */; };
 		26EB1BD72BD0357800AD1AF4 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 26EB1BD62BD0357800AD1AF4 /* AppDelegate.m */; };
 		26EB1BDA2BD0357800AD1AF4 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 26EB1BD92BD0357800AD1AF4 /* ViewController.m */; };
 		26EB1BDC2BD0357B00AD1AF4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26EB1BDB2BD0357B00AD1AF4 /* Assets.xcassets */; };
@@ -399,6 +400,7 @@
 		26DFCDFE2BDD15CC00228FE8 /* string_util.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = string_util.c; sourceTree = "<group>"; };
 		26DFCE022BDD32A300228FE8 /* on_vap_info.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = on_vap_info.c; sourceTree = "<group>"; };
 		26DFCE042BDD3F1500228FE8 /* on_download.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = on_download.c; sourceTree = "<group>"; };
+		26DFCE062BDD431F00228FE8 /* on_vap_json.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = on_vap_json.c; sourceTree = "<group>"; };
 		26EB1BD22BD0357800AD1AF4 /* Vap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vap.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26EB1BD52BD0357800AD1AF4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		26EB1BD62BD0357800AD1AF4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -778,6 +780,7 @@
 				26DFCDF92BDD0C9F00228FE8 /* on_vap_file_list.c */,
 				26DFCE022BDD32A300228FE8 /* on_vap_info.c */,
 				26DFCE042BDD3F1500228FE8 /* on_download.c */,
+				26DFCE062BDD431F00228FE8 /* on_vap_json.c */,
 			);
 			path = request_handler;
 			sourceTree = "<group>";
@@ -1208,6 +1211,7 @@
 				26DFCDDD2BDC0A5C00228FE8 /* hashmap.c in Sources */,
 				26DFCE032BDD32A300228FE8 /* on_vap_info.c in Sources */,
 				26DFCDD42BDBD8F800228FE8 /* server_util.c in Sources */,
+				26DFCE072BDD431F00228FE8 /* on_vap_json.c in Sources */,
 				26DFCE012BDD15CC00228FE8 /* string_util.c in Sources */,
 				26DFCDBF2BDB40DE00228FE8 /* vap-server.c in Sources */,
 				26DFCE052BDD3F1500228FE8 /* on_download.c in Sources */,

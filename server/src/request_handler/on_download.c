@@ -19,8 +19,6 @@
 
 int onDownloadRequest(struct mg_connection *conn, void *ignored) {
     char *filePath = getParamsFromRequest(conn, "path");
-    cJSON *result = cJSON_CreateObject();
-    cJSON *file_info = cJSON_CreateObject();
     if (file_exists(filePath) == -1) {
         char *resultStr = "not exist";
         unsigned long len = strlen(resultStr);
