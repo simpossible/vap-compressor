@@ -25,6 +25,7 @@ static struct Dictionary * compress_dic = NULL;
 extern int onFileRequest(struct mg_connection *conn, void *ignored);
 extern int onVapFileListRequest(struct mg_connection *conn, void *ignored);
 extern int onVapInfoRequest(struct mg_connection *conn, void *ignored);
+extern int onDownloadRequest(struct mg_connection *conn, void *ignored);
 
 static int handleHellowWord(struct mg_connection *conn, void *ignored)
 {
@@ -84,5 +85,6 @@ void startVapServer(void) {
     mg_set_request_handler(ctx, "/file", onFileRequest, "file");
     mg_set_request_handler(ctx, "/vap-file-list", onVapFileListRequest, "onVapFileListRequest");
     mg_set_request_handler(ctx, "/vap-info", onVapInfoRequest, "vap-info");
+    mg_set_request_handler(ctx, "/download", onDownloadRequest, "vap-info");
     
 }
