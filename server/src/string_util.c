@@ -10,6 +10,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <libgen.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 bool isFileInnerPath(char *fileName) {
     return string_start_with(fileName, "__compress_");
@@ -44,4 +47,21 @@ char **char_remove_element(char **array, int *length, int index) {
     array = realloc(array, (*length - 1) * sizeof(char *));
     (*length)--;
     return array;
+}
+
+
+char * tempVapPathFrom(const char *filePath) {
+    char *filePathCopy = strdup(filePath);
+    char *basePath = dirname(filePathCopy);
+    unsigned long basePathLen = strlen(basePath);
+
+    char *filePathCopy2 = strdup(filePath);
+    char *baseName = basename(filePathCopy2);
+    unsigned long baseNameLen = strlen(baseName);
+    unsigned long outPutLen = basePathLen + baseNameLen + 13;
+    char *outputPath = malloc(outPutLen);
+    snprintf(outputPath, outPutLen, "%s/__compress_%s", basePath, baseName);
+    free(filePathCopy);
+    free(filePathCopy2);
+    return outputPath;
 }

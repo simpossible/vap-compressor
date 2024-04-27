@@ -10,14 +10,7 @@
 #include "CJSON.h"
 #include "transcode.h"
 #include "transcode.h"
-typedef enum {
-    CompressState_error = -1,
-    CompressState_none = 0,
-    CompressState_compressing = 1,
-    CompressState_done = 2,
-    CompressState_acceptting = 3,
-    CompressState_quitting = 4
-} CompressState;
+
 
 typedef struct VapFileInfo {
     unsigned long long size;
