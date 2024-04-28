@@ -77,28 +77,28 @@ void *__compressVapFile(void **args) {
     int ret = av_compress_video(filePath, outputPath, crf, preset, __onCommpressProgressChange);
     if (ret != 0) {
         printf("compress fail");
-        return NULL;
+        goto end;;
     }
     
     CompressInfo *compressInfo = cacheGetCompressInfo(filePath);
     if (compressInfo == NULL) {
         printf("no compress info");
         remove(outputPath);
-        return NULL;
+        goto end;;
     }
     compressInfo->state = CompressState_done;
     VapFileInfo *outputVapFileInfo = getVapFileInfoAllowNotVap(outputPath);
     if (outputVapFileInfo == NULL) {
         compressInfo->errorMsg = "out put file error";
         compressInfo->errorCode = -2;
-        return NULL;
+        goto end;
     }
         
     char *oldVapcContent = getVapcContent(filePath);
     if (oldVapcContent == NULL) {
         compressInfo->errorMsg = "old vap error";
         compressInfo->errorCode = -2;
-        return NULL;
+        goto end;;
     }
     // add vap info to outoup    
     ret = addVapcToMp4File(outputPath, oldVapcContent);
@@ -107,7 +107,7 @@ void *__compressVapFile(void **args) {
         remove(outputPath);
         compressInfo->errorMsg = "add vapc error";
         compressInfo->errorCode = ret;
-        return NULL;
+        goto end;
     }
     
     if (compressInfo->auto_accept) {
@@ -130,6 +130,8 @@ void *__compressVapFile(void **args) {
     }else {
         compressInfo->progress = 100;
     }
+end:
+    free(args);
     return NULL;
 }
 
