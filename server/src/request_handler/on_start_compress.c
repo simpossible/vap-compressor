@@ -20,11 +20,11 @@
 #include <pthread.h>
 void _compressFile(char *filePath, char *crf, char *preset);
 
+extern int onCompressInfoRequest(struct mg_connection *conn, void *ignored) ;
+
 int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
-    char *filePath = getParamsFromRequest(conn, "path");
-    char *crf = getParamsFromRequest(conn, "crf");
-    char *preset = getParamsFromRequest(conn, "preset");
     cJSON *result = NULL;
+    char *filePath = getParamsFromRequest(conn, "path");
     if (file_exists(filePath) == -1) {
         cJSON_AddStringToObject(result, "msg", "file not exist");
         cJSON_AddFalseToObject(result, "is_dir");
@@ -32,6 +32,39 @@ int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
         cJSON_AddNumberToObject(result, "code", -1);
         goto finish;
     }
+    
+    char *crf = getParamsFromRequest(conn, "crf");
+    char *preset = getParamsFromRequest(conn, "preset");
+    char * auto_accept = getParamsFromRequest(conn, "auto_accept");
+    bool need_auto_accpet = false;
+    if (auto_accept != NULL) {
+        if (strcmp(auto_accept, "true") == 0) {
+            need_auto_accpet = true;
+        }
+    }
+    
+    char *tempVapPath = tempVapPathFrom(filePath);
+    if (file_exists(tempVapPath)) {
+        free(tempVapPath);
+        return onCompressInfoRequest(conn, ignored);
+    }
+    
+    CompressInfo *exist = cacheGetCompressInfo(filePath);
+    if (exist != NULL && exist->state == CompressState_compressing) {
+        cJSON *result = compressInfnToJson(exist);
+        goto finish;
+    }
+    
+    if (exist == NULL) {
+        exist = malloc(sizeof(CompressInfo));
+        memset(exist, 0, sizeof(CompressInfo));
+    }
+    exist->state = CompressState_compressing;
+    exist->auto_accept = need_auto_accpet;
+    exist->org_path = filePath;
+    cacheSaveCompressInfo(filePath, exist);
+    
+    
     if (crf == NULL) {
         crf = "23";
     }
