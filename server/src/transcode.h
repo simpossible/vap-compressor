@@ -16,8 +16,10 @@ typedef struct VideoInfo {
     char * codec_name;
 } VideoInfo;
 
+typedef void (*ProcessCallBack)(char* fileName, float process);
+
 extern VideoInfo *getMp4Info(char * input);
-extern int av_compress_video(char* inputPath, char *outputPath);
+extern int av_compress_video(char* inputPath, char *outputPath, char*crf, char *speed, ProcessCallBack callBack);
 
 #endif /* transcode_h */
 

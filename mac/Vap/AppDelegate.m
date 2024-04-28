@@ -12,7 +12,6 @@
 extern char *create_monitor_with_helpers(void);
 
 extern void startVapServer(void);
-extern int av_compress_video(char* inputPath, char *outputPath);
 
 
 @interface AppDelegate ()
@@ -85,9 +84,7 @@ void onProgress(int p){
 }
 
 - (void)startCompress {
-    NSString *input = @"/Users/liangjinfeng/Downloads/aaaa/b.mp4";
-    NSString *output = @"/Users/liangjinfeng/Downloads/aaaa/b_1.mp4";
-    av_compress_video(input.UTF8String, output.UTF8String);
+
     return;
 }
 

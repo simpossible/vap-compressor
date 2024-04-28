@@ -18,10 +18,12 @@
 #include "server_util.h"
 #include "compress_util.h"
 #include <pthread.h>
-void _compressFile(char *filePath);
+void _compressFile(char *filePath, char *crf, char *preset);
 
 int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
     char *filePath = getParamsFromRequest(conn, "path");
+    char *crf = getParamsFromRequest(conn, "crf");
+    char *preset = getParamsFromRequest(conn, "preset");
     cJSON *result = NULL;
     if (file_exists(filePath) == -1) {
         cJSON_AddStringToObject(result, "msg", "file not exist");
@@ -30,8 +32,14 @@ int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
         cJSON_AddNumberToObject(result, "code", -1);
         goto finish;
     }
+    if (crf == NULL) {
+        crf = "23";
+    }
+    if (preset == NULL) {
+        preset = "slow";
+    }
     
-    _compressFile(filePath);
+    _compressFile(filePath, crf, preset);
     
 finish:
     {
@@ -52,16 +60,27 @@ finish:
     
 }
 
-void *__compressVapFile(void *args) {
-    char * filePath = (char *)args;
+void __onCommpressProgressChange(char *fileName, float progress) {
+    CompressInfo *compressInfo = cacheGetCompressInfo(fileName);
+    if (compressInfo == NULL) {
+        printf("no compress info");
+    }
+    printf("fileName is%s progress is %f \n", fileName, progress);
+}
+
+void *__compressVapFile(void **args) {
+    char **params = (char **)args;
+    char * filePath = params[0];
+    char * crf = params[1];
+    char * preset = params[2];
     char *outputPath = tempVapPathFrom(filePath);
-    int ret = av_compress_video(filePath, outputPath);
+    int ret = av_compress_video(filePath, outputPath, crf, preset, __onCommpressProgressChange);
     if (ret != 0) {
         printf("compress fail");
         return NULL;
     }
     
-    CompressInfo *compressInfo = cacheGetCompressInfo(filePath);    
+    CompressInfo *compressInfo = cacheGetCompressInfo(filePath);
     if (compressInfo == NULL) {
         printf("no compress info");
         remove(outputPath);
@@ -114,14 +133,18 @@ void *__compressVapFile(void *args) {
     return NULL;
 }
 
-void _compressFile(char *filePath) {
+void _compressFile(char *filePath, char *crf, char *preset) {
     pthread_t thread_id;
-        pthread_attr_t attr;
-
-        pthread_attr_init(&attr);
-        pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-        printf("Before Thread\n");
-        pthread_create(&thread_id, &attr, __compressVapFile, filePath);
+    pthread_attr_t attr;
+    
+    pthread_attr_init(&attr);
+    pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+    printf("Before Thread\n");
+    void **params = malloc(3 * sizeof(char *));
+    params[0] = filePath;
+    params[1] = crf;
+    params[2] = preset;
+    pthread_create(&thread_id, &attr, __compressVapFile, params);
 }
 
 
