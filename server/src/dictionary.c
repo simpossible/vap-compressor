@@ -58,8 +58,10 @@ void dicSetValue(Dictionary*dic, char *key, void *value) {
         return;
     }
     struct DictionaryNode *node = malloc(sizeof(struct DictionaryNode));
+    char *nodekey = malloc(strlen(key)+1);
+    strcpy(nodekey, key);
     node->obj = value;
-    node->key = key;
+    node->key = nodekey;
     hashmap_set(_dic->map, node);
     pthread_mutex_unlock(&_dic->lock);
 }
@@ -80,5 +82,27 @@ void* dicGetValue(Dictionary*dic, char *key) {
     return node->obj;
 }
 
+
+void dicRemoveValueForKey(Dictionary*dic, char *key) {
+    __Dictionary *_dic = (__Dictionary *)dic;
+    pthread_mutex_lock(&_dic->lock);
+    if (_dic->map == NULL) {
+        pthread_mutex_unlock(&_dic->lock);
+        return;
+    }
+    struct DictionaryNode *node = (DictionaryNode *)hashmap_get(_dic->map, &(struct DictionaryNode){.key=key});
+    if (node == NULL) {
+        hashmap_delete(_dic->map, &(struct DictionaryNode){.key=key});
+        if (node->obj == NULL) {
+            free(node->obj);
+            free(node->key);
+        }
+        free(node);
+        
+    }
+    pthread_mutex_unlock(&_dic->lock);
+   
+    
+}
 
 

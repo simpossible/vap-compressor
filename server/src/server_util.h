@@ -12,9 +12,11 @@
 #include "CJSON.h"
 #include "transcode.h"
 #include "string_util.h"
+#include "cJSON.h"
 
 
 extern char * getParamsFromRequest(struct mg_connection *conn, char *paramName);
+extern cJSON * getPostFromRequest(struct mg_connection *conn);
 extern int file_exists(char *filename);
 extern bool string_end_with(const char *filePath, const char * suffix);
 extern cJSON *videoInfnToJson(VideoInfo *videoInfo);

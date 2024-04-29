@@ -15,5 +15,6 @@ extern Dictionary *dicCreate(void);
 
 extern void dicSetValue(Dictionary*dic, char *key, void *value);
 extern void* dicGetValue(Dictionary*dic, char *key);
+extern void dicRemoveValueForKey(Dictionary*dic, char *key);
 
 #endif /* dictionary_h */

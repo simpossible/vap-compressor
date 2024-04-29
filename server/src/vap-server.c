@@ -29,6 +29,9 @@ extern int onDownloadRequest(struct mg_connection *conn, void *ignored);
 extern int onVapJsonRequest(struct mg_connection *conn, void *ignored);
 extern int onCompressInfoRequest(struct mg_connection *conn, void *ignored);
 extern int onStartCompressRequest(struct mg_connection *conn, void *ignored);
+extern int onClearFilesRequest(struct mg_connection *conn, void *ignored);
+extern int onAcceptCompressnRequest(struct mg_connection *conn, void *ignored);
+extern int onQuitCompressnRequest(struct mg_connection *conn, void *ignored);
 
 static int handleHellowWord(struct mg_connection *conn, void *ignored)
 {
@@ -92,5 +95,8 @@ void startVapServer(void) {
     mg_set_request_handler(ctx, "/vap-json", onVapJsonRequest, "vap-json");
     mg_set_request_handler(ctx, "/compress-info", onCompressInfoRequest, "compress-info");
     mg_set_request_handler(ctx, "/start-compress", onStartCompressRequest, "compress-info");
+    mg_set_request_handler(ctx, "/quit-compress", onQuitCompressnRequest, "quit-compress");
+    mg_set_request_handler(ctx, "/accept-compress", onAcceptCompressnRequest, "accept-compress");
+    mg_set_request_handler(ctx, "/clear-files", onClearFilesRequest, "clear-files");
     
 }

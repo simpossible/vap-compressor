@@ -40,6 +40,6 @@ typedef struct CompressInfo {
 extern CompressInfo* cacheGetCompressInfo(char *filePath);
 
 extern void cacheSaveCompressInfo(char *filePath, CompressInfo *info);
-
+extern void cacheDeleteCompressInfo(char *filePath);
 
 extern cJSON *compressInfnToJson(CompressInfo *videoInfo);

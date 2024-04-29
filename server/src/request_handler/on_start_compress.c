@@ -76,17 +76,15 @@ int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
     
 finish:
     {
-        char *resultStr = NULL;
+        char *resultStr = "";
         if (result != NULL) {
-            cJSON_Print(result);
-        }else {
-            resultStr = "";
+            resultStr = cJSON_Print(result);
+            cJSON_Delete(result);
         }
         
         unsigned long len = strlen(resultStr);
         mg_send_http_ok(conn, "application/jsonn", len);
         mg_write(conn, resultStr, len);
-        cJSON_Delete(result);
         free(filePath);
     }
     return 200;

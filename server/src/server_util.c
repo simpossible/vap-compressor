@@ -16,6 +16,7 @@
 #include <sys/stat.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include "cJSON.h"
 
 #endif
 
@@ -41,6 +42,50 @@ char * getParamsFromRequest(struct mg_connection *conn, char *paramName){
         return  paramValue;
     }
     return NULL;
+}
+
+cJSON * getPostFromRequest(struct mg_connection *conn) {
+    char buf[1024];
+    ssize_t n, total = 0;
+    int ret;
+    
+    // 创建一个足够大的动态缓冲区，或者使用 realloc 动态增长
+    char *data = malloc(2048); // 初始分配更大的内存
+    if (data == NULL) {
+        // 内存分配失败
+        return NULL;
+    }
+    
+    // 循环读取数据直到读取完毕
+    do {
+        n = mg_read(conn, buf, sizeof(buf));
+        if (n <= 0) {
+            free(data);
+            return NULL; // 读取失败
+        }
+        
+        // 检查是否需要重新分配内存
+        if (total + n >= (ssize_t)strlen(data)) {
+            char *tmp = realloc(data, total + n + 1);
+            if (tmp == NULL) {
+                free(data);
+                return NULL; // 内存重新分配失败
+            }
+            data = tmp;
+        }
+        
+        // 将读取的数据追加到动态缓冲区
+        memcpy(data + total, buf, n);
+        total += n;
+    } while (n == sizeof(buf));
+    
+    // 数据末尾添加空字符
+    cJSON *result = cJSON_CreateRaw(data);
+        
+    free(data);
+    
+    // 返回成功
+    return result;
 }
 
 

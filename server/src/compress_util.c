@@ -29,6 +29,11 @@ CompressInfo * cacheGetCompressInfo(char *filePath) {
     
 }
 
+void cacheDeleteCompressInfo(char *filePath) {
+    initialDic();
+    dicRemoveValueForKey(shareDictionary, filePath);
+}
+
 void cacheSaveCompressInfo(char *filePath, CompressInfo *info) {
     initialDic();
     dicSetValue(shareDictionary, filePath, info);
