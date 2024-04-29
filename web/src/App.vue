@@ -1,47 +1,73 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-</script>
-
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <el-row style="height: 100%;width: 100%;">
+    <el-col :span="6" id="xx1">
+      <VapList :onVapChoosed="onListVapChoosed" />
+    </el-col>
+    <el-col :span="9" v-if="selectNode.fileType == 2">
+      <VapDetail :key="refreshKey" :node="selectNode"></VapDetail>
+    </el-col>
+    <el-col :span="9" v-if="selectNode.fileType == 2">
+      <VapCompressDetail :key="refreshKey" :node="selectNode"> </VapCompressDetail>
+    </el-col>
+    <el-col :span="18" v-if="selectNode.fileType == 1">
+      <DirDetail :key="selectNode.src" :node="selectNode"></DirDetail>
+    </el-col>
+  </el-row>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
 </template>
+<script>
+import VapList from "./view/list/list.vue";
+import VapDetail from "./view/detail/detail.vue";
+import VapCompressDetail from "./view/compress_detail/compress_detail.vue";
+import { FileNode } from "./sdk/file_node";
+import DirDetail from "./view/detail/dir_detail.vue";
+import { shared_center } from "./sdk/vap_center";
 
-<style scoped>
-header {
-  line-height: 1.5;
+export default {
+  components: {
+    VapList,
+    VapDetail,
+    VapCompressDetail,
+    DirDetail
+  },
+  data() {
+    return {
+      count: 0,
+      selectNode: new FileNode(""),
+      refreshKey: 0
+    }
+  },
+  methods: {
+    increment() {
+      this.count++
+    },
+    onListVapChoosed(node) {
+      if (shared_center.dealingNodeSrc != "" && shared_center.dealingNodeSrc != node.src) {
+        this.$message({
+          message: '任务正在处理中',
+          type: 'warning'
+        });
+        return
+      }
+      console.log("listVapChoosed", node)
+      this.refreshKey = this.refreshKey + 1
+      this.selectNode = node
+    }
+
+  },
+
+  mounted() {
+    console.log(`The initial count is ${this.count}.`)
+  }
+}
+</script>
+<style>
+body {
+  margin: 0rem;
+  padding: 0rem;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
+.app {
+  height: 100%;
 }
 </style>

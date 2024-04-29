@@ -72,7 +72,7 @@ void startVapServer(void) {
     const char *documentPath = vapServerWorkSpacePath();
     const char *options[] = {
         "document_root", documentPath,
-        "listening_ports", "8070",
+        "listening_ports", "3000",
         NULL
     };
     mg_start_init_data.configuration_options = options;
