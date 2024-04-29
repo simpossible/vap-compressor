@@ -1,5 +1,4 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as path from 'path-browserify';
 
 function isMP4File(filePath) {
     // 检查文件是否存在

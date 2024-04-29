@@ -91,7 +91,6 @@ cJSON * getPostFromRequest(struct mg_connection *conn) {
 
 int file_exists(char *filename) {
     return access(filename, F_OK);
-    return 0;
 }
 
 

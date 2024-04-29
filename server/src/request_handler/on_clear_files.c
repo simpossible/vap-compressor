@@ -26,7 +26,7 @@ int onClearFilesRequest(struct mg_connection *conn, void *ignored) {
             cJSON *fileJson = cJSON_GetArrayItem(filesArray, i);
             char *filePath =  cJSON_GetStringValue(fileJson);
             char *tempVapPath = tempVapPathFrom(filePath);
-            if (file_exists(tempVapPath)) {
+            if (file_exists(tempVapPath) != -1 ) {
                 rename(tempVapPath, filePath);
             }
             cacheDeleteCompressInfo(filePath);

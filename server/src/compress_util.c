@@ -51,6 +51,11 @@ extern cJSON *compressInfnToJson(CompressInfo *compressInfo) {
     if (compressInfo->outputFileInfo != NULL) {
         cJSON_AddItemToObject(json, "outputFileInfo", compressInfo->outputFileInfo);
     }
+    cJSON_AddNumberToObject(json, "progress", compressInfo->progress);
+    if (compressInfo->errorMsg != NULL) {
+        cJSON_AddStringToObject(json, "errorMsg", compressInfo->errorMsg);
+    }
+    
     return json;
 }
 

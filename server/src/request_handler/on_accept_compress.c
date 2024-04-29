@@ -31,7 +31,7 @@ int onAcceptCompressnRequest(struct mg_connection *conn, void *ignored) {
         remove(filePath);
     }    
     char *tempVapPath = tempVapPathFrom(filePath);
-    if (file_exists(tempVapPath)) {
+    if (file_exists(tempVapPath) != -1) {
         rename(tempVapPath, filePath);
     }
 

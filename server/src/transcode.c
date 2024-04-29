@@ -770,7 +770,7 @@ VideoInfo *getMp4Info(char * input) {
     info->width = codecInfo->width;
     info->height = codecInfo->height;
     info->bitrate = codecInfo->bit_rate;
-    info->duration = pFormatCtx->streams[videoStream]->duration;
+    info->duration = pFormatCtx->streams[videoStream]->duration / 1000;
     // 打印视频信息
     // 关闭文件
     avformat_close_input(&pFormatCtx);

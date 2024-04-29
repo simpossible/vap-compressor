@@ -30,7 +30,7 @@ int onQuitCompressnRequest(struct mg_connection *conn, void *ignored) {
     cacheDeleteCompressInfo(filePath);
     
     char *tempVapPath = tempVapPathFrom(filePath);
-    if (file_exists(tempVapPath)) {
+    if (file_exists(tempVapPath) != -1) {
         remove(tempVapPath);
     }
 

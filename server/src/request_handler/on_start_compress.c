@@ -44,7 +44,7 @@ int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
     }
     
     char *tempVapPath = tempVapPathFrom(filePath);
-    if (file_exists(tempVapPath)) {
+    if (file_exists(tempVapPath) != -1) {
         free(tempVapPath);
         return onCompressInfoRequest(conn, ignored);
     }
@@ -65,10 +65,10 @@ int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
     cacheSaveCompressInfo(filePath, exist);
     
     
-    if (crf == NULL) {
+    if (crf == NULL || strcmp(crf, "") == 0) {
         crf = "23";
     }
-    if (preset == NULL) {
+    if (preset == NULL || strcmp(crf, "") == 0) {
         preset = "slow";
     }
     
@@ -93,10 +93,11 @@ finish:
 
 void __onCommpressProgressChange(char *fileName, float progress) {
     CompressInfo *compressInfo = cacheGetCompressInfo(fileName);
+    compressInfo->progress = progress;
     if (compressInfo == NULL) {
         printf("no compress info");
     }
-    printf("fileName is%s progress is %f \n", fileName, progress);
+    printf("==========fileName is%s progress is %f \n", fileName, progress);
 }
 
 void *__compressVapFile(void **args) {
@@ -166,6 +167,12 @@ end:
     return NULL;
 }
 
+char * copyChar(char *org){
+    char *new = malloc(strlen(org) + 1);
+    strcpy(new, org);
+    return new;
+}
+
 void _compressFile(char *filePath, char *crf, char *preset) {
     pthread_t thread_id;
     pthread_attr_t attr;
@@ -174,10 +181,11 @@ void _compressFile(char *filePath, char *crf, char *preset) {
     pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
     printf("Before Thread\n");
     void **params = malloc(3 * sizeof(char *));
-    params[0] = filePath;
-    params[1] = crf;
-    params[2] = preset;
+    params[0] = copyChar(filePath);
+    params[1] = copyChar(crf);
+    params[2] = copyChar(preset);
     pthread_create(&thread_id, &attr, __compressVapFile, params);
 }
+
 
 
