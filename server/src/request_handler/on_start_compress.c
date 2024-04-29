@@ -143,6 +143,11 @@ void *__compressVapFile(void **args) {
         goto end;
     }
     
+    cJSON *vapFileInfoJson = getVapFileInfoJson(outputPath);
+    if (vapFileInfoJson != NULL) {
+        compressInfo->outputFileInfo = vapFileInfoJson;
+    }
+    
     if (compressInfo->auto_accept) {
         struct stat inputFileStat;
         struct stat ouputFileStat;

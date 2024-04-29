@@ -91,3 +91,4 @@ typings/
 # Electron-Forge
 out/
 UserInterfaceState.xcuserstate
+mac/Vap.xcodeproj/xcuserdata
