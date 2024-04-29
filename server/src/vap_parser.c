@@ -259,7 +259,12 @@ cJSON * getVapFileInfoJson(char * filePath) {
     return json;
 }
 
-
+void writeUInt32BE(uint8_t *buffer, uint32_t value) {
+    buffer[0] = (value >> 24) & 0xFF;
+    buffer[1] = (value >> 16) & 0xFF;
+    buffer[2] = (value >> 8) & 0xFF;
+    buffer[3] = value & 0xFF;
+}
 
 int addVapcToMp4File(char * outPath, char *vapc) {
     BoxArray allBoxes = getVapBoxes(outPath);
@@ -269,10 +274,11 @@ int addVapcToMp4File(char * outPath, char *vapc) {
         }
     }
 
-    uint64_t vapcLen = strlen(vapc);
+    uint64_t vapcLen = strlen(vapc) + 1;
     uint64_t vapcBoxSize = 8 + vapcLen;
-    char *vapcBoxBuffer = malloc(vapcBoxSize);
-    memcpy(vapcBoxBuffer, &vapcBoxSize, 4);
+    uint8_t *vapcBoxBuffer = malloc(vapcBoxSize);
+    writeUInt32BE(vapcBoxBuffer, (uint32_t)vapcBoxSize);
+
     memcpy(vapcBoxBuffer + 4, "vapc", 4);
     memcpy(vapcBoxBuffer + 8, vapc, vapcLen);
 
@@ -288,7 +294,9 @@ int addVapcToMp4File(char * outPath, char *vapc) {
         position = oldBox->start + oldBox->size;
     }
     fwrite(vapcBoxBuffer, sizeof(char), vapcBoxSize, fd);
-
+    fclose(fd);
+    fclose(oldFd);
+    
     BoxArray newAllBox = getVapBoxes(tempFilePath);
     int boxOk = 0;
     for (int i = 0; i < newAllBox.length; i++) {
@@ -297,8 +305,7 @@ int addVapcToMp4File(char * outPath, char *vapc) {
             break;
         }
     }
-    fclose(fd);
-    fclose(oldFd);
+  
     if (boxOk) {
         remove(outPath);
         rename(tempFilePath, outPath);

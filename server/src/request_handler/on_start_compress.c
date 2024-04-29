@@ -123,6 +123,7 @@ void *__compressVapFile(void **args) {
     if (outputVapFileInfo == NULL) {
         compressInfo->errorMsg = "out put file error";
         compressInfo->errorCode = -2;
+        compressInfo->progress = 100;
         goto end;
     }
         

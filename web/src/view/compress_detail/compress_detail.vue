@@ -174,8 +174,6 @@ export default {
                 } else {
                     console.log("task.compressedFileInfo is null")
                 }
-            } else {
-
             }
         },
 
