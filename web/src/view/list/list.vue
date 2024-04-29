@@ -79,8 +79,9 @@ export default {
       e.stopPropagation();
       this.change_list_area_hightlight(false)
       let files = e.dataTransfer.files;
-      shared_center.createFileNodeFromFiles(files);
       console.log(files)
+      shared_center.createFileNodeFromFiles(files);
+
     },
     change_list_area_hightlight(hightlight = false) {
       this.vap_list_style_class = hightlight ? 'vap_list_style_highlight' : 'vap_list_style_normal'

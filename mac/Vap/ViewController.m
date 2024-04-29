@@ -7,21 +7,39 @@
 
 #import "ViewController.h"
 #import <Foundation/Foundation.h>
+#import "ContainerView.h"
+@import WebKit;
 
-@interface ViewController()
 
+
+@interface ViewController()<NSDraggingDestination>
+
+@property (nonatomic, strong) WKWebView *webView;
 
 @end
 
 
 @implementation ViewController
 
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    NSButton *button = [[NSButton alloc] initWithFrame:(NSMakeRect(0, 0, 100, 100))];
-    [self.view addSubview:button];
-    button.layer.backgroundColor = [NSColor redColor].CGColor;
-    // Do any additional setup after loading the view.
+    WKWebViewConfiguration *configuration = [[WKWebViewConfiguration alloc] init];
+    self.webView = [[ContainerView alloc] initWithFrame:self.view.bounds configuration:configuration];
+    [self.view addSubview:self.webView];
+    self.webView.translatesAutoresizingMaskIntoConstraints = NO;
+    // Load a webpage
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://127.0.0.1:3000?a=%ld",(long)CFAbsoluteTimeGetCurrent()]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [self.webView loadRequest:request];
+    [self setupConstraints];
+}
+
+- (void)setupConstraints {
+    // 约束web视图顶部、底部、左部和右部与父视图对齐
+    NSDictionary *views = @{@"webView": self.webView};
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[webView]|" options:0 metrics:nil views:views]];
+    [self.view addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|[webView]|" options:0 metrics:nil views:views]];
 }
 
 
@@ -30,6 +48,9 @@
 
     // Update the view, if already loaded.
 }
+
+#pragma mark - NSDraggingDestination
+
 
 
 @end

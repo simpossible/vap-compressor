@@ -36,27 +36,20 @@ void onProgress(int p){
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    // 拷贝resource文件到vap工作空间
-//    dispatch_async(dispatch_get_global_queue(0, 0), ^{
-//        [self startCompress];
-//    });
-    create_monitor_with_helpers();
-//    struct Dictionary *aDic = dicCreate();
-//    dicSetValue(aDic, @"1111".UTF8String, @"gogogo");
-//    dicSetValue(aDic, @"2222".UTF8String, @"ggg");
-//    dicSetValue(aDic, @"3333".UTF8String, @"bbbg");
-//    NSString *a = (__bridge NSString *)dicGetValue(aDic, [@"1111" UTF8String]);
-//    NSString *b = (__bridge NSString *)dicGetValue(aDic, @"2222".UTF8String);
-//    NSString *c = (__bridge NSString *)dicGetValue(aDic, @"3333".UTF8String);
-//    
-//    NSString *input = @"/Users/liangjinfeng/Downloads/aaaa/video.mp4";
-   
+
    
     NSString * resourcePath = [[NSBundle mainBundle] pathForResource:@"resource" ofType:@""];
     if (![[NSFileManager defaultManager] fileExistsAtPath:resourcePath]) {
         return;
     }
+    NSError *error;
     NSString *workSpacePath = vapServerGetDocumentPath();
+    if ([[NSFileManager defaultManager] fileExistsAtPath:workSpacePath]) {
+        [[NSFileManager defaultManager] removeItemAtPath:workSpacePath error:&error];
+        if (error) {
+            NSLog(@"get a error when remove old file");
+        }
+    }
     if (![[NSFileManager defaultManager] fileExistsAtPath:workSpacePath]) {
         NSError *error;
         [[NSFileManager defaultManager] copyItemAtPath:resourcePath toPath:workSpacePath error:&error];

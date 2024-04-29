@@ -42,12 +42,14 @@ int onFileRequest(struct mg_connection *conn, void *ignored) {
     if(stat(filePath, &fileStat) < 0) {
         return 404;
     }
+    cJSON *result = cJSON_CreateObject();
     bool isDir = S_ISDIR(fileStat.st_mode);
     bool isVap = false;
     cJSON *file_info = cJSON_CreateObject();
     if (!isDir) {
+        cJSON_AddItemToObject(result, "sub_files", cJSON_CreateArray());
         cJSON_AddNumberToObject(file_info, "size", fileStat.st_size);
-        cJSON_AddItemToObject(file_info, "sub_files", cJSON_CreateObject());
+        cJSON_AddItemToObject(result, "file_info", cJSON_CreateObject());
         if (string_end_with(filePath, ".mp4")) {
             cJSON* vapInfo = getVapcInfo(filePath);
             if (vapInfo != NULL) {
@@ -76,6 +78,10 @@ int onFileRequest(struct mg_connection *conn, void *ignored) {
                     free(subName);
                     continue;
                 }
+                if ((strcmp(subName, ".") == 0) || strcmp(subName, "..") == 0) {
+                    free(subName);
+                    continue;
+                }
                 char *absulutePath = osJoinPath(filePath, subName);
                 struct stat dirStat;
                 if(stat(absulutePath, &dirStat) < 0) {
@@ -100,11 +106,10 @@ int onFileRequest(struct mg_connection *conn, void *ignored) {
         }
         cJSON *subFiles = cJSON_CreateStringArray(absuluteSubFiles, arrayLength);
         free(absuluteSubFiles);
-        cJSON_AddItemToObject(file_info, "sub_files", subFiles);
+        cJSON_AddItemToObject(result, "sub_files", subFiles);
         closedir(dir);
         
     }
-    cJSON *result = cJSON_CreateObject();
     cJSON_AddNumberToObject(result, "code", 0);
     cJSON_AddStringToObject(result, "msg", "");
     cJSON_AddItemToObject(result, "file_info", file_info);

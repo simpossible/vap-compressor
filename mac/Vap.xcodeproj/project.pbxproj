@@ -11,6 +11,8 @@
 		263763E22BDF314E00968C9B /* on_quit_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 263763E12BDF314E00968C9B /* on_quit_compress.c */; };
 		263763E42BDF315E00968C9B /* on_accept_compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 263763E32BDF315E00968C9B /* on_accept_compress.c */; };
 		263763E62BDF35EC00968C9B /* on_clear_files.c in Sources */ = {isa = PBXBuildFile; fileRef = 263763E52BDF35EC00968C9B /* on_clear_files.c */; };
+		263763E92BDFE54000968C9B /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 263763E82BDFE54000968C9B /* ContainerView.m */; };
+		263763EB2BDFE6BC00968C9B /* onDrag.c in Sources */ = {isa = PBXBuildFile; fileRef = 263763EA2BDFE6BC00968C9B /* onDrag.c */; };
 		26DFCC922BDB3FC700228FE8 /* civetweb.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCC902BDB3FC700228FE8 /* civetweb.h */; };
 		26DFCC932BDB3FC700228FE8 /* CivetServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCC912BDB3FC700228FE8 /* CivetServer.h */; };
 		26DFCD272BDB400600228FE8 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCC962BDB400600228FE8 /* version.h */; };
@@ -241,6 +243,9 @@
 		263763E12BDF314E00968C9B /* on_quit_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = on_quit_compress.c; sourceTree = "<group>"; };
 		263763E32BDF315E00968C9B /* on_accept_compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = on_accept_compress.c; sourceTree = "<group>"; };
 		263763E52BDF35EC00968C9B /* on_clear_files.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = on_clear_files.c; sourceTree = "<group>"; };
+		263763E72BDFE54000968C9B /* ContainerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContainerView.h; sourceTree = "<group>"; };
+		263763E82BDFE54000968C9B /* ContainerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContainerView.m; sourceTree = "<group>"; };
+		263763EA2BDFE6BC00968C9B /* onDrag.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = onDrag.c; sourceTree = "<group>"; };
 		26DFCBD82BDB3F7800228FE8 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavutil.a; sourceTree = "<group>"; };
 		26DFCBD92BDB3F7800228FE8 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavfilter.a; sourceTree = "<group>"; };
 		26DFCBDA2BDB3F7800228FE8 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavcodec.a; sourceTree = "<group>"; };
@@ -802,6 +807,7 @@
 				263763E12BDF314E00968C9B /* on_quit_compress.c */,
 				263763E32BDF315E00968C9B /* on_accept_compress.c */,
 				263763E52BDF35EC00968C9B /* on_clear_files.c */,
+				263763EA2BDFE6BC00968C9B /* onDrag.c */,
 			);
 			path = request_handler;
 			sourceTree = "<group>";
@@ -840,6 +846,8 @@
 				26EB1BD62BD0357800AD1AF4 /* AppDelegate.m */,
 				26EB1BD82BD0357800AD1AF4 /* ViewController.h */,
 				26EB1BD92BD0357800AD1AF4 /* ViewController.m */,
+				263763E72BDFE54000968C9B /* ContainerView.h */,
+				263763E82BDFE54000968C9B /* ContainerView.m */,
 				26EB1BDB2BD0357B00AD1AF4 /* Assets.xcassets */,
 				26EB1BDD2BD0357B00AD1AF4 /* Main.storyboard */,
 				26EB1BE02BD0357B00AD1AF4 /* main.m */,
@@ -1196,6 +1204,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				263763E92BDFE54000968C9B /* ContainerView.m in Sources */,
 				26DFCDFB2BDD0C9F00228FE8 /* on_vap_file_list.c in Sources */,
 				26DFCDED2BDCA94100228FE8 /* vap_parser.c in Sources */,
 				26EB1BDA2BD0357800AD1AF4 /* ViewController.m in Sources */,
@@ -1203,6 +1212,7 @@
 				26EB1BE12BD0357B00AD1AF4 /* main.m in Sources */,
 				26DFCE002BDD15CC00228FE8 /* string_util.c in Sources */,
 				26EB1BD72BD0357800AD1AF4 /* AppDelegate.m in Sources */,
+				263763EB2BDFE6BC00968C9B /* onDrag.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

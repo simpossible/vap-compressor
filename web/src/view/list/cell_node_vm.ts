@@ -1,5 +1,5 @@
 import { FileNode, FileNodeType } from "../../sdk/file_node";
-import * as path from 'path';
+import * as path from 'path-browserify';
 import { shared_center } from '../../sdk/vap_center';
 class CellNodeVm {
     node: FileNode;
@@ -11,8 +11,8 @@ class CellNodeVm {
         this.node = node;
         this.uuid = node.src;
         this.label = path.basename(node.src);
-        for (let child of node.subNodes) {
-            var vm = new CellNodeVm(child)
+        for (const child of node.subNodes) {
+            const vm = new CellNodeVm(child)
             this.children.push(vm);
             this.childrenMap.set(child.src, vm);
         }
@@ -26,11 +26,11 @@ class CellNodeVm {
 
     onNodeInfoLoaded(node: FileNode) {
         console.log("onNodeInfoLoaded");
-        var tempSubMap = new Map();
-        var newArray: CellNodeVm[] = [];
-        var hasNew = false;
-        for (let child of node.subNodes) {
-            var vm: CellNodeVm | undefined = undefined;
+        const tempSubMap = new Map();
+        const newArray: CellNodeVm[] = [];
+        let hasNew = false;
+        for (const child of node.subNodes) {
+            let vm: CellNodeVm | undefined = undefined;
             if (this.childrenMap.has(child.src)) {
                 vm = this.childrenMap.get(child.src);
                 this.childrenMap.delete(child.src);
@@ -43,7 +43,7 @@ class CellNodeVm {
                 tempSubMap.set(vm.uuid, vm)
             }
         }
-        var hasDelete = this.childrenMap.size > 0;
+        const hasDelete = this.childrenMap.size > 0;
         this.children = newArray;
         this.childrenMap = tempSubMap;
         console.log("update key", this.uuid, " children:", this.children);

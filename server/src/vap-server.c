@@ -32,25 +32,7 @@ extern int onStartCompressRequest(struct mg_connection *conn, void *ignored);
 extern int onClearFilesRequest(struct mg_connection *conn, void *ignored);
 extern int onAcceptCompressnRequest(struct mg_connection *conn, void *ignored);
 extern int onQuitCompressnRequest(struct mg_connection *conn, void *ignored);
-
-static int handleHellowWord(struct mg_connection *conn, void *ignored)
-{
-    printf("hahaha");
-    const char *msg = "Hello world";
-    unsigned long len = (unsigned long)strlen(msg);
-    char *test = getParamsFromRequest(conn, "test");
-    if (test != NULL){
-        printf("a");
-    }
-    mg_send_http_ok(conn, "text/plain", len);
-    
-    mg_write(conn, msg, len);
-    
-    return 200; /* HTTP state 200 = OK */
-}
-
-
-
+extern int onDragRequest(struct mg_connection *conn, void *ignored);
 
 
 
@@ -98,5 +80,7 @@ void startVapServer(void) {
     mg_set_request_handler(ctx, "/quit-compress", onQuitCompressnRequest, "quit-compress");
     mg_set_request_handler(ctx, "/accept-compress", onAcceptCompressnRequest, "accept-compress");
     mg_set_request_handler(ctx, "/clear-files", onClearFilesRequest, "clear-files");
+    mg_set_request_handler(ctx, "/on-drag", onDragRequest, "on-drag");
+    
     
 }
