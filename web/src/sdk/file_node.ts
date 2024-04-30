@@ -249,9 +249,12 @@ class FileNode {
                         if (cachedNode == null) {
                             cachedNode = new FileNode(file_path);
                             currentNodeCache().cacheNode(cachedNode, file_path);
-                            console.log("file_info_changed 1", cachedNode.src)
-                            cachedNode.fileInfo = fileInfo;
+                            if (file_path.includes("__compress")) {
+                                console.log("debug --1");
+                            }
+                           
                         }
+                        cachedNode.fileInfo = fileInfo;
                         tempArray.push(cachedNode);
                     }
                     resolve(tempArray);

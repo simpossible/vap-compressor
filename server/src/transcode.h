@@ -11,7 +11,7 @@
 typedef struct VideoInfo {
     int width;
     float height;
-    long long duration;
+    float duration;
     float bitrate;
     char * codec_name;
 } VideoInfo;

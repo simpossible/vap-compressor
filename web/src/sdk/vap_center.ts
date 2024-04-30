@@ -46,6 +46,10 @@ class VapCenter {
     if (this.nodeMap.has(path)) {
       node = this.nodeMap.get(path);
     } else {
+      console.log("debugb --");
+      if (path.includes("__compress")) {
+        console.log("debug b--");
+    }
       node = new FileNode(path);
       this.nodeMap.set(path, node);
     }
@@ -53,6 +57,10 @@ class VapCenter {
   }
 
   cacheNode(node: any, path: string): void {
+    console.log("debuga --");
+    if (path.includes("__compress")) {
+      console.log("debug --");
+  }
     this.nodeMap.set(path, node);
   }
 

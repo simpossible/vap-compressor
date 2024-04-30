@@ -14,18 +14,11 @@
 #include "string_util.h"
 #include <sys/stat.h>
 #include "server_util.h"
+#include "vap_parser.h"
 
-typedef struct {
-    char *boxType;
-    uint64_t start;
-    uint64_t size;
-    char *content;
-} Mp4Box;
 
-typedef struct {
-    Mp4Box **boxes;
-    uint64_t length;
-} BoxArray;
+
+
 
 BoxArray getVapBoxes(char *filePath);
 
@@ -124,11 +117,22 @@ char* convertToString(uint8_t *buffer, int length) {
 }
 
 BoxArray getVapBoxes(char *file_path) {
-    printf("start parse mp4\n");
+    printf("start parse mp4 %s \n", file_path);
     FILE *fd = fopen(file_path, "r");
     Mp4Box **allBoxes = malloc(sizeof(Mp4Box*) * 100); // Assuming max 100 boxes.
+    if (allBoxes == NULL) {
+        printf("Memory allocation failed\n");
+        return (BoxArray){NULL, 0};
+    }
+    if (fd == NULL) {
+        printf("File not found\n");
+        return (BoxArray){NULL, 0, 0};
+    }
     uint64_t position = 0;
     uint64_t boxCount = 0;
+    if (strcmp(file_path, "/Users/liangjinfeng/Downloads/aaaa/__compress_video.mp4") == 0) {
+        printf("ready for test");
+    }
     while (1) {
         uint64_t boxStart = position;
         uint8_t *sizeReadBuffer = readFromFile(fd, position, 4);
@@ -141,6 +145,11 @@ BoxArray getVapBoxes(char *file_path) {
         uint64_t boxSize = readUInt32BE(sizeReadBuffer);
         free(sizeReadBuffer);
         printf("boxSize: %lld\n", boxSize);
+        if (boxSize == 0) {
+            printf("read boxsize error - 1\n");
+            return (BoxArray){NULL, 0, 1};
+            break;
+        }
 
         uint8_t *boxTypeReadBuffer = readFromFile(fd, position, 4);
         headerSize += 4;
@@ -165,10 +174,8 @@ BoxArray getVapBoxes(char *file_path) {
         }
         char *boxContent = "";
         if (strcmp(boxType, "vapc") == 0) {
-            printf("box size is %lld, headersize is %lld, position is %lld\n", boxSize, headerSize, position);
             uint64_t vapcLen = boxSize - headerSize;
             char *contentReadBuffer = readCharFromFile(fd, position, vapcLen);
-            printf("vaplen is %lld, content read is %lu\n", vapcLen, strlen(contentReadBuffer));
             position += vapcLen;
             if (contentReadBuffer == NULL) {
                 printf("read file error - 3\n");

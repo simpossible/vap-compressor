@@ -18,6 +18,7 @@
 #include "server_util.h"
 #include "compress_util.h"
 #include <pthread.h>
+#include "vap_parser.h"
 void _compressFile(char *filePath, char *crf, char *preset);
 
 extern int onCompressInfoRequest(struct mg_connection *conn, void *ignored) ;
@@ -34,7 +35,7 @@ int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
     }
     
     char *crf = getParamsFromRequest(conn, "crf");
-    char *preset = getParamsFromRequest(conn, "preset");
+    char *preset = getParamsFromRequest(conn, "speed");
     char * auto_accept = getParamsFromRequest(conn, "auto_accept");
     bool need_auto_accpet = false;
     if (auto_accept != NULL) {
@@ -45,8 +46,14 @@ int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
     
     char *tempVapPath = tempVapPathFrom(filePath);
     if (file_exists(tempVapPath) != -1) {
-        free(tempVapPath);
-        return onCompressInfoRequest(conn, ignored);
+        BoxArray box = getVapBoxes(tempVapPath);
+        if (box.state == 1) {
+            remove(tempVapPath);
+        }else {            
+            free(tempVapPath);
+            return onCompressInfoRequest(conn, ignored);
+        }
+        
     }
     
     CompressInfo *exist = cacheGetCompressInfo(filePath);

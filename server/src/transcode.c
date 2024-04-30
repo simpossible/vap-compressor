@@ -764,13 +764,13 @@ VideoInfo *getMp4Info(char * input) {
         return NULL; // 没有找到视频流
     
     // 获取编解码器上下文
-    
+    AVStream *avStream = pFormatCtx->streams[videoStream];
     AVCodecParameters *codecInfo = pFormatCtx->streams[videoStream]->codecpar;
     VideoInfo *info = (VideoInfo *)malloc(sizeof(VideoInfo));
     info->width = codecInfo->width;
     info->height = codecInfo->height;
     info->bitrate = codecInfo->bit_rate;
-    info->duration = pFormatCtx->streams[videoStream]->duration / 1000;
+    info->duration = avStream->duration * av_q2d(avStream->time_base);
     // 打印视频信息
     // 关闭文件
     avformat_close_input(&pFormatCtx);

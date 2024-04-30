@@ -4,7 +4,7 @@ export interface NodeCacheInterface {
   cacheNode(node: any, path: string): void;
 }
 
-var vapCompresseNodeCache: NodeCacheInterface | null = null;
+let vapCompresseNodeCache: NodeCacheInterface | null = null;
 
 export function setNodeCache(implement: NodeCacheInterface){
   vapCompresseNodeCache = implement;
