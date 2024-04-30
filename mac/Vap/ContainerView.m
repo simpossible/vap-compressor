@@ -7,7 +7,7 @@
 
 #import "ContainerView.h"
 
-static NSArray *dragfiles = @[@"/Users/liangjinfeng/Downloads/aaaa"];
+static NSArray *dragfiles = @[];
 
 char * getAppDragFiles(void) {
     NSMutableArray *fileArray = [NSMutableArray array];
@@ -21,7 +21,7 @@ char * getAppDragFiles(void) {
     };
     NSData * data = [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
     NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-//    dragfiles = @[];
+    dragfiles = @[];
     char *jsonChar = (char *)[str UTF8String];
     char *copystr = malloc(strlen(jsonChar)+1); //交给他人释放
     memcpy(copystr, jsonChar, strlen(jsonChar)+1);
@@ -40,14 +40,18 @@ char * getAppDragFiles(void) {
 - (BOOL)performDragOperation:(id<NSDraggingInfo>)sender {
     NSPasteboard *pasteboard = [sender draggingPasteboard];
     NSArray *files = [pasteboard propertyListForType:NSPasteboardTypeFileURL];
-    if (files.count > 0) {
-        dragfiles = files;
+    if ([files isKindOfClass:[NSString class]]) {
+        files = @[files];
     }
-    if (files.count > 0) {
-        NSString *fileURL = files[0];
-        NSLog(@"文件拖入成功，路径为: %@", fileURL);
-        // 处理文件，例如加载文件等
+    // 处理文件路径
+
+    NSMutableArray *pathArray = [NSMutableArray array];
+    for (NSString *filePath in files) {
+       NSURL *u = [NSURL URLWithString:filePath];
+        NSString *uPath = [u path];
+        [pathArray addObject:uPath];
     }
+    dragfiles = pathArray;
     return [super performDragOperation:sender];
 }
 
