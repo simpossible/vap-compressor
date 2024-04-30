@@ -248,7 +248,7 @@ export default {
         for (let task of this.taskList) {
           task.clear()
           task.node.triggerCompressCleared()
-          
+
         }
         this.loadAllTask()
         this.finished = false

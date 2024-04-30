@@ -91,7 +91,7 @@ void dicRemoveValueForKey(Dictionary*dic, char *key) {
         return;
     }
     struct DictionaryNode *node = (DictionaryNode *)hashmap_get(_dic->map, &(struct DictionaryNode){.key=key});
-    if (node == NULL) {
+    if (node != NULL) {
         hashmap_delete(_dic->map, &(struct DictionaryNode){.key=key});
         if (node->obj == NULL) {
             free(node->obj);

@@ -77,8 +77,8 @@ finish:
             }
         }
         unsigned long len = strlen(resultStr);
-        mg_send_http_ok(conn, "application/jsonn", len);
-        mg_write(conn, resultStr, len);
+            mg_send_http_ok(conn, "application/jsonn", len);
+            mg_write(conn, resultStr, len);
         if (result != NULL) {
             cJSON_Delete(result);
         }

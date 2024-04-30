@@ -187,6 +187,7 @@ BoxArray getVapBoxes(char *file_path) {
         allBoxes[boxCount++] = box;
         position = boxStart + boxSize;
     }
+    fclose(fd);
     BoxArray boxArray = {
         .boxes = allBoxes,
         .length = boxCount

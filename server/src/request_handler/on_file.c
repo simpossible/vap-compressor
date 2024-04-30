@@ -57,6 +57,7 @@ int onFileRequest(struct mg_connection *conn, void *ignored) {
                 if (videoInfo != NULL) {
                    cJSON *videoInfoJson = videoInfnToJson(videoInfo);
                     cJSON_AddItemToObject(file_info, "video_info", videoInfoJson);
+                    free(videoInfo);
                 }
                 isVap = true;
                 cJSON_AddItemToObject(file_info, "vap_info", vapInfo);
@@ -121,6 +122,7 @@ int onFileRequest(struct mg_connection *conn, void *ignored) {
     mg_write(conn, resultStr, len);
     free(filePath);
     cJSON_Delete(result);
+    
     
     return 200;
 }

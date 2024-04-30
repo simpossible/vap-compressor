@@ -247,8 +247,9 @@ export default {
             this.canPreview = false
             this.isOperated = true
             this.stopPlay()
+            var that = this
             this.node.quitCompress((code, error) => {
-                node.triggerCompressCleared()
+                that.node.triggerCompressCleared()
                 if (code == 0) {
                     this.refreshTask()
                 } else {

@@ -49,7 +49,7 @@ int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
         BoxArray box = getVapBoxes(tempVapPath);
         if (box.state == 1) {
             remove(tempVapPath);
-        }else {            
+        }else {
             free(tempVapPath);
             return onCompressInfoRequest(conn, ignored);
         }
@@ -84,15 +84,23 @@ int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
 finish:
     {
         char *resultStr = "";
+        char *printstr = NULL;
         if (result != NULL) {
-            resultStr = cJSON_Print(result);
+            printstr = cJSON_Print(result);
+            if (printstr != NULL) {
+                resultStr = printstr;
+            }
+        }
+        unsigned long len = strlen(resultStr);
+            mg_send_http_ok(conn, "application/jsonn", len);
+            mg_write(conn, resultStr, len);
+        if (result != NULL) {
             cJSON_Delete(result);
         }
-        
-        unsigned long len = strlen(resultStr);
-        mg_send_http_ok(conn, "application/jsonn", len);
-        mg_write(conn, resultStr, len);
         free(filePath);
+        if (printstr != NULL) {
+            free(printstr);
+        }
     }
     return 200;
     
@@ -125,9 +133,10 @@ void *__compressVapFile(void **args) {
         remove(outputPath);
         goto end;;
     }
-    compressInfo->state = CompressState_done;
+    
     VapFileInfo *outputVapFileInfo = getVapFileInfoAllowNotVap(outputPath);
     if (outputVapFileInfo == NULL) {
+        compressInfo->state = CompressState_done;
         compressInfo->errorMsg = "out put file error";
         compressInfo->errorCode = -2;
         compressInfo->progress = 100;
@@ -136,6 +145,7 @@ void *__compressVapFile(void **args) {
         
     char *oldVapcContent = getVapcContent(filePath);
     if (oldVapcContent == NULL) {
+        compressInfo->state = CompressState_done;
         compressInfo->errorMsg = "old vap error";
         compressInfo->errorCode = -2;
         goto end;;
@@ -145,6 +155,7 @@ void *__compressVapFile(void **args) {
     if (ret != 0) {
         printf("add vapc error");
         remove(outputPath);
+        compressInfo->state = CompressState_done;
         compressInfo->errorMsg = "add vapc error";
         compressInfo->errorCode = ret;
         goto end;
@@ -154,6 +165,7 @@ void *__compressVapFile(void **args) {
     if (vapFileInfoJson != NULL) {
         compressInfo->outputFileInfo = vapFileInfoJson;
     }
+    compressInfo->state = CompressState_done;
     
     if (compressInfo->auto_accept) {
         struct stat inputFileStat;
