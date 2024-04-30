@@ -9,6 +9,7 @@
 #import "transcode.h"
 #import "dictionary.h"
 #import "Cjson.h"
+#import "ViewController.h"
 
 extern void startVapServer(void);
 
@@ -27,15 +28,18 @@ NSString * vapServerGetDocumentPath(void) {
     return vapWorkSpace;
 }
 
-void onProgress(int p){
-    printf("progress is %d", p);
-}
+
+@interface AppDelegate()
+
+@property (nonatomic, strong) NSWindow * window;
+
+@end
 
 @implementation AppDelegate
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-
+    [self initialUI];
    
     NSString * resourcePath = [[NSBundle mainBundle] pathForResource:@"resource" ofType:@""];
     if (![[NSFileManager defaultManager] fileExistsAtPath:resourcePath]) {
@@ -61,8 +65,42 @@ void onProgress(int p){
         startVapServer();
     }];
     [self.thread start];
+        
+}
+
+
+- (void)initialUI{
+    NSWindow *window = [[NSWindow alloc] initWithContentRect:NSMakeRect(100, 100, 1024, 560)
+                                                   styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable
+                                                     backing:NSBackingStoreBuffered
+                                                       defer:NO];
+  
     
+    // 2. 创建一个NSViewController实例
+    // 如果你有一个在Storyboard中定义的ViewController，可以通过以下方式获取：
+    // NSViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"YourViewControllerIdentifier"];
     
+    // 或者，如果你在代码中创建它：
+    NSViewController *viewController = [[ViewController alloc] init];
+    [window setTitle:@"压缩"];
+    
+    // 3. 设置NSViewController的View为NSWindow的内容视图
+    [window setContentViewController:viewController];
+    
+    // 4. 显示NSWindow
+    [window makeKeyAndOrderFront:self];
+    [window setContentSize:NSMakeSize(1024, 560)];
+    [window setContentMaxSize:NSMakeSize(1024, 560)];
+    [window setContentMinSize:NSMakeSize(1024, 560)];
+    [window setMinSize:NSMakeSize(1024, 560)];
+    [window setMaxSize:NSMakeSize(1024, 560)];
+    
+    // 将新创建的窗口添加到应用程序的窗口数组中，这样它就可以接收事件
+    self.window = window;
+    
+    // 设置窗口的初始状态
+    [window center];
+    [window setInitialFirstResponder:viewController.view];
 }
 
 
