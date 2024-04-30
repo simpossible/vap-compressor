@@ -78,12 +78,14 @@ cJSON * getPostFromRequest(struct mg_connection *conn) {
         memcpy(data + total, buf, n);
         total += n;
     } while (n == sizeof(buf));
-    
-    // 数据末尾添加空字符
-    cJSON *result = cJSON_CreateRaw(data);
-        
-    free(data);
-    
+
+    char * rawData = malloc(total + 1);
+    memcpy(rawData, data, total);
+    rawData[total] = '\0';
+    // 数据末尾添加空字符;
+    cJSON *result = cJSON_Parse(rawData);
+    free(rawData);
+    free(data);    
     // 返回成功
     return result;
 }
