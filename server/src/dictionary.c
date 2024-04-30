@@ -92,12 +92,12 @@ void dicRemoveValueForKey(Dictionary*dic, char *key) {
     }
     struct DictionaryNode *node = (DictionaryNode *)hashmap_get(_dic->map, &(struct DictionaryNode){.key=key});
     if (node != NULL) {
-        hashmap_delete(_dic->map, &(struct DictionaryNode){.key=key});
-        if (node->obj == NULL) {
+        if (node->obj != NULL) {
             free(node->obj);
             free(node->key);
         }
-        free(node);
+        hashmap_delete(_dic->map, &(struct DictionaryNode){.key=key});
+        
         
     }
     pthread_mutex_unlock(&_dic->lock);
