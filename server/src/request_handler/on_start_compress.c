@@ -34,7 +34,7 @@ int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
         goto finish;
     }
     
-    char *crf = getParamsFromRequest(conn, "crf");
+    char *crf = getParamsFromRequest(conn, "quality");
     char *preset = getParamsFromRequest(conn, "speed");
     char * auto_accept = getParamsFromRequest(conn, "auto_accept");
     bool need_auto_accpet = false;
