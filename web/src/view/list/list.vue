@@ -92,12 +92,16 @@ export default {
         console.log("node exist");
         return
       }
+      var shouldAutoChoose = this.vm_list.length === 0
       var vm = new CellNodeVm(node)
       this.vm_list.unshift(vm)
       this.vm_list_map.set(node.src, vm)
-      this.onVapChoosed(vm)
       if (this.$refs.vap_list_tree != undefined) {
         this.$refs.vap_list_tree.updateKeyChildren(node.src, this.vm_list);
+      }
+
+      if (shouldAutoChoose) {
+        this.onVapChoosed(node)
       }
 
     },

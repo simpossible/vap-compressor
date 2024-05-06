@@ -34,7 +34,8 @@ export default {
     return {
       count: 0,
       selectNode: new FileNode(""),
-      refreshKey: 0
+      refreshKey: 0,
+      waitingSrc: ""
     }
   },
   methods: {
@@ -50,8 +51,30 @@ export default {
         return
       }
       console.log("listVapChoosed", node)
-      this.refreshKey = this.refreshKey + 1
-      this.selectNode = node
+      if (this.selectNode != null && this.selectNode.src != node.src) {
+        this.selectNode.deleteDelegates(this)
+      }
+      if (node.initialed) {
+        this.selectNode = node
+        this.waitingSrc = ""
+        node.addDelegates(this);
+        this.refreshKey = this.refreshKey + 1
+      } else {
+        this.waitingSrc = node.src
+        this.selectNode = new FileNode("")
+        node.addDelegates(this);
+      }
+
+
+    },
+    onNodeInfoLoaded(node) {
+      if (node.src == this.waitingSrc) {
+        this.selectNode = node
+        this.waitingSrc = ""
+        node.deleteDelegates(this);
+        this.refreshKey = this.refreshKey + 1
+      }
+      node.deleteDelegates(this);
     }
 
   },
