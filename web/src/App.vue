@@ -69,10 +69,10 @@ export default {
     },
     onNodeInfoLoaded(node) {
       if (node.src == this.waitingSrc) {
+        this.refreshKey = this.refreshKey + 1
         this.selectNode = node
         this.waitingSrc = ""
         node.deleteDelegates(this);
-        this.refreshKey = this.refreshKey + 1
       }
       node.deleteDelegates(this);
     }

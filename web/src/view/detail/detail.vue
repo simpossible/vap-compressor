@@ -5,13 +5,13 @@
             <div ref="anim" class="vap_anim">
             </div>
         </el-row>
-        <el-row>          
+        <el-row>
             <el-table :data="tableData">
-                    <el-table-column prop="resolution" label="分辨率"></el-table-column>
-                    <el-table-column prop="fileSize" label="文件大小"></el-table-column>
-                    <el-table-column prop="bitRate" label="比特率"></el-table-column>
-                    <el-table-column prop="duration" label="时长"></el-table-column>
-                </el-table>
+                <el-table-column prop="resolution" label="分辨率"></el-table-column>
+                <el-table-column prop="fileSize" label="文件大小"></el-table-column>
+                <el-table-column prop="bitRate" label="比特率"></el-table-column>
+                <el-table-column prop="duration" label="时长"></el-table-column>
+            </el-table>
         </el-row>
         <el-row>
             <!-- 这个搞个文本区域来显示vapJson的参数,最高显示100px-->
@@ -38,8 +38,8 @@ export default {
     },
     mounted() {
         if (this.node != null & this.node != undefined & this.node.src.length > 0) {
-            this.node.addDelegates(this)   
-            this.refreshInfo()            
+            this.node.addDelegates(this)
+            this.refreshInfo()
             this.play()
         }
     },
@@ -48,7 +48,7 @@ export default {
         if (this.vap != null) {
             this.vap.pause()
             this.vap = null
-        }        
+        }
     },
 
     data() {
@@ -58,11 +58,11 @@ export default {
             vapJson: "",
             bitRate: "",
             duration: "",
-            tableData:[]
+            tableData: []
         };
     },
     methods: {
-        onNodeInfoLoaded(node){
+        onNodeInfoLoaded(node) {
             if (node == this.node) {
                 var shouldRefreshPlay = false
                 if (this.fileSize != this.formatBytes(node.fileInfo.size)) {
@@ -76,20 +76,20 @@ export default {
                 }
             }
         },
-        refreshInfo(){
+        refreshInfo() {
             var fileSizeBytes = this.node.fileInfo.size;
             this.fileSize = this.formatBytes(fileSizeBytes)
             this.resolution = this.node.fileInfo.video_info.width + "x" + this.node.fileInfo.video_info.height
             this.vapJson = JSON.stringify(this.node.fileInfo.vap_info, null, 0)
             this.duration = this.formatTime(this.node.fileInfo.video_info.duration_ts)
             this.bitRate = this.node.fileInfo.video_info.bit_rate
-            this.fileUrl = vapUrlForKey(UrlPathDownload, {path: this.node.src});
-            this.vapJsonUrl = vapUrlForKey(UrlPathVapJson, {path: this.node.src});
+            this.fileUrl = vapUrlForKey(UrlPathDownload, { path: this.node.src });
+            this.vapJsonUrl = vapUrlForKey(UrlPathVapJson, { path: this.node.src });
             this.tableData = [{
                 resolution: this.resolution,
                 fileSize: this.fileSize,
                 bitRate: this.bitRate,
-                duration: this.duration                
+                duration: this.duration
             }]
         },
         play() {
@@ -113,7 +113,7 @@ export default {
                 // 精准模式
                 accurate: true
                 // 播放起始时间点(秒)
-            },  { type: 1 }))
+            }, { type: 1 }))
                 .on('playing', () => {
 
                 })
@@ -121,14 +121,14 @@ export default {
                 })
                 .on('frame', (frame, timestamp) => {
                 })
-            window.vap = this.vap
         },
         pause() {
             this.vap.pause()
         },
         stop() {
-            if(this.vap != null){
+            if (this.vap != null) {
                 this.vap.stop()
+                this.vap.destroy()
                 this.vap = null;
             }
         },

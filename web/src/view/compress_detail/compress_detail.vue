@@ -111,6 +111,7 @@ export default {
 
     unmounted() {
         this.node.deleteCompresseDelegate(this)
+        this.stopPlay()
     },
 
     data() {
@@ -188,7 +189,7 @@ export default {
             if (this.task.taskState == CompressTaskState.prepaired) {
                 shared_center.dealingNodeSrc = this.node.src
                 this.task.start({
-                    quality: this.compressQualityValue / 2,
+                    quality: (51 - this.compressQualityValue / 2),
                     speed: CompressSpeedOptions[this.compressSpeedValue]
                 })
             }
@@ -225,7 +226,6 @@ export default {
                 .on('frame', (frame, timestamp) => {
                     // frame: 当前帧(从0开始)  timestamp: (播放时间戳)
                 })
-            window.vap = this.vap
         },
         pause() {
             if (this.vap != null) {
@@ -239,6 +239,8 @@ export default {
         },
         stopPlay() {
             if (this.vap != null) {
+                console.log("stoped the vap play")
+                this.vap.destroy()
                 this.vap = null
             }
         },

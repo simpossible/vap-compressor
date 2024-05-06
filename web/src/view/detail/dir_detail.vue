@@ -197,7 +197,7 @@ export default {
       for (let task of this.taskList) {
         if (task.taskState == CompressTaskState.prepaired) {
           task.start({
-            quality: this.compressQualityValue / 2,
+            quality: (51 - this.compressQualityValue / 2),
             speed: CompressSpeedOptions[this.compressSpeedValue]
           })
           alreadyFinish = false
