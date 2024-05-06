@@ -75,7 +75,7 @@ int onStartCompressRequest(struct mg_connection *conn, void *ignored) {
     if (crf == NULL || strcmp(crf, "") == 0) {
         crf = "23";
     }
-    if (preset == NULL || strcmp(crf, "") == 0) {
+    if (preset == NULL || strcmp(preset, "") == 0) {
         preset = "slow";
     }
     

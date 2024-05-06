@@ -82,7 +82,7 @@ NSString * vapServerGetDocumentPath(void) {
     
     // 或者，如果你在代码中创建它：
     NSViewController *viewController = [[ViewController alloc] init];
-    [window setTitle:@"压缩"];
+    [window setTitle:@"VapCompressor"];
     
     // 3. 设置NSViewController的View为NSWindow的内容视图
     [window setContentViewController:viewController];
