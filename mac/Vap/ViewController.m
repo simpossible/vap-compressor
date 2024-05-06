@@ -35,6 +35,7 @@
     [self setupConstraints];
 }
 
+
 - (void)setupConstraints {
     // 约束web视图顶部、底部、左部和右部与父视图对齐
     NSDictionary *views = @{@"webView": self.webView};

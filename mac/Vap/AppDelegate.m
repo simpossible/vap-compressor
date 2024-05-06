@@ -29,7 +29,7 @@ NSString * vapServerGetDocumentPath(void) {
 }
 
 
-@interface AppDelegate()
+@interface AppDelegate()<NSWindowDelegate>
 
 @property (nonatomic, strong) NSWindow * window;
 
@@ -86,6 +86,7 @@ NSString * vapServerGetDocumentPath(void) {
     
     // 3. 设置NSViewController的View为NSWindow的内容视图
     [window setContentViewController:viewController];
+    window.delegate = self;
     
     // 4. 显示NSWindow
     [window makeKeyAndOrderFront:self];
@@ -116,6 +117,12 @@ NSString * vapServerGetDocumentPath(void) {
 - (void)startCompress {
 
     return;
+}
+
+
+- (BOOL)windowShouldClose:(NSWindow *)sende {
+    exit(0);
+    return YES;
 }
 
 
