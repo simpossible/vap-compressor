@@ -198,7 +198,7 @@ export default {
         if (task.taskState == CompressTaskState.prepaired) {
           task.start({
             quality: (51 - this.compressQualityValue / 2),
-            speed: CompressSpeedOptions[this.compressSpeedValue]
+            speed: CompressSpeedOptions[8 - this.compressSpeedValue]
           })
           alreadyFinish = false
           break

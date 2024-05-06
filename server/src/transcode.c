@@ -151,6 +151,7 @@ static int open_input_file(const char *filename, TranscodeManager *manager)
 
 static int open_output_file(const char *filename, TranscodeManager *manager, char *crf, char *preset)
 {
+    printf("--压缩参数是crf:%s preset:%s",crf, preset);
     AVStream *out_stream;
     AVStream *in_stream;
     AVCodecContext *dec_ctx, *enc_ctx;

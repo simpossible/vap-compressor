@@ -190,7 +190,7 @@ export default {
                 shared_center.dealingNodeSrc = this.node.src
                 this.task.start({
                     quality: (51 - this.compressQualityValue / 2),
-                    speed: CompressSpeedOptions[this.compressSpeedValue]
+                    speed: CompressSpeedOptions[8 - this.compressSpeedValue]
                 })
             }
         },
