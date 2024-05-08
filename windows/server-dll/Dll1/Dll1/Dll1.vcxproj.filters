@@ -1,0 +1,558 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="源文件\src">
+      <UniqueIdentifier>{1f70f19a-b614-4cd2-b79c-4861466c7e14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件\src\request_handler">
+      <UniqueIdentifier>{ad43bd64-7a32-4e1d-9330-1aec00918c56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\third">
+      <UniqueIdentifier>{c78420a8-d7bb-464f-9ea5-61e9a37f2f72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\third\cJson">
+      <UniqueIdentifier>{03b760af-aa2e-422c-896b-6f15e2ee8bb9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\third\cvetweb">
+      <UniqueIdentifier>{6a72e3cc-f005-4732-b4f0-ad00f87aea2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件\third\codec">
+      <UniqueIdentifier>{21c72794-3f77-498b-ab56-cc35835c7c80}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\server\src\server_util.h">
+      <Filter>源文件\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\server\src\string_util.h">
+      <Filter>源文件\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\server\src\transcode.h">
+      <Filter>源文件\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\server\src\vap_parser.h">
+      <Filter>源文件\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\server\src\vap-server.h">
+      <Filter>源文件\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\server\src\compress_util.h">
+      <Filter>源文件\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\server\src\dictionary.h">
+      <Filter>源文件\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\server\src\hashmap.h">
+      <Filter>源文件\src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\cjson\cJSON.h">
+      <Filter>头文件\third\cJson</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\cvetweb\CivetServer.h">
+      <Filter>头文件\third\cvetweb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\cvetweb\civetweb.h">
+      <Filter>头文件\third\cvetweb</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavfilter\avfilter.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavfilter\buffersink.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavfilter\buffersrc.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavfilter\version.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavfilter\version_major.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavformat\avformat.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavformat\avio.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavformat\version.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavformat\version_major.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\adler32.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\aes.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\aes_ctr.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\ambient_viewing_environment.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\attributes.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\audio_fifo.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\avassert.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\avconfig.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\avstring.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\avutil.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\base64.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\blowfish.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\bprint.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\bswap.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\buffer.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\camellia.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\cast5.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\channel_layout.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\common.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\cpu.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\crc.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\csp.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\des.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\detection_bbox.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\dict.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\display.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\dovi_meta.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\downmix_info.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\encryption_info.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\error.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\eval.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\executor.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\ffversion.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\fifo.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\file.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\film_grain_params.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\frame.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hash.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hdr_dynamic_metadata.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hdr_dynamic_vivid_metadata.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hmac.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext_cuda.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext_d3d11va.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext_d3d12va.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext_drm.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext_dxva2.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext_mediacodec.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext_opencl.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext_qsv.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext_vaapi.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext_vdpau.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext_videotoolbox.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\hwcontext_vulkan.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\iamf.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\imgutils.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\intfloat.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\intreadwrite.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\lfg.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\libm.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\log.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\lzo.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\macros.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\mastering_display_metadata.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\mathematics.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\md5.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\mem.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\motion_vector.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\murmur3.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\opt.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\parseutils.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\pixdesc.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\pixelutils.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\pixfmt.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\random_seed.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\rational.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\rc4.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\replaygain.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\ripemd.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\samplefmt.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\sha.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\sha512.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\spherical.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\stereo3d.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\tea.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\threadmessage.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\time.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\timecode.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\timestamp.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\tree.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\twofish.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\tx.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\uuid.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\version.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\video_enc_params.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\video_hint.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavutil\xtea.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libswresample\swresample.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libswresample\version.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libswresample\version_major.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libswscale\swscale.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libswscale\version.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libswscale\version_major.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\ac3_parser.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\adts_parser.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\avcodec.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\avdct.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\avfft.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\bsf.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\codec.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\codec_desc.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\codec_id.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\codec_par.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\d3d11va.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\defs.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\dirac.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\dv_profile.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\dxva2.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\jni.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\mediacodec.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\packet.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\qsv.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\vdpau.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\version.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\version_major.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\videotoolbox.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavcodec\vorbis_parser.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavdevice\avdevice.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavdevice\version.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\include\codec\libavdevice\version_major.h">
+      <Filter>头文件\third\codec</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\server_util.c">
+      <Filter>源文件\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\string_util.c">
+      <Filter>源文件\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\transcode.c">
+      <Filter>源文件\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\vap_parser.c">
+      <Filter>源文件\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\vap-server.c">
+      <Filter>源文件\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\compress_util.c">
+      <Filter>源文件\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\dictionary.c">
+      <Filter>源文件\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\hashmap.c">
+      <Filter>源文件\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\request_handler\on_file.c">
+      <Filter>源文件\src\request_handler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\request_handler\on_quit_compress.c">
+      <Filter>源文件\src\request_handler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\request_handler\on_start_compress.c">
+      <Filter>源文件\src\request_handler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\request_handler\on_vap_file_list.c">
+      <Filter>源文件\src\request_handler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\request_handler\on_vap_info.c">
+      <Filter>源文件\src\request_handler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\request_handler\on_vap_json.c">
+      <Filter>源文件\src\request_handler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\request_handler\onDrag.c">
+      <Filter>源文件\src\request_handler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\request_handler\on_accept_compress.c">
+      <Filter>源文件\src\request_handler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\request_handler\on_clear_files.c">
+      <Filter>源文件\src\request_handler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\request_handler\on_compress_info.c">
+      <Filter>源文件\src\request_handler</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\server\src\request_handler\on_download.c">
+      <Filter>源文件\src\request_handler</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

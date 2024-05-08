@@ -8,8 +8,7 @@
 #ifndef dictionary_h
 #define dictionary_h
 
-typedef struct Dictionary{
-}Dictionary;
+typedef void Dictionary;
 
 extern Dictionary *dicCreate(void);
 

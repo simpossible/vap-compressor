@@ -21,6 +21,11 @@
 #endif
 
 
+#ifdef _WINDOWS
+typedef __int64          ssize_t;
+#endif
+
+
 char * getParamsFromRequest(struct mg_connection *conn, char *paramName){
     const struct mg_request_info *ri = mg_get_request_info(conn);
     if (strcmp(ri->request_method, "GET") == 0) {
@@ -46,7 +51,8 @@ char * getParamsFromRequest(struct mg_connection *conn, char *paramName){
 
 cJSON * getPostFromRequest(struct mg_connection *conn) {
     char buf[1024];
-    ssize_t n, total = 0;
+    ssize_t n = 0;
+    ssize_t total = 0;
     int ret;
     
     // 创建一个足够大的动态缓冲区，或者使用 realloc 动态增长

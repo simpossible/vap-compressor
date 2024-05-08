@@ -10,6 +10,7 @@
 #include "CJSON.h"
 #include "transcode.h"
 #include <stdlib.h>
+#include <stdint.h>
 
 typedef struct VapFileInfo {
     unsigned long long size;

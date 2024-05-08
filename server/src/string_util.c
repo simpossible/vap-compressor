@@ -10,9 +10,24 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <libgen.h>
+
 #include <stdio.h>
 #include <stdlib.h>
+
+#ifdef _WINDOWS
+char* basename(char* path) {
+    char* base = strrchr(path, '\\');
+    return base ? base + 1 : path;
+}
+
+char* dirname(char* path) {
+    char* dir = strrchr(path, '\\');
+    if (dir) *dir = '\0';  // Cut the path at the last backslash
+    return path;
+}
+#else
+#include <libgen.h>
+#endif
 
 bool isFileInnerPath(char *fileName) {
     return string_start_with(fileName, "__compress_");
@@ -60,7 +75,11 @@ char * tempVapPathFrom(const char *filePath) {
     unsigned long baseNameLen = strlen(baseName);
     unsigned long outPutLen = basePathLen + baseNameLen + 13;
     char *outputPath = malloc(outPutLen);
+#ifdef _WINDOWS
+    snprintf(outputPath, outPutLen, "%s\__compress_%s", basePath, baseName);
+#else
     snprintf(outputPath, outPutLen, "%s/__compress_%s", basePath, baseName);
+#endif
     free(filePathCopy);
     free(filePathCopy2);
     return outputPath;
