@@ -17,6 +17,11 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "cJSON.h"
+#include <dirent.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 #endif
 
@@ -103,6 +108,35 @@ int file_exists(char *filename) {
 
 
 
+
+#define BUF_SIZE 512
+
+void copy_file(const char* src_path, const char* dest_path) {
+    char buffer[BUF_SIZE];
+    int src_fd = open(src_path, O_RDONLY);
+    int dest_fd = open(dest_path, O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);
+    ssize_t bytes;
+    while ((bytes = read(src_fd, buffer, BUF_SIZE)) > 0) {
+        write(dest_fd, buffer, bytes);
+    }
+    close(src_fd);
+    close(dest_fd);
+}
+
+void copy_dir(const char* src_dir, const char* dest_dir) {
+    mkdir(dest_dir, S_IRUSR | S_IWUSR | S_IXUSR);
+    DIR* dir = opendir(src_dir);
+    struct dirent* entry;
+    while ((entry = readdir(dir)) != NULL) {
+        if (entry->d_type == DT_REG) {
+            char src_path[1024], dest_path[1024];
+            snprintf(src_path, sizeof(src_path), "%s/%s", src_dir, entry->d_name);
+            snprintf(dest_path, sizeof(dest_path), "%s/%s", dest_dir, entry->d_name);
+            copy_file(src_path, dest_path);
+        }
+    }
+    closedir(dir);
+}
 
 
 cJSON *videoInfnToJson(VideoInfo *videoInfo) {

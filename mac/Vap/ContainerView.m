@@ -6,27 +6,7 @@
 //
 
 #import "ContainerView.h"
-
-static NSArray *dragfiles = @[];
-
-char * getAppDragFiles(void) {
-    NSMutableArray *fileArray = [NSMutableArray array];
-    for (NSString *file in dragfiles) {
-        [fileArray addObject:@{
-            @"path":file
-        }];
-    }
-    NSDictionary *dic = @{
-        @"files":fileArray
-    };
-    NSData * data = [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
-    NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-    dragfiles = @[];
-    char *jsonChar = (char *)[str UTF8String];
-    char *copystr = malloc(strlen(jsonChar)+1); //交给他人释放
-    memcpy(copystr, jsonChar, strlen(jsonChar)+1);
-    return copystr;
-}
+#include "adaptor.h"
 
 @implementation ContainerView
 
@@ -49,9 +29,19 @@ char * getAppDragFiles(void) {
     for (NSString *filePath in files) {
        NSURL *u = [NSURL URLWithString:filePath];
         NSString *uPath = [u path];
-        [pathArray addObject:uPath];
+        [pathArray addObject:@{
+            @"path": uPath
+        }];
     }
-    dragfiles = pathArray;
+    NSDictionary *dic = @{
+        @"files":pathArray
+    };
+    NSData * data = [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
+    NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    char *jsonChar = (char *)[str UTF8String];
+    char *copystr = malloc(strlen(jsonChar)+1); //交给他人释放
+    memcpy(copystr, jsonChar, strlen(jsonChar)+1);
+    setAppDragFiles(copystr);
     return [super performDragOperation:sender];
 }
 

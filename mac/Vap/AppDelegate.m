@@ -10,7 +10,7 @@
 #import "dictionary.h"
 #import "Cjson.h"
 #import "ViewController.h"
-
+#import "adaptor.h"
 extern void startVapServer(void);
 
 
@@ -41,30 +41,14 @@ NSString * vapServerGetDocumentPath(void) {
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     [self initialUI];
    
+    
     NSString * resourcePath = [[NSBundle mainBundle] pathForResource:@"resource" ofType:@""];
     if (![[NSFileManager defaultManager] fileExistsAtPath:resourcePath]) {
         return;
     }
-    NSError *error;
-    NSString *workSpacePath = vapServerGetDocumentPath();
-    if ([[NSFileManager defaultManager] fileExistsAtPath:workSpacePath]) {
-        [[NSFileManager defaultManager] removeItemAtPath:workSpacePath error:&error];
-        if (error) {
-            NSLog(@"get a error when remove old file");
-        }
-    }
-    if (![[NSFileManager defaultManager] fileExistsAtPath:workSpacePath]) {
-        NSError *error;
-        [[NSFileManager defaultManager] copyItemAtPath:resourcePath toPath:workSpacePath error:&error];
-        if (error) {
-            NSLog(@"文件拷贝失败:%@", error.localizedDescription);
-        }
-    }
-
-    self.thread = [[NSThread alloc] initWithBlock:^{
-        startVapServer();
-    }];
-    [self.thread start];
+    
+    setVapHtmlResourcePath([resourcePath UTF8String]);    
+    vapServerStart();
         
 }
 
@@ -129,8 +113,8 @@ NSString * vapServerGetDocumentPath(void) {
 @end
 
 
-const char * vapServerWorkSpacePath(void) {
-    NSString *vapWorkSpace =  vapServerGetDocumentPath();
-    return vapWorkSpace.UTF8String;
-    
-}
+//const char * vapServerWorkSpacePath(void) {
+//    NSString *vapWorkSpace =  vapServerGetDocumentPath();
+//    return vapWorkSpace.UTF8String;
+//    
+//}

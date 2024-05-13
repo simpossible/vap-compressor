@@ -13,6 +13,7 @@
 		263763E62BDF35EC00968C9B /* on_clear_files.c in Sources */ = {isa = PBXBuildFile; fileRef = 263763E52BDF35EC00968C9B /* on_clear_files.c */; };
 		263763E92BDFE54000968C9B /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 263763E82BDFE54000968C9B /* ContainerView.m */; };
 		263763EB2BDFE6BC00968C9B /* onDrag.c in Sources */ = {isa = PBXBuildFile; fileRef = 263763EA2BDFE6BC00968C9B /* onDrag.c */; };
+		263763F42BF27C9400968C9B /* adaptor.c in Sources */ = {isa = PBXBuildFile; fileRef = 263763F32BF27C9400968C9B /* adaptor.c */; };
 		26DFCC922BDB3FC700228FE8 /* civetweb.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCC902BDB3FC700228FE8 /* civetweb.h */; };
 		26DFCC932BDB3FC700228FE8 /* CivetServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCC912BDB3FC700228FE8 /* CivetServer.h */; };
 		26DFCD272BDB400600228FE8 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCC962BDB400600228FE8 /* version.h */; };
@@ -246,6 +247,8 @@
 		263763E72BDFE54000968C9B /* ContainerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContainerView.h; sourceTree = "<group>"; };
 		263763E82BDFE54000968C9B /* ContainerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContainerView.m; sourceTree = "<group>"; };
 		263763EA2BDFE6BC00968C9B /* onDrag.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = onDrag.c; sourceTree = "<group>"; };
+		263763F22BF27C9400968C9B /* adaptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = adaptor.h; sourceTree = "<group>"; };
+		263763F32BF27C9400968C9B /* adaptor.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = adaptor.c; sourceTree = "<group>"; };
 		26DFCBD82BDB3F7800228FE8 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavutil.a; sourceTree = "<group>"; };
 		26DFCBD92BDB3F7800228FE8 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavfilter.a; sourceTree = "<group>"; };
 		26DFCBDA2BDB3F7800228FE8 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavcodec.a; sourceTree = "<group>"; };
@@ -770,6 +773,8 @@
 				26DFCDDB2BDC0A5C00228FE8 /* hashmap.c */,
 				26DFCDB82BDB40DE00228FE8 /* transcode.h */,
 				26DFCDB52BDB40DE00228FE8 /* transcode.c */,
+				263763F32BF27C9400968C9B /* adaptor.c */,
+				263763F22BF27C9400968C9B /* adaptor.h */,
 				26DFCDB62BDB40DE00228FE8 /* vap-server.h */,
 				26DFCDB92BDB40DE00228FE8 /* vap-server.c */,
 				26DFCDD12BDBD8F800228FE8 /* server_util.h */,
@@ -1212,6 +1217,7 @@
 				26EB1BE12BD0357B00AD1AF4 /* main.m in Sources */,
 				26DFCE002BDD15CC00228FE8 /* string_util.c in Sources */,
 				26EB1BD72BD0357800AD1AF4 /* AppDelegate.m in Sources */,
+				263763F42BF27C9400968C9B /* adaptor.c in Sources */,
 				263763EB2BDFE6BC00968C9B /* onDrag.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

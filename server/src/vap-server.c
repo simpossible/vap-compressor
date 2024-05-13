@@ -37,7 +37,7 @@ extern int onDragRequest(struct mg_connection *conn, void *ignored);
 
 
 
-void startVapServer(void) {
+void startVapServer(const char *workspacePath) {
     
     // 初始化压缩的字典
     compress_dic = dicCreate();
@@ -51,7 +51,7 @@ void startVapServer(void) {
     struct mg_init_data mg_start_init_data = {0};
     mg_start_init_data.callbacks = &callbacks;
     mg_start_init_data.user_data = user_data;
-    const char *documentPath = vapServerWorkSpacePath();
+    const char *documentPath = workspacePath;
     const char *options[] = {
         "document_root", documentPath,
         "listening_ports", "3000",

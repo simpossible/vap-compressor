@@ -21,6 +21,6 @@ extern int file_exists(char *filename);
 extern bool string_end_with(const char *filePath, const char * suffix);
 extern cJSON *videoInfnToJson(VideoInfo *videoInfo);
 extern char * osJoinPath(const char* path1, const char* path2);
-
+extern void copy_dir(const char* src_dir, const char* dest_dir);
 
 #endif /* server_util_h */

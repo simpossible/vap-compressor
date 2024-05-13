@@ -10,7 +10,6 @@
 
 #include <stdio.h>
 
-extern void startVapServer(void);
-extern const char * vapServerWorkSpacePath(void);
+extern void startVapServer(const char *workspacePath);
 
 #endif /* vap_server_h */
