@@ -213,6 +213,7 @@
 		26EB1DE62BD19AA800AD1AF4 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26EB1DE52BD19AA800AD1AF4 /* CoreMedia.framework */; };
 		26EB1DE82BD19AD400AD1AF4 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26EB1DE72BD19AD400AD1AF4 /* VideoToolbox.framework */; };
 		26EB1DF02BD2062400AD1AF4 /* libvap-server.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 26EB1C102BD03DCD00AD1AF4 /* libvap-server.a */; };
+		26F796252BF51DB20009E131 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 26F796232BF51DB20009E131 /* main.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -423,7 +424,7 @@
 		26DFCE082BDD47A500228FE8 /* on_compress_info.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = on_compress_info.c; sourceTree = "<group>"; };
 		26DFCE0A2BDD481900228FE8 /* compress_util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress_util.h; sourceTree = "<group>"; };
 		26DFCE0B2BDD481900228FE8 /* compress_util.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = compress_util.c; sourceTree = "<group>"; };
-		26EB1BD22BD0357800AD1AF4 /* Vap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Vap.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		26EB1BD22BD0357800AD1AF4 /* VapCompressor.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VapCompressor.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26EB1BD52BD0357800AD1AF4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		26EB1BD62BD0357800AD1AF4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		26EB1BD82BD0357800AD1AF4 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
@@ -452,6 +453,7 @@
 		26EB1DE22BD19A6000AD1AF4 /* libiconv.2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.2.tbd; path = usr/lib/libiconv.2.tbd; sourceTree = SDKROOT; };
 		26EB1DE52BD19AA800AD1AF4 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		26EB1DE72BD19AD400AD1AF4 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		26F796232BF51DB20009E131 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -768,6 +770,7 @@
 		26DFCDB32BDB40DE00228FE8 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				26F796212BF51D970009E131 /* main */,
 				26DFCDEF2BDCB57A00228FE8 /* request_handler */,
 				26DFCDDC2BDC0A5C00228FE8 /* hashmap.h */,
 				26DFCDDB2BDC0A5C00228FE8 /* hashmap.c */,
@@ -834,7 +837,7 @@
 		26EB1BD32BD0357800AD1AF4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				26EB1BD22BD0357800AD1AF4 /* Vap.app */,
+				26EB1BD22BD0357800AD1AF4 /* VapCompressor.app */,
 				26EB1BE72BD0357B00AD1AF4 /* VapTests.xctest */,
 				26EB1BF12BD0357B00AD1AF4 /* VapUITests.xctest */,
 				26EB1C102BD03DCD00AD1AF4 /* libvap-server.a */,
@@ -895,6 +898,14 @@
 				26EB1C292BD04A1600AD1AF4 /* Network.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		26F796212BF51D970009E131 /* main */ = {
+			isa = PBXGroup;
+			children = (
+				26F796232BF51DB20009E131 /* main.c */,
+			);
+			path = main;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1060,9 +1071,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		26EB1BD12BD0357800AD1AF4 /* Vap */ = {
+		26EB1BD12BD0357800AD1AF4 /* VapCompressor */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 26EB1BFB2BD0357B00AD1AF4 /* Build configuration list for PBXNativeTarget "Vap" */;
+			buildConfigurationList = 26EB1BFB2BD0357B00AD1AF4 /* Build configuration list for PBXNativeTarget "VapCompressor" */;
 			buildPhases = (
 				26EB1BCE2BD0357800AD1AF4 /* Sources */,
 				26EB1BCF2BD0357800AD1AF4 /* Frameworks */,
@@ -1073,9 +1084,9 @@
 			dependencies = (
 				26EB1C212BD03E9F00AD1AF4 /* PBXTargetDependency */,
 			);
-			name = Vap;
+			name = VapCompressor;
 			productName = Vap;
-			productReference = 26EB1BD22BD0357800AD1AF4 /* Vap.app */;
+			productReference = 26EB1BD22BD0357800AD1AF4 /* VapCompressor.app */;
 			productType = "com.apple.product-type.application";
 		};
 		26EB1BE62BD0357B00AD1AF4 /* VapTests */ = {
@@ -1169,7 +1180,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				26EB1BD12BD0357800AD1AF4 /* Vap */,
+				26EB1BD12BD0357800AD1AF4 /* VapCompressor */,
 				26EB1BE62BD0357B00AD1AF4 /* VapTests */,
 				26EB1BF02BD0357B00AD1AF4 /* VapUITests */,
 				26EB1C0F2BD03DCD00AD1AF4 /* vap-server */,
@@ -1247,6 +1258,7 @@
 				263763E42BDF315E00968C9B /* on_accept_compress.c in Sources */,
 				26DFCDE22BDC0C6A00228FE8 /* dictionary.c in Sources */,
 				26DFCDF22BDCB59700228FE8 /* on_file.c in Sources */,
+				26F796252BF51DB20009E131 /* main.c in Sources */,
 				26DFCE092BDD47A500228FE8 /* on_compress_info.c in Sources */,
 				26DFCDDD2BDC0A5C00228FE8 /* hashmap.c in Sources */,
 				26DFCE032BDD32A300228FE8 /* on_vap_info.c in Sources */,
@@ -1269,12 +1281,12 @@
 /* Begin PBXTargetDependency section */
 		26EB1BE92BD0357B00AD1AF4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 26EB1BD12BD0357800AD1AF4 /* Vap */;
+			target = 26EB1BD12BD0357800AD1AF4 /* VapCompressor */;
 			targetProxy = 26EB1BE82BD0357B00AD1AF4 /* PBXContainerItemProxy */;
 		};
 		26EB1BF32BD0357B00AD1AF4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 26EB1BD12BD0357800AD1AF4 /* Vap */;
+			target = 26EB1BD12BD0357800AD1AF4 /* VapCompressor */;
 			targetProxy = 26EB1BF22BD0357B00AD1AF4 /* PBXContainerItemProxy */;
 		};
 		26EB1C212BD03E9F00AD1AF4 /* PBXTargetDependency */ = {
@@ -1418,10 +1430,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Vap/Vap.entitlements;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 5X939PFV35;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vap/Info.plist;
@@ -1436,9 +1449,10 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../lib/arm64\"",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = cloud.labuda.tool.Vap;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mikevillage.vapc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1452,10 +1466,11 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Vap/Vap.entitlements;
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 5X939PFV35;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vap/Info.plist;
@@ -1470,9 +1485,10 @@
 					"$(inherited)",
 					"\"$(SRCROOT)/../lib/arm64\"",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				MARKETING_VERSION = 1.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = cloud.labuda.tool.Vap;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mikevillage.vapc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1598,7 +1614,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		26EB1BFB2BD0357B00AD1AF4 /* Build configuration list for PBXNativeTarget "Vap" */ = {
+		26EB1BFB2BD0357B00AD1AF4 /* Build configuration list for PBXNativeTarget "VapCompressor" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				26EB1BFC2BD0357B00AD1AF4 /* Debug */,
