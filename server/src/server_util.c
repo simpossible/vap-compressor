@@ -38,11 +38,11 @@ char * getParamsFromRequest(struct mg_connection *conn, char *paramName){
         const char *query_string = ri->query_string;
         
         /* 使用 mg_get_var() 来解析查询字符串并获取参数值 */
-        char * paramValue = (char *)malloc(100);
-        memset(paramValue, 0, 100);
+        char * paramValue = (char *)malloc(512);
+        memset(paramValue, 0, 512);
         size_t paramValueLen = 0;
         size_t length = strlen(query_string);
-        int ret = mg_get_var(query_string, length, paramName, paramValue, 100);
+        int ret = mg_get_var(query_string, length, paramName, paramValue, 512);
         if (ret == 0) {
             /* 找到参数，paramValue 包含了参数的值 */
             printf("The value of paramName is: %.*s\n", (int)paramValueLen, paramValue);
