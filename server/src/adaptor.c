@@ -16,12 +16,13 @@ static char * __vap_drag_files = NULL;
 void setAppDragFiles(const char * files_json_str) {
     if (__vap_drag_files) {
         free(__vap_drag_files);
+        __vap_drag_files = NULL;
     }
     __vap_drag_files = strdup(files_json_str);
 }
 
 char * getAppDragFiles(void) {
-    return __vap_drag_files;
+    return strdup(__vap_drag_files);
 }
 
 

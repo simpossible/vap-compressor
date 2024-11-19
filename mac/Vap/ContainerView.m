@@ -39,9 +39,7 @@
     NSData * data = [NSJSONSerialization dataWithJSONObject:dic options:0 error:nil];
     NSString *str = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     char *jsonChar = (char *)[str UTF8String];
-    char *copystr = malloc(strlen(jsonChar)+1); //交给他人释放
-    memcpy(copystr, jsonChar, strlen(jsonChar)+1);
-    setAppDragFiles(copystr);
+    setAppDragFiles(jsonChar);
     return [super performDragOperation:sender];
 }
 
