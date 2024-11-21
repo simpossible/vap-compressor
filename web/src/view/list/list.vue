@@ -2,6 +2,17 @@
   <div id="vap_list_area" :class="vap_list_style_class" style="position: relative;">
     <el-tree v-if="vm_list.length > 0" style="max-width: 600px" ref="vap_list_tree" :data="vm_list" node-key="uuid"
       :props="defaultProps" @node-click="handleNodeClick">
+      <template v-slot="{ node, data }">
+        <span class="custom-tree-node">
+          <span style="display: inline-flex; align-items: center;">{{ data.label }}</span>
+          <span> {{ " " }} </span>
+          <span v-if="data.errorTip !== ''"
+            style="color: red;font-size: 8px;display: inline-flex; align-items: center;">
+            {{ data.errorTip }}
+          </span>
+
+        </span>
+      </template>
     </el-tree>
     <div v-if="vm_list.length === 0"
       style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;  display: flex; justify-content: center; align-items: center;">
@@ -13,7 +24,6 @@
 <script>
 import { shared_center } from '../../sdk/vap_center';
 import CellNodeVm from './cell_node_vm';
-
 export default {
   name: 'VapList',
   props: {
@@ -41,6 +51,7 @@ export default {
     for (var i = 0; i < node_list.length; i++) {
       let node = node_list[i]
       var vm = new CellNodeVm(node)
+      vm.setDelegate(this)
       this.vm_list_map.set(node.src, vm);
       this.vm_list.push(vm)
     }
@@ -54,7 +65,8 @@ export default {
       vm_list_map: new Map(),
       defaultProps: {
         children: 'children',
-        label: 'label',
+        label: 'label'
+
       },
       selectNode: null
     };
@@ -92,8 +104,11 @@ export default {
         console.log("node exist");
         return
       }
+
       var shouldAutoChoose = this.vm_list.length === 0
       var vm = new CellNodeVm(node)
+      vm.setDelegate(this)
+
       this.vm_list.unshift(vm)
       this.vm_list_map.set(node.src, vm)
       if (this.$refs.vap_list_tree != undefined) {
@@ -109,7 +124,24 @@ export default {
       console.log("on node clicked")
       ele.reloadFiles();
       this.onVapChoosed(ele.node);
-    }
+    },
+    toUpdateNodeUI(vm) {
+      // this.refreshNode(vm.uuid)
+      var newVMList = [...this.vm_list];
+      this.vm_list = newVMList;
+
+    },
+    refreshNode(nodeUuid) {
+      console.log("force update node", nodeUuid)
+      const tree = this.$refs.vap_list_tree;
+      const node = tree.getNode(nodeUuid);
+      if (node) {
+        const parent = node.parent;
+        const children = node.data.children;
+        // Remove and re-add the node to force refresh
+        tree.updateKeyChildren(nodeUuid, []);
+      }
+    },
   },
 }
 </script>

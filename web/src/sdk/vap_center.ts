@@ -13,6 +13,7 @@ class VapCenter {
   nodeMap: Map<string, FileNode> = new Map();
   delegate: VapCenterInterface | null = null;
   dealingNodeSrc: string = '';
+  isEverPlayer:boolean = false;
     
   constructor() {
     this.nodes = [];

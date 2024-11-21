@@ -29,7 +29,7 @@
     [self.view addSubview:self.webView];
     self.webView.translatesAutoresizingMaskIntoConstraints = NO;
     // Load a webpage
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://127.0.0.1:3000?a=%ld",(long)CFAbsoluteTimeGetCurrent()]];
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://localhost:5173?a=%ld",(long)CFAbsoluteTimeGetCurrent()]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest:request];
     [self setupConstraints];

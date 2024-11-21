@@ -130,9 +130,6 @@ BoxArray getVapBoxes(char *file_path) {
     }
     uint64_t position = 0;
     uint64_t boxCount = 0;
-    if (strcmp(file_path, "/Users/liangjinfeng/Downloads/aaaa/__compress_video.mp4") == 0) {
-        printf("ready for test");
-    }
     while (1) {
         uint64_t boxStart = position;
         uint8_t *sizeReadBuffer = readFromFile(fd, position, 4);

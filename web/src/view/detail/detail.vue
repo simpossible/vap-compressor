@@ -1,8 +1,12 @@
 <template>
     <div v-if="node.src.length != 0" id="vap_detail_area">
         <el-row>
+
             <!-- 这里是预览区域,区域的高度定为300px -->
             <div ref="anim" class="vap_anim">
+                <el-button v-if="shouldShowPlayTip" type="text" @click="startFirstPlay"
+                    style="display: inline;align-items: center;">点击开始播放特效</el-button>
+
             </div>
         </el-row>
         <el-row>
@@ -22,6 +26,7 @@
 </template>
 <script>
 import { FileNode } from '../../sdk/file_node';
+import { shared_center } from '../../sdk/vap_center';
 import Vap from 'video-animation-player';
 import { vapUrlForKey, UrlPathDownload, UrlPathVapJson } from '../../sdk/url_config';
 
@@ -37,7 +42,11 @@ export default {
 
     },
     mounted() {
+
         if (this.node != null & this.node != undefined & this.node.src.length > 0) {
+            if (!shared_center.isEverPlayer) {
+                this.shouldShowPlayTip = true
+            }
             this.node.addDelegates(this)
             this.refreshInfo()
             this.play()
@@ -58,7 +67,8 @@ export default {
             vapJson: "",
             bitRate: "",
             duration: "",
-            tableData: []
+            tableData: [],
+            shouldShowPlayTip: false,
         };
     },
     methods: {
@@ -115,12 +125,18 @@ export default {
                 // 播放起始时间点(秒)
             }, { type: 1 }))
                 .on('playing', () => {
-
+                    shared_center.isEverPlayer = true
+                    that.shouldShowPlayTip = false
                 })
                 .on('ended', () => {
                 })
                 .on('frame', (frame, timestamp) => {
                 })
+        },
+        startFirstPlay() {
+            shared_center.isEverPlayer = true
+            this.shouldShowPlayTip = false
+            this.play()
         },
         pause() {
             this.vap.pause()
@@ -172,5 +188,8 @@ export default {
 .vap_anim {
     width: 37.5vw;
     height: 37.5vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 </style>

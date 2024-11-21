@@ -12,7 +12,7 @@
 #import "ViewController.h"
 #import "adaptor.h"
 extern void startVapServer(void);
-
+extern void set_app_cache_dir(const char * path);
 
 @interface AppDelegate ()
 
@@ -39,8 +39,11 @@ NSString * vapServerGetDocumentPath(void) {
 
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-    [self initialUI];
    
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentDirectory = [paths firstObject];
+    set_app_cache_dir([documentDirectory UTF8String]);
+    [self initialUI];
     
     NSString * resourcePath = [[NSBundle mainBundle] pathForResource:@"resource" ofType:@""];
     if (![[NSFileManager defaultManager] fileExistsAtPath:resourcePath]) {

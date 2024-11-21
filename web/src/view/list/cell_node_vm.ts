@@ -1,16 +1,23 @@
 import { FileNode, FileNodeType } from "../../sdk/file_node";
 import * as path from 'path-browserify';
 import { shared_center } from '../../sdk/vap_center';
+
+interface CellNodeVmUIEvent {
+    toUpdateNodeUI: (vm: any) => void;
+}
 class CellNodeVm {
     node: FileNode;
     label: string = "";
     children: CellNodeVm[] = [];
     childrenMap: Map<string, CellNodeVm> = new Map();
-    uuid: string = ""
+    uuid: string = "";
+    errorTip: string = "";  //错误提示
+    delegate: CellNodeVmUIEvent | null = null;
     constructor(node: FileNode) {
         this.node = node;
         this.uuid = node.src;
         this.label = path.basename(node.src);
+        this.errorTip = "";
         for (const child of node.subNodes) {
             const vm = new CellNodeVm(child)
             this.children.push(vm);
@@ -20,12 +27,26 @@ class CellNodeVm {
         node.initialData();
     }
 
+    setDelegate(delegate: CellNodeVmUIEvent) {
+        this.delegate = delegate;
+        for (const child of this.children) {
+            child.setDelegate(delegate);
+        }
+    }
+
     isVap() {
         return this.node.fileType == FileNodeType.vap;
     }
 
     onNodeInfoLoaded(node: FileNode) {
-        console.log("onNodeInfoLoaded");
+        console.log("onNodeInfoLoaded a ");
+        if (this.node.fileType !== FileNodeType.vap && this.node.fileType !== FileNodeType.dir) {
+            this.errorTip = "不支持的文件类型";
+            if (this.delegate != null) {
+                this.delegate.toUpdateNodeUI(this);
+            }
+            return;
+        }
         const tempSubMap = new Map();
         const newArray: CellNodeVm[] = [];
         let hasNew = false;

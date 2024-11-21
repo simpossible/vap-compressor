@@ -3,12 +3,23 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "tempVapPathFrom:string_util.c">
+         <PersistentStrings>
+            <PersistentString
+               value = "__set_app_cache_dir">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "compressMp4:VapUtil.c">
          <PersistentStrings>
             <PersistentString
                value = "inputPath">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "onFileRequest:on_file.c">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

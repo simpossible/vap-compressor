@@ -14,6 +14,7 @@
 		263763E92BDFE54000968C9B /* ContainerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 263763E82BDFE54000968C9B /* ContainerView.m */; };
 		263763EB2BDFE6BC00968C9B /* onDrag.c in Sources */ = {isa = PBXBuildFile; fileRef = 263763EA2BDFE6BC00968C9B /* onDrag.c */; };
 		263763F42BF27C9400968C9B /* adaptor.c in Sources */ = {isa = PBXBuildFile; fileRef = 263763F32BF27C9400968C9B /* adaptor.c */; };
+		268DDF152CEF960E003D0370 /* libcorecrypto.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 268DDF142CEF960D003D0370 /* libcorecrypto.tbd */; };
 		26DFCC922BDB3FC700228FE8 /* civetweb.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCC902BDB3FC700228FE8 /* civetweb.h */; };
 		26DFCC932BDB3FC700228FE8 /* CivetServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCC912BDB3FC700228FE8 /* CivetServer.h */; };
 		26DFCD272BDB400600228FE8 /* version.h in Headers */ = {isa = PBXBuildFile; fileRef = 26DFCC962BDB400600228FE8 /* version.h */; };
@@ -250,6 +251,7 @@
 		263763EA2BDFE6BC00968C9B /* onDrag.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = onDrag.c; sourceTree = "<group>"; };
 		263763F22BF27C9400968C9B /* adaptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = adaptor.h; sourceTree = "<group>"; };
 		263763F32BF27C9400968C9B /* adaptor.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = adaptor.c; sourceTree = "<group>"; };
+		268DDF142CEF960D003D0370 /* libcorecrypto.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libcorecrypto.tbd; path = usr/lib/system/libcorecrypto.tbd; sourceTree = SDKROOT; };
 		26DFCBD82BDB3F7800228FE8 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavutil.a; sourceTree = "<group>"; };
 		26DFCBD92BDB3F7800228FE8 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavfilter.a; sourceTree = "<group>"; };
 		26DFCBDA2BDB3F7800228FE8 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavcodec.a; sourceTree = "<group>"; };
@@ -504,6 +506,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				268DDF152CEF960E003D0370 /* libcorecrypto.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -884,6 +887,7 @@
 		26EB1C232BD0414300AD1AF4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				268DDF142CEF960D003D0370 /* libcorecrypto.tbd */,
 				26EB1DE72BD19AD400AD1AF4 /* VideoToolbox.framework */,
 				26EB1DE52BD19AA800AD1AF4 /* CoreMedia.framework */,
 				26EB1DE22BD19A6000AD1AF4 /* libiconv.2.tbd */,
@@ -1433,12 +1437,15 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 5X939PFV35;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vap/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSDesktopFolderUsageDescription = "\"同意以便存储压缩后的特效文件\"";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -1470,12 +1477,15 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 5;
 				DEVELOPMENT_TEAM = 5X939PFV35;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Vap/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_NSDesktopFolderUsageDescription = "\"同意以便存储压缩后的特效文件\"";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -1576,6 +1586,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/lib/ffmpeg",
 					"$(PROJECT_DIR)/lib/codec",
+					"$(SDKROOT)/usr/lib/system",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -1597,6 +1608,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/lib/ffmpeg",
 					"$(PROJECT_DIR)/lib/codec",
+					"$(SDKROOT)/usr/lib/system",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -92,6 +92,7 @@ class FileNode {
                 const tempSubMap = new Map();
                 const isDir = responseJson["is_dir"];
                 const isVap = responseJson["is_vap"];
+                console.log("on file info come", responseJson)
                 if (isDir) {
                     this.fileType = FileNodeType.dir;
                 } else {
