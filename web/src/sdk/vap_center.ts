@@ -2,7 +2,7 @@ import axios from 'axios';
 import { FileNode } from './file_node';
 import { isMP4File } from './file_util';
 import { setNodeCache } from './node_cache';
-import { UrlPathVapClearFiles, vapUrlForKey, UrlPathVapDragFiles } from './url_config';
+import { UrlPathVapClearFiles, vapUrlForKey, UrlPathVapDragFiles,UrlPathOpenFinderFiles } from './url_config';
 
 interface VapCenterInterface {
   onNodeAdded: (node: FileNode) => void;
@@ -75,6 +75,18 @@ class VapCenter {
         'Content-Type': 'application/json'
       }
     })    
+  }
+
+  openFinder(filePath, callBack){
+    const params = { path: filePath };
+    // 使用axios发送post请求content-type为application/json
+    axios.get(vapUrlForKey(UrlPathOpenFinderFiles,params)).then(response => {
+     console.log("open -finder");
+     response.data(response.data)
+  }).catch(error => {
+      console.log(error);
+  })
+    
   }
 }
 

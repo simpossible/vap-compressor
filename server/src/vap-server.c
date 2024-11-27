@@ -33,6 +33,7 @@ extern int onClearFilesRequest(struct mg_connection *conn, void *ignored);
 extern int onAcceptCompressnRequest(struct mg_connection *conn, void *ignored);
 extern int onQuitCompressnRequest(struct mg_connection *conn, void *ignored);
 extern int onDragRequest(struct mg_connection *conn, void *ignored);
+extern int onOpenFinderRequest(struct mg_connection *conn, void *ignored);
 
 
 
@@ -81,6 +82,7 @@ void startVapServer(const char *workspacePath) {
     mg_set_request_handler(ctx, "/accept-compress", onAcceptCompressnRequest, "accept-compress");
     mg_set_request_handler(ctx, "/clear-files", onClearFilesRequest, "clear-files");
     mg_set_request_handler(ctx, "/on-drag", onDragRequest, "on-drag");
+    mg_set_request_handler(ctx, "/open-finder", onOpenFinderRequest, "open-finder");
     
     
 }

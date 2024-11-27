@@ -33,6 +33,8 @@ NSString * vapServerGetDocumentPath(void) {
 
 @property (nonatomic, strong) NSWindow * window;
 
+@property (nonatomic, strong) NSString * cachePath;
+
 @end
 
 @implementation AppDelegate
@@ -40,9 +42,19 @@ NSString * vapServerGetDocumentPath(void) {
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
    
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSMoviesDirectory, NSUserDomainMask, YES);
     NSString *documentDirectory = [paths firstObject];
-    set_app_cache_dir([documentDirectory UTF8String]);
+    NSString *cachePath = [documentDirectory stringByAppendingPathComponent:@"vapc"];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:cachePath]) {
+        NSError *error;
+        [[NSFileManager defaultManager] createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:nil error:&error];
+        if (error) {
+            NSLog(@"error is %@",error);
+        }
+    }
+    self.cachePath = cachePath;
+    set_app_cache_dir([cachePath UTF8String]);
+    [self removeEmptySubdirectoriesAtPath:cachePath];
     [self initialUI];
     
     NSString * resourcePath = [[NSBundle mainBundle] pathForResource:@"resource" ofType:@""];
@@ -94,6 +106,8 @@ NSString * vapServerGetDocumentPath(void) {
 
 - (void)applicationWillTerminate:(NSNotification *)aNotification {
     // Insert code here to tear down your application
+    NSLog(@"applicationWillTerminate");
+    [self removeEmptySubdirectoriesAtPath:self.cachePath];
 }
 
 
@@ -101,6 +115,8 @@ NSString * vapServerGetDocumentPath(void) {
     return YES;
 }
 
+
+   
 - (void)startCompress {
 
     return;
@@ -113,8 +129,45 @@ NSString * vapServerGetDocumentPath(void) {
 }
 
 
+- (void)removeEmptySubdirectoriesAtPath:(NSString *)directoryPath {
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    NSDirectoryEnumerator *enumerator = [fileManager enumeratorAtPath:directoryPath];
+    NSString *subdirectory;
+    NSMutableArray *emptyDirectories = [NSMutableArray array];
+
+    // Collect all empty subdirectories
+    while ((subdirectory = [enumerator nextObject])) {
+        NSString *fullPath = [directoryPath stringByAppendingPathComponent:subdirectory];
+        BOOL isDirectory;
+        if ([fileManager fileExistsAtPath:fullPath isDirectory:&isDirectory] && isDirectory) {
+            NSArray *contents = [fileManager contentsOfDirectoryAtPath:fullPath error:nil];
+            if (contents.count == 0) {
+                [emptyDirectories addObject:fullPath];
+            }
+        }
+    }
+
+    // Remove all empty subdirectories
+    for (NSString *emptyDirectory in emptyDirectories) {
+        NSError *error = nil;
+        if (![fileManager removeItemAtPath:emptyDirectory error:&error]) {
+            NSLog(@"Failed to remove directory: %@, error: %@", emptyDirectory, error);
+        }
+    }
+}
+
+
 @end
 
+extern char * OpenFinderForPath(char *path) {
+    NSString *filePath = [NSString stringWithUTF8String:path];
+    if([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        NSURL *fileURL = [NSURL fileURLWithPath:filePath];
+        [[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:@[fileURL]];
+        [[NSWorkspace sharedWorkspace] openURL:[NSURL fileURLWithPath:@"/System/Library/CoreServices/Finder.app"]];
+    }
+    return "ok";
+}
 
 //const char * vapServerWorkSpacePath(void) {
 //    NSString *vapWorkSpace =  vapServerGetDocumentPath();

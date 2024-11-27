@@ -19,7 +19,7 @@
                         @change="onCompressQualityChange" />
                 </el-col>
                 <el-col :span="3" style="margin-top: 5px;padding-left: 6px;"> <el-text class="mx-1" size="small">{{
-        compressQualityPercentage }}</el-text> </el-col>
+                    compressQualityPercentage }}</el-text> </el-col>
             </el-row>
             <!-- 加一个压缩速度的可选进度条 -->
             <el-row style="margin-top: 12px;">
@@ -71,15 +71,19 @@
             </el-row>
             <el-row style="margin-top: 8px;">
                 <!-- 这个搞个文本区域来显示vapJson的参数,最高显示100px-->
-                <el-col :span="4"></el-col>
-                <el-col :span="7">
+                <el-col :span="1"></el-col>
+                <el-col :span="4">
                     <el-button @click="quitCompress">放弃</el-button>
                 </el-col>
-                <el-col :span="2"></el-col>
+                <el-col :span="1"></el-col>
                 <el-col :span="7">
-                    <el-button @click="acceptCompress">使用</el-button>
+                    <el-button @click="navigateFile">查看压缩文件</el-button>
                 </el-col>
-                <el-col :span="4"></el-col>
+                <el-col :span="1"></el-col>
+                <el-col :span="7">
+                    <el-button @click="acceptCompress">覆盖源文件</el-button>
+                </el-col>
+                <el-col :span="1"></el-col>
             </el-row>
         </div>
     </div>
@@ -278,6 +282,11 @@ export default {
                     });
                 }
             })
+        },
+
+        navigateFile() {
+            // 跳转到文件夹
+            shared_center.openFinder(this.task.compressedFileInfo.path);
         },
         qualityTip(number) {
             return (number * 100 / 102).toFixed(2) + "%";

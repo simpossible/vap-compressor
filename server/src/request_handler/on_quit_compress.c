@@ -15,6 +15,9 @@
 #include "server_util.h"
 #include <stdlib.h>
 #include "compress_util.h"
+#include <libgen.h>
+#include <unistd.h>
+
 
 int onQuitCompressnRequest(struct mg_connection *conn, void *ignored) {
     char *filePath = getParamsFromRequest(conn, "path");
