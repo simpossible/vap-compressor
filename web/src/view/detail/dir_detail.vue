@@ -18,7 +18,7 @@
           @change="onCompressQualityChange" />
       </el-col>
       <el-col :span="3" style="margin-top: 5px;padding-left: 6px;"> <el-text class="mx-1" size="small">{{
-    compressQualityPercentage }}</el-text> </el-col>
+        compressQualityPercentage }}</el-text> </el-col>
     </el-row>
     <!-- 加一个压缩速度的可选进度条 -->
     <el-row v-if="started === false" style="margin-top: 20px;">
@@ -29,12 +29,12 @@
           @change="onCompressSpeedQualityChange" />
       </el-col>
       <el-col :span="3" style="margin-top: 5px;padding-left: 6px;"> <el-text class="mx-1" size="small">{{
-    compressSpeedTip }}</el-text> </el-col>
+        compressSpeedTip }}</el-text> </el-col>
     </el-row>
     <el-row v-if="started === false">
       <el-col :span="1"></el-col>
       <el-col :span="22">
-        <el-text class="mx-1" size="small" style="margin-top: 6px;">Tip: 压缩速度约快 压缩率越低。压缩质量越大，耗时就越久</el-text>
+        <el-text class="mx-1" size="small" style="margin-top: 6px;">Tip: 压缩速度越快 压缩率越高。压缩质量越大，耗时就越久</el-text>
       </el-col>
     </el-row>
     <el-row>

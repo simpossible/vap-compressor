@@ -39,7 +39,7 @@
             </el-row>
             <el-row>
                 <el-col style="margin-left: 12px;">
-                    <el-text class="mx-1" size="small" style="margin-top: 6px;">Tip: 压缩速度约快 压缩率越低。压缩质量越大，耗时就越久</el-text>
+                    <el-text class="mx-1" size="small" style="margin-top: 6px;">Tip: 压缩速度越快 压缩率越高。压缩质量越大，耗时就越久</el-text>
                 </el-col>
             </el-row>
         </div>
