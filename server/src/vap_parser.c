@@ -279,7 +279,7 @@ int addVapcToMp4File(char * outPath, char *vapc) {
         }
     }
 
-    uint64_t vapcLen = strlen(vapc) + 1;
+    uint64_t vapcLen = strlen(vapc);
     uint64_t vapcBoxSize = 8 + vapcLen;
     uint8_t *vapcBoxBuffer = malloc(vapcBoxSize);
     writeUInt32BE(vapcBoxBuffer, (uint32_t)vapcBoxSize);
